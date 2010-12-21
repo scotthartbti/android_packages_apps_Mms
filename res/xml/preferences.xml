@@ -319,6 +319,15 @@
             android:title="@string/direct_call_title"
             android:summary="@string/direct_call_summary"/>
 
+        <com.android.mms.preferences.UserAgentListPreference
+            android:key="pref_key_mms_user_agent"
+            android:defaultValue="default"
+            android:title="@string/pref_title_mms_user_agent"
+            android:summary="@string/pref_summary_mms_user_agent"
+            android:entries="@array/pref_mms_user_agent_entries"
+            android:entryValues="@array/pref_mms_user_agent_values"
+            android:dialogTitle="@string/pref_title_mms_user_agent" />
+
     </PreferenceCategory>
 
     <!-- Blacklist settings -->

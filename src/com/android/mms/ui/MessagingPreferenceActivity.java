@@ -100,15 +100,20 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static final String QM_LOCKSCREEN_ENABLED     = "pref_key_qm_lockscreen";
     public static final String QM_CLOSE_ALL_ENABLED      = "pref_key_close_all";
     public static final String QM_DARK_THEME_ENABLED     = "pref_dark_theme";
-    private static final String DIRECT_CALL_PREF = "direct_call_pref";
+
     // Blacklist
     public static final String BUTTON_BLACKLIST  = "button_blacklist";
+
+    private static final String DIRECT_CALL_PREF         = "direct_call_pref";
+    public static final String MESSAGE_FONT_SIZE         = "pref_key_mms_message_font_size";
 
     // Text Area
     private static final String PREF_TEXT_AREA_SIZE      = "pref_text_area_size";
     public static final String TEXT_AREA_SIZE            = "text_area_size";
     private static final int TEXT_AREA_LIMIT_MIN         = 2;
     private static final int TEXT_AREA_LIMIT_MAX         = 15;
+    public static final String USER_AGENT               = "pref_key_mms_user_agent";
+    public static final String USER_AGENT_CUSTOM        = "pref_key_mms_user_agent_custom";
 
     // Menu entries
     private static final int MENU_RESTORE_DEFAULTS    = 1;
