@@ -60,7 +60,7 @@
                 android:id="@+id/slideshow_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@drawable/text_color_black" />
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
@@ -91,7 +91,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dip"
             android:layout_height="45dip"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:text="@string/edit" />
 
         <Button
@@ -99,7 +99,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dip"
             android:layout_height="45dip"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:text="@string/send" />
 
         <Button
@@ -107,7 +107,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dip"
             android:layout_height="45dip"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:text="@string/remove" />
 
     </LinearLayout>

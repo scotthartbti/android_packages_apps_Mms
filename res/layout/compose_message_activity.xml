@@ -42,7 +42,7 @@
 
         <EditText android:id="@+id/subject"
             android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:capitalize="sentences"
@@ -116,7 +116,7 @@
             </ScrollView>
 
             <!-- Divider -->
-            <View android:background="#eeeeee"
+            <View android:background="#202020"
                 android:layout_width="match_parent"
                 android:layout_height="1dp" />
 
@@ -125,10 +125,10 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fff" >
+                android:background="#000" >
 
                 <EditText
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:id="@+id/embedded_text_editor"
                     android:layout_width="0dip"
                     android:layout_gravity="bottom"
@@ -159,7 +159,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal|bottom"
-                        android:textColor="#cc333333"
+                        android:textColor="#cccfcfcf"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingLeft="3dip"

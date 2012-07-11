@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="12dip"
             android:textSize="18sp"
-            android:textColor="#777777" />
+            android:textColor="#CFCFCF" />
         <ImageButton
             android:id="@+id/widget_compose"
             android:layout_width="wrap_content"
