@@ -320,6 +320,14 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     }
 
 
+    private void restoreDefaultPreferences() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit().clear().apply();
+        setPreferenceScreen(null);
+        addPreferencesFromResource(R.xml.preferences);
+        setMessagePreferences();
+    }
+
     NumberPickerDialog.OnNumberSetListener mSmsLimitListener =
         new NumberPickerDialog.OnNumberSetListener() {
             public void onNumberSet(int limit) {
