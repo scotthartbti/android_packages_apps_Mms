@@ -48,6 +48,7 @@ public class SmsMessageSender implements MessageSender {
 
     // Default preference values
     private static final boolean DEFAULT_DELIVERY_REPORT_MODE  = false;
+    private static final boolean DEFAULT_SMS_SPLIT_MESSAGE = false;
     private static final boolean DEFAULT_SMS_SPLIT_COUNTER = false;
 
     private static final String[] SERVICE_CENTER_PROJECTION = new String[] {
@@ -91,7 +92,9 @@ public class SmsMessageSender implements MessageSender {
                 MessagingPreferenceActivity.SMS_DELIVERY_REPORT_MODE,
                 DEFAULT_DELIVERY_REPORT_MODE);
 
-        boolean splitMessage = MmsConfig.getSplitSmsEnabled();
+        boolean splitMessage = prefs.getBoolean(
+                MessagingPreferenceActivity.SMS_SPLIT_MESSAGE,
+                DEFAULT_SMS_SPLIT_MESSAGE);
 
         boolean splitCounter = prefs.getBoolean(
                 MessagingPreferenceActivity.SMS_SPLIT_COUNTER,
