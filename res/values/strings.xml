@@ -849,4 +849,8 @@
     <string name="pref_title_mms_use_sent_timestamp">Original timestamps</string>
     <string name="pref_summary_mms_use_sent_timestamp">Display sent date instead of received date in timestamps</string>
 
+    <string name="pref_title_sms_EnableMultipartSMS">"SMS to MMS"</string>
+    <string name="pref_summary_sms_EnableMultipartSMS">"Transform long text messages into MMS"</string>
+    <string name="pref_title_sms_SmsToMmsTextThreshold">"SMS count"</string>
+    <string name="pref_summary_sms_SmsToMmsTextThreshold">"<xliff:g id="COUNT">%1$s</xliff:g> messages before MMS conversion"</string>
 </resources>
