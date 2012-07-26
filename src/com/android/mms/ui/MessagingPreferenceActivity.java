@@ -206,7 +206,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         setEnabledNotificationsPref();
 
         // If needed, migrate vibration setting from a previous version
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.contains(NOTIFICATION_VIBRATE_WHEN) &&
                 sharedPreferences.contains(NOTIFICATION_VIBRATE)) {
             int stringId = sharedPreferences.getBoolean(NOTIFICATION_VIBRATE, false) ?
