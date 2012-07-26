@@ -119,7 +119,7 @@
     </string-array>
 
     <string-array name="pref_entries_input_type">
-        <item>Emoji</item>
+        <item>Smiley key</item>
         <item>Send</item>
         <item>Enter for a new line</item>
     </string-array>
