@@ -38,7 +38,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.provider.Browser;
 import android.provider.ContactsContract.Profile;
 import android.provider.Telephony.Sms;
 import android.telephony.PhoneNumberUtils;
