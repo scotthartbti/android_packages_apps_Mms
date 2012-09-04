@@ -84,7 +84,7 @@
         android:fillViewport="true"
         android:minHeight="72dp"
         android:paddingTop="4dp"
-        android:background="#fff3f3f3"
+        android:background="#ff010101"
         android:paddingBottom="4dp" >
 
         <TextView
@@ -98,8 +98,8 @@
             android:paddingRight="8dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="16sp"
-            android:textColor="?android:attr/textColorPrimaryInverse"
-            android:textColorLink="?android:attr/textColorPrimaryInverse" />
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorLink="?android:attr/textColorPrimary" />
     </ScrollView>
 
     <!-- 'Tap to reply' editor, character counter and send button -->
@@ -108,7 +108,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff3f3f3"
+        android:background="#ff010101"
         android:paddingTop="4dp"
         android:paddingBottom="2dp" >
 
@@ -125,7 +125,7 @@
             android:nextFocusRight="@+id/send_button"
             android:hint="@string/type_to_reply_text_enter_to_send"
             android:minHeight="@dimen/input_text_height"
-            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textColor="?android:attr/textColorPrimary"
             android:textColorHint="?android:attr/textColorTertiary"
             android:maxLines="3"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
@@ -135,6 +135,7 @@
         <LinearLayout
             android:id="@+id/button_with_counter"
             android:orientation="vertical"
+            android:background="#ff010101"
             android:layout_gravity="bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
