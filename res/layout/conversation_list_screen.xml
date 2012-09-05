@@ -28,8 +28,8 @@
         android:layout_height="match_parent"
         android:drawSelectorOnTop="false"
         android:scrollbarStyle="insideOverlay"
-        android:background="@android:color/black"
-        android:cacheColorHint="@android:color/black"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
         android:fadingEdgeLength="16dip" />
 
     <TextView android:id="@+id/empty"
