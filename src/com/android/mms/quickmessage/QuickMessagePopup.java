@@ -196,11 +196,10 @@ public class QuickMessagePopup extends Activity implements
 
         // Set the theme color on the pager arrow
         if (mDarkTheme) {
-            mQmPagerArrow.setBackgroundColor(0xff1e1e1e); // dark theme
+            mQmPagerArrow.setBackgroundColor(0xff040404); // dark theme
         } else {
-            mQmPagerArrow.setBackgroundColor(0xfff3f3f3); // light theme
+            mQmPagerArrow.setBackgroundColor(0xffefefef); // light theme
         }
-
         // ViewPager Support
         mPagerAdapter = new MessagePagerAdapter();
         mMessagePager = (ViewPager) findViewById(R.id.message_pager);
@@ -277,6 +276,13 @@ public class QuickMessagePopup extends Activity implements
             // Make sure the counter is accurate
             updateMessageCounter();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        clearNotification(false);
+        finish();
     }
 
     @Override
@@ -743,7 +749,7 @@ public class QuickMessagePopup extends Activity implements
 
         if (!TextUtils.isEmpty(message)) {
             SmileyParser parser = SmileyParser.getInstance();
-            CharSequence smileyBody = parser.addSmileySpans(message);
+            CharSequence smileyBody = parser.addSmileySpansRecv(message);
             if (enableEmojis) {
                 EmojiParser emojiParser = EmojiParser.getInstance();
                 smileyBody = emojiParser.addEmojiSpans(smileyBody);

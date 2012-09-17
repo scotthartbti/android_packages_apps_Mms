@@ -535,7 +535,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static boolean getQmDarkThemeEnabled(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean qmDarkThemeEnabled =
-            prefs.getBoolean(MessagingPreferenceActivity.QM_DARK_THEME_ENABLED, false);
+            prefs.getBoolean(MessagingPreferenceActivity.QM_DARK_THEME_ENABLED, true);
         return qmDarkThemeEnabled;
     }
 

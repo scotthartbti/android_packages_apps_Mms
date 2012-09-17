@@ -55,7 +55,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="2"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?android:attr/textColorPrimary"
+                android:textColor="@color/qm_dark_text"
                 android:textColorLink="?android:attr/textColorPrimary" />
 
             <TextView
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:textColor="?android:attr/textColorTertiary" />
+                android:textColor="@color/qm_dark_text_fade" />
         </LinearLayout>
     </LinearLayout>
 
@@ -71,7 +71,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dip"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/qm_holo_blue_light"
         android:paddingBottom="4dp"
         android:paddingTop="4dp" />
 
@@ -84,7 +84,7 @@
         android:fillViewport="true"
         android:minHeight="72dp"
         android:paddingTop="4dp"
-        android:background="#ff010101"
+        android:background="@color/qm_light_bg"
         android:paddingBottom="4dp" >
 
         <TextView
@@ -98,7 +98,7 @@
             android:paddingRight="8dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="16sp"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/qm_light_text"
             android:textColorLink="?android:attr/textColorPrimary" />
     </ScrollView>
 
@@ -108,7 +108,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ff010101"
+        android:background="@color/qm_light_bg"
         android:paddingTop="4dp"
         android:paddingLeft="6dp"
         android:paddingBottom="2dp" >
@@ -137,7 +137,7 @@
             android:nextFocusRight="@+id/send_button"
             android:hint="@string/type_to_reply_text_enter_to_send"
             android:minHeight="@dimen/input_text_height"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/qm_light_text"
             android:textColorHint="?android:attr/textColorTertiary"
             android:maxLines="3"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
@@ -147,7 +147,7 @@
         <LinearLayout
             android:id="@+id/button_with_counter"
             android:orientation="vertical"
-            android:background="#ff010101"
+            android:background="@color/qm_light_bg"
             android:layout_gravity="bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
@@ -158,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|bottom"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorTertiary"
+                android:textColor="@color/qm_dark_text_fade"
                 android:paddingLeft="3dip"
                 android:paddingRight="3dip"
                 android:paddingBottom="4dip"

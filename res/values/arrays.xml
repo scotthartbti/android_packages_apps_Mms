@@ -20,27 +20,27 @@
          to the array DEFAULT_SMILEY_RES_IDS in MessageListItem.java and to default_smiley_names
          below. -->
     <string-array name="default_smiley_texts" translatable="false">
-      <item>:-)</item>   <!-- 0: Happy -->
-      <item>:-(</item>   <!-- 1: Sad -->
-      <item>;-)</item>   <!-- 2: Winking -->
-      <item>:-P</item>   <!-- 3: Tongue sticking out -->
-      <item>=-O</item>   <!-- 4: Surprised -->
-      <item>:-*</item>   <!-- 5: Kissing -->
-      <item>:O</item>    <!-- 6: Yelling -->
-      <item>B-)</item>   <!-- 7: Cool -->
-      <item>:-$</item>   <!-- 8: Money mouth -->
-      <item>:-!</item>   <!-- 9: Foot in mouth -->
-      <item>:-[</item>   <!-- 10: Embarrassed -->
-      <item>O:-)</item>  <!-- 11: Angel -->
-      <item>:-\\</item>  <!-- 12: Undecided -->
-      <item>:\'(</item>  <!-- 13: Crying -->
-      <item>:-X</item>   <!-- 14: Lips are sealed -->
-      <item>:-D</item>   <!-- 15: Laughing -->
-      <item>o_O</item>   <!-- 16: Confused -->
-      <item>&lt;3</item> <!-- 17: Heart -->
-      <item>x-(</item>   <!-- 18: Mad -->
-      <item>:-/</item>   <!-- 19: Smirk -->
-      <item>:-I</item>   <!-- 20: Poker face -->
+        <item>:-)</item>   <!-- 0: Happy -->
+        <item>:-(</item>   <!-- 1: Sad -->
+        <item>;-)</item>   <!-- 2: Winking -->
+        <item>:-P</item>   <!-- 3: Tongue sticking out -->
+        <item>=-O</item>   <!-- 4: Surprised -->
+        <item>:-*</item>   <!-- 5: Kissing -->
+        <item>:O</item>    <!-- 6: Yelling -->
+        <item>B-)</item>   <!-- 7: Cool -->
+        <item>:-$</item>   <!-- 8: Money mouth -->
+        <item>:-!</item>   <!-- 9: Foot in mouth -->
+        <item>:-[</item>   <!-- 10: Embarrassed -->
+        <item>O:-)</item>  <!-- 11: Angel -->
+        <item>:-\\</item>  <!-- 12: Undecided -->
+        <item>:\'(</item>  <!-- 13: Crying -->
+        <item>:-X</item>   <!-- 14: Lips are sealed -->
+        <item>:-D</item>   <!-- 15: Laughing -->
+        <item>o_O</item>   <!-- 16: Confused -->
+        <item>&lt;3</item> <!-- 17: Heart -->
+        <item>x-(</item>   <!-- 18: Mad -->
+        <item>:-/</item>   <!-- 19: Smirk -->
+        <item>:-I</item>   <!-- 20: Poker face -->
     </string-array>
 
     <!-- NOTE: if you change anything about this array, you must make the corresponding change
@@ -71,33 +71,33 @@
     </string-array>
 
     <string-array name="pref_templates_gestures_sensitivity_entries">
-      <item>1 (broadest)</item>
-      <item>2</item>
-      <item>3</item>
-      <item>4</item>
-      <item>5</item>
-      <item>6</item>
-      <item>7</item>
-      <item>8</item>
-      <item>9</item>
-      <item>10</item>
-      <item>11</item>
-      <item>12 (strictest)</item>
+        <item>1 (broadest)</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12 (strictest)</item>
     </string-array>
 
     <string-array name="pref_templates_gestures_sensitivity_values" translatable="false">
-      <item>1</item>
-      <item>2</item>
-      <item>3</item>
-      <item>4</item>
-      <item>5</item>
-      <item>6</item>
-      <item>7</item>
-      <item>8</item>
-      <item>9</item>
-      <item>10</item>
-      <item>11</item>
-      <item>12</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
     </string-array>
 
     <string-array name="pref_mms_notification_vibrate_pattern_entries">
@@ -128,6 +128,52 @@
         <item>64</item><!-- InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE constant  -->
         <item>0</item><!-- default input -->
         <item>80</item><!-- InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE constant  -->
+    </string-array>
+
+    <!-- Themes Arrays -->
+    <!-- Layout styles values -->
+    <string-array name="text_conv_layout_styles">
+        <item>@string/layout_default</item>
+        <item>@string/layout_from_left</item>
+        <item>@string/layout_from_right</item>
+    </string-array>
+
+    <string-array name="text_conv_layout_values" translatable="false">
+        <item>**DEFAULT**</item>
+        <item>**LAYOUTFROMLEFT**</item>
+        <item>**LAYOUTFROMRIGHT**</item>
+    </string-array>
+
+    <!-- Bubble styles -->
+    <string-array name="text_bubble_styles">
+        <item>@string/bubble_none</item>
+        <item>@string/bubble</item>
+        <item>@string/hc_bubble</item>
+        <item>@string/circle_bubble</item>
+        <item>@string/frame_arrow</item>
+        <item>@string/frame</item>
+        <item>@string/frame_outer_only</item>
+    </string-array>
+
+    <string-array name="text_bubble_values" translatable="false">
+        <item>**BUBBLENONE**</item>
+        <item>**BUBBLE**</item>
+        <item>**HCBUBBLE**</item>
+        <item>**CIRCLE**</item>
+        <item>**FRAME**</item>
+        <item>**FRAMENOARROW**</item>
+        <item>**FRAMEOUTER**</item>
+    </string-array>
+
+    <!-- widget styles -->
+    <string-array name="widget_layout_styles">
+        <item>@string/widget_layout_dark</item>
+        <item>@string/widget_layout_light</item>
+    </string-array>
+
+    <string-array name="widget_layout_values" translatable="false">
+        <item>**dark**</item>
+        <item>**light**</item>
     </string-array>
 
 </resources>

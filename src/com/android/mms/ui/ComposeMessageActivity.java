@@ -166,7 +166,9 @@ import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.templates.TemplateGesturesLibrary;
 import com.android.mms.templates.TemplatesProvider.Template;
+import com.android.mms.themes.Themes;
 import com.android.mms.transaction.MessagingNotification;
+import com.android.mms.ui.ColorFilterMaker;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
 import com.android.mms.ui.MessageUtils.ResizeImageResultCallback;
 import com.android.mms.ui.RecipientsEditor.RecipientContextMenuInfo;
@@ -356,6 +358,10 @@ public class ComposeMessageActivity extends Activity
      * Whether this activity is currently running (i.e. not paused)
      */
     private boolean mIsRunning;
+
+    // signature
+    private String mSignature;
+    private SharedPreferences sp;
 
     private int inputMethod;
 
@@ -3779,6 +3785,12 @@ public class ComposeMessageActivity extends Activity
             // them back once the recipient list has settled.
             removeRecipientsListeners();
 
+            // add signature if set.
+            sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            mSignature = sp.getString(Themes.PREF_SIGNATURE, "");
+            mSignature = "\n" + mSignature;
+            mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);
+
             mWorkingMessage.send(mDebugRecipients);
 
             mSentMessage = true;
@@ -4309,7 +4321,6 @@ public class ComposeMessageActivity extends Activity
 
             mSmileyDialog = b.create();
         }
-
         mSmileyDialog.show();
     }
 
