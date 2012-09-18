@@ -677,7 +677,10 @@ public class MessageListItem extends LinearLayout implements
         int mColor = 0;
         int contactLength = 0;
         if (mUseContact) {
-            contactLength = msgItem.mContact.length() + 1;
+            try {
+                contactLength = msgItem.mContact.length() + 1;
+            } catch (NullPointerException e) {
+            }
             if (mMessageItem.getBoxId() == 1) {
                 mColor = sp.getInt(ThemesMessageList.PREF_RECV_CONTACT_COLOR, 0xffffffff);
             } else {
