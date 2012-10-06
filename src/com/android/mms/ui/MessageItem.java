@@ -76,7 +76,6 @@ public class MessageItem {
     String mTimestamp;
     String mAddress;
     String mContact;
-    String mGroupContact;
     String mBody; // Body of SMS, first text of MMS.
     String mTextContentType; // ContentType of text of MMS.
     Pattern mHighlight; // portion of message to highlight (from search)
@@ -164,7 +163,13 @@ public class MessageItem {
                 }
                 mTimestamp = MessageUtils.formatTimeStampString(context, date, mFullTimestamp);
             }
-            mGroupContact = Contact.get(getMmsSender(mMsgId, mContext), false).getName();
+            // Use a separate thread for this so its not running on the UI thread
+            Thread getContact = new Thread() {
+                public void run() {
+                    mContact = Contact.get(getMmsSender(mMsgId, mContext), false).getName();
+                }
+            };
+            getContact.start();
             mLocked = cursor.getInt(columnsMap.mColumnSmsLocked) != 0;
             mErrorCode = cursor.getInt(columnsMap.mColumnSmsErrorCode);
         } else if ("mms".equals(type)) {
