@@ -3788,8 +3788,10 @@ public class ComposeMessageActivity extends Activity
             // add signature if set.
             sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             mSignature = sp.getString(Themes.PREF_SIGNATURE, "");
-            mSignature = "\n" + mSignature;
-            mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);
+            if (!mSignature.isEmpty()) {
+                mSignature = "\n" + mSignature;
+                mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);
+            }
 
             mWorkingMessage.send(mDebugRecipients);
 
