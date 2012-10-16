@@ -70,21 +70,21 @@ public class MmsConfig {
     private static int mSmsToMmsTextThresholdMin = 1;            // default value
     private static int mSmsToMmsTextThresholdMax = 100;          // default value
 
-    // This flag is somewhat confusing. If mEnableMultipartSMS is true, long sms messages are
-    // always sent as multi-part sms messages, with no checked limit on the number of segments.
-    // If mEnableMultipartSMS is false, then mSmsToMmsTextThreshold is used to determine the
-    // limit of the number of sms segments before turning the long sms message into an mms
-    // message. For example, if mSmsToMmsTextThreshold is 4, then a long sms message with three
-    // or fewer segments will be sent as a multi-part sms. When the user types more characters
-    // to cause the message to be 4 segments or more, the send button will show the MMS tag to
-    // indicate the message will be sent as an mms.
+    // If mEnableMultipartSMS is true, long sms messages are always sent as multi-part sms
+    // messages, with no checked limit on the number of segments.
+    // If mEnableMultipartSMS is false, then as soon as the user types a message longer
+    // than a single segment (i.e. 140 chars), then the message will turn into and be sent
+    // as an mms message. This feature exists for carriers that don't support multi-part sms's.
     private static boolean mEnableMultipartSMS = true;
-
+    
     // By default, the radio splits multipart sms, not the application. If the carrier or radio
     // does not support this, and the recipient gets garbled text, set this to true. If this is
     // true and mEnableMultipartSMS is false, the mSmsToMmsTextThreshold will be observed,
     // converting to mms if we reach the required number of segments.
     private static boolean mEnableSplitSMS = false;
+
+    // Support to hide sprint VVM's 9016 text mesages.
+    private static boolean mEnableSprintVVM = false;
 
     private static boolean mEnableSlideDuration = true;
     private static boolean mEnableMMSReadReports = true;        // key: "enableMMSReadReports"
@@ -224,6 +224,10 @@ public class MmsConfig {
         return mEnableSplitSMS;
     }
 
+    public static boolean getSprintVVMEnabled() {
+        return mEnableSprintVVM;
+    }
+
     public static boolean getSlideDurationEnabled() {
         return mEnableSlideDuration;
     }
@@ -335,6 +339,8 @@ public class MmsConfig {
                             mEnableMultipartSMS = "true".equalsIgnoreCase(text);
                         } else if ("enableSplitSMS".equalsIgnoreCase(value)) {
                             mEnableSplitSMS = "true".equalsIgnoreCase(text);
+                        } else if ("enableSprintVVM".equalsIgnoreCase(value)) {
+                            mEnableSprintVVM = "true".equalsIgnoreCase(text);
                         } else if ("enableSlideDuration".equalsIgnoreCase(value)) {
                             mEnableSlideDuration = "true".equalsIgnoreCase(text);
                         } else if ("enableMMSReadReports".equalsIgnoreCase(value)) {
