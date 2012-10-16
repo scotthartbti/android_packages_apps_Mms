@@ -40,6 +40,7 @@ import com.android.mms.util.EmojiParser;
 import com.android.mms.util.PduLoaderManager;
 import com.android.mms.util.RateController;
 import com.android.mms.util.SmileyParser;
+import com.android.mms.util.EmojiParser;
 import com.android.mms.util.ThumbnailManager;
 
 public class MmsApp extends Application {

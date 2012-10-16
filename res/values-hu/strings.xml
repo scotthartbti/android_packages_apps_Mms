@@ -173,6 +173,9 @@
     <string name="pref_summary_notification_vibrateWhen" msgid="669655090822561447">"Rezgés értesítések esetén is"</string>
     <string name="pref_title_notification_ringtone" msgid="5467265237106229952">"Válasszon csengőhangot"</string>
     <string name="pref_messages_to_save" msgid="3202539743892934926">"A menteni kívánt üzenetek számának beállítása"</string>
+    <string name="pref_title_input_type">Enter billentyű</string>
+    <string name="pref_summary_input_type">Válassza ki az Enter billentyűhöz társított műveletet</string>
+
   <string-array name="prefEntries_vibrateWhen">
     <item msgid="2520871831815631409">"Mindig"</item>
     <item msgid="6069709696037750627">"Csak néma üzemmódban"</item>
@@ -285,6 +288,7 @@
     <string name="saved_ringtone" msgid="3847363932276708626">"A csengőhang mentve."</string>
     <string name="saved_ringtone_fail" msgid="4778500070919251116">"Nem sikerült menteni a csengőhangot."</string>
     <string name="menu_insert_smiley" msgid="4964504393061025071">"Hangulatjel beszúrása"</string>
+    <string name="menu_insert_emoji">Ikon beszúrása</string>
     <string name="select_link_title" msgid="3371818607625768447">"Művelet kiválasztása"</string>
     <string name="slide_number" msgid="1923958526266726635">"<xliff:g id="NUMBER">%s</xliff:g>. dia"</string>
   <plurals name="slide_duration">
@@ -331,6 +335,10 @@
   </plurals>
     <string name="error_state" msgid="5177386717626893507">"Inkonzisztens állapot"</string>
     <string name="error_state_text" msgid="7918866106335387710">"A láncok és a címzettek állapota nem konzisztens. Kérjük, rögzítse a hibajelentést, és jelentse a http://go/droidanizer oldalon keresztül"</string>
+
+    <string name="label_mms_push">Push üzenetek</string>
+    <string name="desc_mms_push">Push üzenetek fogadása a hálózatról</string>
+
   <plurals name="recipient_count">
     <item quantity="other" msgid="7338580381574463136">"<xliff:g id="NUMBER">%1$s</xliff:g> személy"</item>
   </plurals>
@@ -399,6 +407,11 @@
     <!-- Which timestamps -->
     <string name="pref_title_mms_use_sent_timestamp">Eredeti dátum</string>
     <string name="pref_summary_mms_use_sent_timestamp">Küldés dátumának megjelenítése a fogadás dátuma helyett</string>
+
+    <!-- Soft Keyboard Type -->
+    <string name="pref_keyboard_emoji">Hangulatjel beszúrása</string>
+    <string name="pref_keyboard_send">Üzenet elküldése</string>
+    <string name="pref_keyboard_new_line">Új sor beszúrása</string>
 
     <!-- QUICKMESSAGE SUPPORT -->
     <!-- Preferences -->
