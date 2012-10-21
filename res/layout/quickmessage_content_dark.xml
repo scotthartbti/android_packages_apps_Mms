@@ -30,8 +30,8 @@
 
         <android.widget.QuickContactBadge
             android:id="@+id/contactBadge"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
             android:layout_gravity="center"
             android:background="@drawable/ic_contact_picture"
             android:clickable="false"
@@ -66,14 +66,6 @@
                 android:textColor="@color/qm_dark_text_fade" />
         </LinearLayout>
     </LinearLayout>
-
-    <!-- Blue divider line below sender info -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="@color/qm_holo_blue_light"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp" />
 
     <!-- Message body -->
     <ScrollView
@@ -111,7 +103,7 @@
         android:background="@color/qm_dark_bg"
         android:paddingTop="4dp"
         android:paddingLeft="6dp"
-        android:paddingBottom="2dp" >
+        android:paddingBottom="10dp" >
 
         <ImageButton
             android:id="@+id/templates_button"
