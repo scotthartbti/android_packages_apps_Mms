@@ -824,9 +824,9 @@
     <string name="message_timestamp_format"><xliff:g id="string" example="Fred Flinstone">%1$s</xliff:g>\u0020-\u0020<xliff:g id="string" example="9:39AM">%2$s</xliff:g></string>
 
     <!-- Sms templates -->
-    <string name="prefs_templates_settings">Sms templates</string>
+    <string name="prefs_templates_settings">SMS templates</string>
     <string name="pref_title_templates_manage">Templates</string>
-    <string name="pref_summary_templates_manage">Manage your sms templates</string>
+    <string name="pref_summary_templates_manage">Manage your SMS templates</string>
     <string name="pref_title_templates_show_gesture">Gesture</string>
     <string name="pref_summary_templates_show_gesture">Show gesture trace</string>
     <string name="pref_title_template_gestures_sensitivity">Gesture sensitivity</string>
