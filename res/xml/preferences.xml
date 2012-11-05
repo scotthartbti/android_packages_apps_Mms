@@ -309,6 +309,11 @@
             android:entryValues="@array/pref_values_input_type"
             android:defaultValue="64" />
 
+        <CheckBoxPreference
+            android:key="direct_call_pref"
+            android:title="@string/direct_call_title"
+            android:summary="@string/direct_call_summary"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
