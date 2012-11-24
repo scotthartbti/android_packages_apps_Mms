@@ -16,6 +16,10 @@
 
 package com.android.mms.util;
 
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -27,10 +31,6 @@ import com.android.mms.R;
 import com.android.mms.themes.ThemesConversationList;
 import com.android.mms.themes.ThemesMessageList;
 import com.android.mms.ui.ColorFilterMaker;
-
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A class for annotating a CharSequence with spans to convert textual emoticons
@@ -180,6 +180,7 @@ public class SmileyParser {
         return Pattern.compile(patternString.toString());
     }
 
+
     /**
      * Adds ImageSpans to a CharSequence that replace textual emoticons such
      * as :-) with a graphical version.
@@ -222,7 +223,6 @@ public class SmileyParser {
             builder.setSpan(mSpan, matcher.start(),
                         matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-
         return builder;
     }
 
@@ -246,7 +246,6 @@ public class SmileyParser {
             builder.setSpan(mSpan, matcher.start(),
                         matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-
         return builder;
     }
 

@@ -20,10 +20,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.android.mms">
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="16" />
-
     <original-package android:name="com.android.mms" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -44,6 +40,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INSTALL_DRM" />
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
 
     <!-- Needed for QuickMessage -->
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -62,10 +59,10 @@
             android:allowTaskReparenting="true">
 
         <service android:name=".transaction.TransactionService"
-                 android:exported="true" />
+                 android:exported="false" />
 
         <service android:name=".transaction.SmsReceiverService"
-                 android:exported="true" />
+                 android:exported="false" />
 
         <activity android:name=".ui.ConversationList"
                   android:label="@string/app_label"
@@ -93,7 +90,7 @@
 
         <activity android:name=".ui.ComposeMessageActivity"
                   android:configChanges="orientation|screenSize|keyboardHidden"
-                  android:windowSoftInputMode="stateHidden"
+                  android:windowSoftInputMode="stateHidden|adjustResize"
                   android:theme="@style/MmsHoloTheme"
                   android:parentActivityName=".ui.ConversationList"
                   android:launchMode="singleTop" >
@@ -170,6 +167,10 @@
             android:theme="@style/MmsHoloTheme"
             android:label="@string/edit_slideshow_activity" />
 
+        <activity android:name=".ui.RecipientListActivity"
+            android:theme="@style/MmsHoloTheme"
+            android:label="@string/recipient_list_activity" />
+
         <activity android:name=".ui.SlideEditorActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/MmsHoloTheme"
@@ -208,13 +209,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>
-
-        <receiver android:name=".transaction.MmsSystemPushMsgReceiver"
-                  android:permission="android.permission.MMS_PUSH">
-                  <intent-filter>
-                      <action android:name="android.intent.action.MMS_PUSH" />
-                  </intent-filter>
         </receiver>
 
         <activity android:name=".ui.ManageSimMessages"
@@ -295,6 +289,7 @@
 
         <!-- Search Suggestions Provider -->
         <provider android:name="SuggestionsProvider"
+            android:exported="true"
             android:readPermission="android.permission.READ_SMS"
             android:authorities="com.android.mms.SuggestionsProvider" >
             <path-permission
@@ -317,6 +312,7 @@
         </service>
 
         <provider android:name="TempFileProvider"
+                  android:exported="true"
                   android:authorities="mms_temp_file"
                   android:multiprocess="true" />
 

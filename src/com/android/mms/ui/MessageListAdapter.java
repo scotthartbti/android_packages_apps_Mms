@@ -17,6 +17,8 @@
 
 package com.android.mms.ui;
 
+import java.util.regex.Pattern;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -41,8 +43,6 @@ import android.widget.ListView;
 import com.android.mms.R;
 import com.android.mms.themes.ThemesMessageList;
 import com.google.android.mms.MmsException;
-
-import java.util.regex.Pattern;
 
 /**
  * The back-end data adapter of a message list.
@@ -78,7 +78,8 @@ public class MessageListAdapter extends CursorAdapter {
         Mms.READ_REPORT,
         PendingMessages.ERROR_TYPE,
         Mms.LOCKED,
-        Mms.STATUS
+        Mms.STATUS,
+        Mms.TEXT_ONLY
     };
 
     // The indexes of the default columns which must be consistent
@@ -107,6 +108,7 @@ public class MessageListAdapter extends CursorAdapter {
     static final int COLUMN_MMS_ERROR_TYPE      = 21;
     static final int COLUMN_MMS_LOCKED          = 22;
     static final int COLUMN_MMS_STATUS          = 23;
+    static final int COLUMN_MMS_TEXT_ONLY       = 24;
 
     private static final int CACHE_SIZE         = 50;
 
@@ -122,6 +124,7 @@ public class MessageListAdapter extends CursorAdapter {
     private Handler mMsgListItemHandler;
     private Pattern mHighlight;
     private Context mContext;
+    private boolean mIsGroupConversation;
     private boolean mFullTimestamp;
     private boolean mSentTimestamp;
     private SharedPreferences sp;
@@ -169,7 +172,7 @@ public class MessageListAdapter extends CursorAdapter {
             if (msgItem != null) {
                 MessageListItem mli = (MessageListItem) view;
                 int position = cursor.getPosition();
-                mli.bind(msgItem, position == cursor.getCount() - 1, position);
+                mli.bind(msgItem, mIsGroupConversation, position);
                 mli.setMsgListItemHandler(mMsgListItemHandler);
             }
         }
@@ -186,6 +189,10 @@ public class MessageListAdapter extends CursorAdapter {
 
     public void setMsgListItemHandler(Handler handler) {
         mMsgListItemHandler = handler;
+    }
+
+    public void setIsGroupConversation(boolean isGroup) {
+        mIsGroupConversation = isGroup;
     }
 
     public void cancelBackgroundLoading() {
@@ -283,7 +290,7 @@ public class MessageListAdapter extends CursorAdapter {
 
     private boolean isCursorValid(Cursor cursor) {
         // Check whether the cursor is valid or not.
-        if (cursor.isClosed() || cursor.isBeforeFirst() || cursor.isAfterLast()) {
+        if (cursor == null || cursor.isClosed() || cursor.isBeforeFirst() || cursor.isAfterLast()) {
             return false;
         }
         return true;
@@ -378,6 +385,7 @@ public class MessageListAdapter extends CursorAdapter {
         public int mColumnMmsErrorType;
         public int mColumnMmsLocked;
         public int mColumnMmsStatus;
+        public int mColumnMmsTextOnly;
 
         public ColumnsMap() {
             mColumnMsgType            = COLUMN_MSG_TYPE;
@@ -399,6 +407,7 @@ public class MessageListAdapter extends CursorAdapter {
             mColumnMmsErrorType       = COLUMN_MMS_ERROR_TYPE;
             mColumnMmsLocked          = COLUMN_MMS_LOCKED;
             mColumnMmsStatus          = COLUMN_MMS_STATUS;
+            mColumnMmsTextOnly        = COLUMN_MMS_TEXT_ONLY;
         }
 
         public ColumnsMap(Cursor cursor) {
@@ -515,6 +524,12 @@ public class MessageListAdapter extends CursorAdapter {
 
             try {
                 mColumnMmsStatus = cursor.getColumnIndexOrThrow(Mms.STATUS);
+            } catch (IllegalArgumentException e) {
+                Log.w("colsMap", e.getMessage());
+            }
+
+            try {
+                mColumnMmsTextOnly = cursor.getColumnIndexOrThrow(Mms.TEXT_ONLY);
             } catch (IllegalArgumentException e) {
                 Log.w("colsMap", e.getMessage());
             }

@@ -33,9 +33,9 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -60,6 +60,7 @@ import android.provider.Telephony.Threads;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -70,7 +71,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnKeyListener;
 import android.widget.*;
@@ -87,6 +87,7 @@ import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.SmsRejectedReceiver;
 import com.android.mms.util.DraftCache;
 import com.android.mms.util.Recycler;
+import com.android.mms.widget.MmsWidgetProvider;
 import com.google.android.mms.pdu.PduHeaders;
 
 /**
@@ -95,6 +96,7 @@ import com.google.android.mms.pdu.PduHeaders;
 public class ConversationList extends ListActivity implements DraftCache.OnDraftChangedListener {
     private static final String TAG = "ConversationList";
     private static final boolean DEBUG = false;
+    private static final boolean DEBUGCLEANUP = true;
     private static final boolean LOCAL_LOGV = DEBUG;
 
     private static final int THREAD_LIST_QUERY_TOKEN       = 1701;
@@ -115,7 +117,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     private ConversationListAdapter mListAdapter;
     private SharedPreferences mPrefs;
     private Handler mHandler;
-    private boolean mNeedToMarkAsSeen;
+    private boolean mDoOnceAfterFirstQuery;
     private TextView mUnreadConvCount;
     private MenuItem mSearchItem;
     private SearchView mSearchView;
@@ -131,9 +133,8 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         setContentView(R.layout.conversation_list_screen);
 
         mQueryHandler = new ThreadListQueryHandler(getContentResolver());
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        listView = getListView();
+        ListView listView = getListView();
         listView.setOnCreateContextMenuListener(mConvListOnCreateContextMenuListener);
         listView.setOnKeyListener(mThreadListKeyListener);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -150,6 +151,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         setTitle(R.string.app_label);
 
         mHandler = new Handler();
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean checkedMessageLimits = mPrefs.getBoolean(CHECKED_MESSAGE_LIMITS, false);
         if (DEBUG) Log.v(TAG, "checkedMessageLimits: " + checkedMessageLimits);
         if (!checkedMessageLimits || DEBUG) {
@@ -266,7 +268,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         DraftCache.getInstance().addOnDraftChangedListener(this);
 
-        mNeedToMarkAsSeen = true;
+        mDoOnceAfterFirstQuery = true;
 
         startAsyncQuery();
 
@@ -309,6 +311,13 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         // Simply setting the choice mode causes the previous choice mode to finish and we exit
         // multi-select mode (if we're in it) and remove all the selections.
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        // Close the cursor in the ListAdapter if the activity stopped.
+        Cursor cursor = mListAdapter.getCursor();
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
 
         mListAdapter.changeCursor(null);
     }
@@ -727,11 +736,8 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
                         Conversation.startDeleteAll(mHandler, token, mDeleteLockedMessages);
                         DraftCache.getInstance().refresh();
                     } else {
-                        for (long threadId : mThreadIds) {
-                            Conversation.startDelete(mHandler, token, mDeleteLockedMessages,
-                                    threadId);
-                            DraftCache.getInstance().setDraftState(threadId, false);
-                        }
+                        Conversation.startDelete(mHandler, token, mDeleteLockedMessages,
+                                mThreadIds);
                     }
                 }
             });
@@ -749,8 +755,15 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             if (DraftCache.getInstance().getSavingDraft()) {
                 // We're still saving a draft. Try again in a second. We don't want to delete
                 // any threads out from under the draft.
+                if (DEBUGCLEANUP) {
+                    LogTag.debug("mDeleteObsoleteThreadsRunnable saving draft, trying again");
+                }
                 mHandler.postDelayed(mDeleteObsoleteThreadsRunnable, 1000);
             } else {
+                if (DEBUGCLEANUP) {
+                    LogTag.debug("mDeleteObsoleteThreadsRunnable calling " +
+                            "asyncDeleteObsoleteThreads");
+                }
                 Conversation.asyncDeleteObsoleteThreads(mQueryHandler,
                         DELETE_OBSOLETE_THREADS_TOKEN);
             }
@@ -786,14 +799,18 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
                     ((TextView)(getListView().getEmptyView())).setText(R.string.no_conversations);
                 }
 
-                if (mNeedToMarkAsSeen) {
-                    mNeedToMarkAsSeen = false;
-                    Conversation.markAllConversationsAsSeen(getApplicationContext());
+                if (mDoOnceAfterFirstQuery) {
+                    mDoOnceAfterFirstQuery = false;
+                    // Delay doing a couple of DB operations until we've initially queried the DB
+                    // for the list of conversations to display. We don't want to slow down showing
+                    // the initial UI.
 
-                    // Delete any obsolete threads. Obsolete threads are threads that aren't
-                    // referenced by at least one message in the pdu or sms tables. We only call
-                    // this on the first query (because of mNeedToMarkAsSeen).
+                    // 1. Delete any obsolete threads. Obsolete threads are threads that aren't
+                    // referenced by at least one message in the pdu or sms tables.
                     mHandler.post(mDeleteObsoleteThreadsRunnable);
+
+                    // 2. Mark all the conversations as seen.
+                    Conversation.markAllConversationsAsSeen(getApplicationContext());
                 }
                 break;
 
@@ -860,10 +877,14 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
                 // Make sure the list reflects the delete
                 startAsyncQuery();
+
+                MmsWidgetProvider.notifyDatasetChanged(getApplicationContext());
                 break;
 
             case DELETE_OBSOLETE_THREADS_TOKEN:
-                // Nothing to do here.
+                if (DEBUGCLEANUP) {
+                    LogTag.debug("onQueryComplete finished DELETE_OBSOLETE_THREADS_TOKEN");
+                }
                 break;
             }
         }

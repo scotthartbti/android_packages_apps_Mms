@@ -21,13 +21,13 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.android.internal.telephony.TelephonyProperties;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.android.internal.telephony.TelephonyProperties;
 
 public class MmsConfig {
     private static final String TAG = "MmsConfig";
@@ -45,7 +45,7 @@ public class MmsConfig {
      * Whether to hide MMS functionality from the user (i.e. SMS only).
      */
     private static boolean mTransIdEnabled = false;
-    private static boolean mMmsEnabled = true;                  // default to true
+    private static int mMmsEnabled = 1;                         // default to true
     private static int mMaxMessageSize = 300 * 1024;            // default to 300k max size
     private static String mUserAgent = DEFAULT_USER_AGENT;
     private static String mUaProfTagName = DEFAULT_HTTP_KEY_X_WAP_PROFILE;
@@ -105,6 +105,12 @@ public class MmsConfig {
     private static int mMaxSubjectLength = 40;  // maximum number of characters allowed for mms
                                                 // subject
 
+    // If mEnableGroupMms is true, a message with multiple recipients, regardless of contents,
+    // will be sent as a single MMS message with multiple "TO" fields set for each recipient.
+    // If mEnableGroupMms is false, the group MMS setting/preference will be hidden in the settings
+    // activity.
+    private static boolean mEnableGroupMms = true;
+
     public static void init(Context context) {
         if (LOCAL_LOGV) {
             Log.v(TAG, "MmsConfig.init()");
@@ -130,7 +136,7 @@ public class MmsConfig {
     }
 
     public static boolean getMmsEnabled() {
-        return mMmsEnabled;
+        return mMmsEnabled == 1 ? true : false;
     }
 
     public static int getMaxMessageSize() {
@@ -272,6 +278,10 @@ public class MmsConfig {
         return mMaxSubjectLength;
     }
 
+    public static boolean getGroupMmsEnabled() {
+        return mEnableGroupMms;
+    }
+
     public static final void beginDocument(XmlPullParser parser, String firstElementName) throws XmlPullParserException, IOException
     {
         int type;
@@ -326,7 +336,7 @@ public class MmsConfig {
                     if ("bool".equals(tag)) {
                         // bool config tags go here
                         if ("enabledMMS".equalsIgnoreCase(value)) {
-                            mMmsEnabled = "true".equalsIgnoreCase(text);
+                            mMmsEnabled = "true".equalsIgnoreCase(text) ? 1 : 0;
                         } else if ("enabledTransID".equalsIgnoreCase(value)) {
                             mTransIdEnabled = "true".equalsIgnoreCase(text);
                         } else if ("enabledNotifyWapMMSC".equalsIgnoreCase(value)) {
@@ -349,6 +359,8 @@ public class MmsConfig {
                             mEnableSMSDeliveryReports = "true".equalsIgnoreCase(text);
                         } else if ("enableMMSDeliveryReports".equalsIgnoreCase(value)) {
                             mEnableMMSDeliveryReports = "true".equalsIgnoreCase(text);
+                        } else if ("enableGroupMms".equalsIgnoreCase(value)) {
+                            mEnableGroupMms = "true".equalsIgnoreCase(text);
                         }
                     } else if ("int".equals(tag)) {
                         // int config tags go here
