@@ -134,7 +134,10 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         mQueryHandler = new ThreadListQueryHandler(getContentResolver());
 
-        ListView listView = getListView();
+        mHandler = new Handler();
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        listView = getListView();
         listView.setOnCreateContextMenuListener(mConvListOnCreateContextMenuListener);
         listView.setOnKeyListener(mThreadListKeyListener);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -144,14 +147,12 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         listView.setEmptyView(findViewById(R.id.empty));
         listView.setBackgroundColor(mPrefs.getInt(ThemesConversationList.PREF_CONV_LIST_BG, 0X00000000)); //list background
         setBackground(this, (ViewGroup) findViewById(R.id.conv_list_screen)); // custom background
+
         initListAdapter();
 
         setupActionBar();
 
         setTitle(R.string.app_label);
-
-        mHandler = new Handler();
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean checkedMessageLimits = mPrefs.getBoolean(CHECKED_MESSAGE_LIMITS, false);
         if (DEBUG) Log.v(TAG, "checkedMessageLimits: " + checkedMessageLimits);
         if (!checkedMessageLimits || DEBUG) {
@@ -337,7 +338,6 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     }
 
     private void startAsyncQuery() {
-        listView.setBackgroundColor(mPrefs.getInt(ThemesConversationList.PREF_CONV_LIST_BG, 0X00000000)); //list background
         try {
             ((TextView)(getListView().getEmptyView())).setText(R.string.loading_conversations);
 
