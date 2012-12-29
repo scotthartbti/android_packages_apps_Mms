@@ -29,16 +29,19 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract.Profile;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -53,6 +56,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -92,6 +96,7 @@ import java.nio.charset.CharsetEncoder;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -109,6 +114,14 @@ public class QuickMessagePopup extends Activity implements
             "com.android.mms.SMS_FROM_NUMBER";
     public static final String SMS_NOTIFICATION_OBJECT_EXTRA =
             "com.android.mms.NOTIFICATION_OBJECT";
+    public static final String QR_SHOW_KEYBOARD_EXTRA =
+            "com.android.mms.QR_SHOW_KEYBOARD";
+
+    // Message removal
+    public static final String QR_REMOVE_MESSAGES_EXTRA =
+            "com.android.mms.QR_REMOVE_MESSAGES";
+    public static final String QR_THREAD_ID_EXTRA =
+            "com.android.mms.QR_THREAD_ID";
 
     // Templates support
     private static final int DIALOG_TEMPLATE_SELECT        = 1;
@@ -127,6 +140,7 @@ public class QuickMessagePopup extends Activity implements
     private Context mContext;
     private boolean mScreenUnlocked = false;
     private KeyguardManager mKeyguardManager = null;
+    private PowerManager mPowerManager;
 
     // Message list items
     private ArrayList<QuickMessage> mMessageList;
@@ -140,6 +154,7 @@ public class QuickMessagePopup extends Activity implements
     private boolean mFullTimestamp = false;
     private boolean mStripUnicode = false;
     private boolean mEnableEmojis = false;
+    private int mInputMethod;
 
     // Message pager
     private ViewPager mMessagePager;
@@ -164,6 +179,8 @@ public class QuickMessagePopup extends Activity implements
         mMessageList = new ArrayList<QuickMessage>();
         mDefaultContactImage = getResources().getDrawable(R.drawable.ic_contact_picture);
         mNumTemplates = getTemplatesCount();
+        mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
 
         // Get the preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -173,6 +190,8 @@ public class QuickMessagePopup extends Activity implements
         mDarkTheme = prefs.getBoolean(MessagingPreferenceActivity.QM_DARK_THEME_ENABLED, false);
         mStripUnicode = prefs.getBoolean(MessagingPreferenceActivity.STRIP_UNICODE, false);
         mEnableEmojis = prefs.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);
+        mInputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE,
+                Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
 
         // Set the window features and layout
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -195,11 +214,13 @@ public class QuickMessagePopup extends Activity implements
         mViewButton = (Button) findViewById(R.id.button_view);
 
         // Set the theme color on the pager arrow
+        Resources res = getResources();
         if (mDarkTheme) {
-            mQmPagerArrow.setBackgroundColor(0xff040404); // dark theme
+            mQmPagerArrow.setBackgroundColor(res.getColor(R.color.quickmessage_body_dark_bg));
         } else {
-            mQmPagerArrow.setBackgroundColor(0xffefefef); // light theme
+            mQmPagerArrow.setBackgroundColor(res.getColor(R.color.quickmessage_body_light_bg));
         }
+
         // ViewPager Support
         mPagerAdapter = new MessagePagerAdapter();
         mMessagePager = (ViewPager) findViewById(R.id.message_pager);
@@ -264,30 +285,44 @@ public class QuickMessagePopup extends Activity implements
             return;
         }
 
-        // Parse the intent and ensure we have a notification object to work with
-        NotificationInfo nm = (NotificationInfo) extras.getParcelable(SMS_NOTIFICATION_OBJECT_EXTRA);
-        if (nm != null) {
-            QuickMessage qm = new QuickMessage(extras.getString(SMS_FROM_NAME_EXTRA),
-                    extras.getString(SMS_FROM_NUMBER_EXTRA), nm);
-            mMessageList.add(qm);
-
-            if (newMessage && mCurrentPage != -1) {
-                // There is already a message showing
-                // Stay on the current message
-                mMessagePager.setCurrentItem(mCurrentPage);
-            } else {
-                // Set the current message to the last message received
-                mCurrentPage = mMessageList.size()-1;
-                mMessagePager.setCurrentItem(mCurrentPage);
+        // Check if we are being called to remove messages already showing
+        if (extras.getBoolean(QR_REMOVE_MESSAGES_EXTRA, false)) {
+            // Get the ID
+            long threadId = extras.getLong(QR_THREAD_ID_EXTRA, -1);
+            if (threadId != -1) {
+                removeMatchingMessages(threadId);
             }
+        } else {
+            // Parse the intent and ensure we have a notification object to work with
+            NotificationInfo nm = (NotificationInfo) extras.getParcelable(SMS_NOTIFICATION_OBJECT_EXTRA);
+            if (nm != null) {
+                QuickMessage qm = new QuickMessage(extras.getString(SMS_FROM_NAME_EXTRA),
+                        extras.getString(SMS_FROM_NUMBER_EXTRA), nm);
+                mMessageList.add(qm);
 
-            if (DEBUG)
-                Log.d(LOG_TAG, "parseIntent(): New message from " + qm.getFromName().toString()
-                        + " added. Number of messages = " + mMessageList.size()
-                        + ". Displaying page #" + (mCurrentPage+1));
+                // If triggered from Quick Reply the keyboard should be visible immediately
+                if (extras.getBoolean(QR_SHOW_KEYBOARD_EXTRA, false)) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
 
-            // Make sure the counter is accurate
-            updateMessageCounter();
+                if (newMessage && mCurrentPage != -1) {
+                    // There is already a message showing
+                    // Stay on the current message
+                    mMessagePager.setCurrentItem(mCurrentPage);
+                } else {
+                    // Set the current message to the last message received
+                    mCurrentPage = mMessageList.size()-1;
+                    mMessagePager.setCurrentItem(mCurrentPage);
+                }
+
+                if (DEBUG)
+                    Log.d(LOG_TAG, "parseIntent(): New message from " + qm.getFromName().toString()
+                            + " added. Number of messages = " + mMessageList.size()
+                            + ". Displaying page #" + (mCurrentPage+1));
+
+                // Make sure the counter is accurate
+                updateMessageCounter();
+            }
         }
     }
 
@@ -309,6 +344,7 @@ public class QuickMessagePopup extends Activity implements
 
         // Load and display the new message
         parseIntent(intent.getExtras(), true);
+        unlockScreen();
     }
 
     @Override
@@ -553,7 +589,6 @@ public class QuickMessagePopup extends Activity implements
         mEmojiDialog.show();
     }
 
-
     /**
      * This method dismisses the on screen keyboard if it is visible for the supplied qm
      *
@@ -578,9 +613,11 @@ public class QuickMessagePopup extends Activity implements
             return;
         }
 
-        // See if the screen is locked and get the wake lock to turn on the screen
-        mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        if (mKeyguardManager.inKeyguardRestrictedInputMode()) {
+        // See if the screen is locked or if no lock set and the screen is off
+        // and get the wake lock to turn on the screen.
+        boolean isScreenOn = mPowerManager.isScreenOn();
+        boolean inKeyguardRestrictedInputMode = mKeyguardManager.inKeyguardRestrictedInputMode();
+        if (inKeyguardRestrictedInputMode || ((!inKeyguardRestrictedInputMode) && !isScreenOn)) {
             ManageWakeLock.acquireFull(mContext);
             mScreenUnlocked = true;
         }
@@ -648,6 +685,37 @@ public class QuickMessagePopup extends Activity implements
             Log.d(LOG_TAG, "updatePages(): Removed message " + removeMsg.getThreadId()
                     + " and changed to page #" + (gotoPage+1) + ". Remaining messages = "
                     + mMessageList.size());
+    }
+
+    /**
+     * Remove all matching quickmessages for the supplied thread id
+     *
+     * @param threadId
+     */
+    public void removeMatchingMessages(long threadId) {
+        if (DEBUG)
+            Log.d(LOG_TAG, "removeMatchingMessages() looking for match with threadID = " + threadId);
+
+        Iterator<QuickMessage> itr = mMessageList.iterator();
+        QuickMessage qmElement = null;
+
+        // Iterate through the list and remove the messages that match
+        while(itr.hasNext()){
+            qmElement = itr.next();
+            if(qmElement.getThreadId() == threadId) {
+                itr.remove();
+            }
+        }
+
+        // See if there are any remaining messages and update the pager
+        if (mMessageList.size() > 0) {
+            mPagerAdapter.notifyDataSetChanged();
+            mMessagePager.setCurrentItem(1); // First message
+            updateMessageCounter();
+        } else {
+            // we are done
+            finish();
+        }
     }
 
     /**
@@ -1031,6 +1099,10 @@ public class QuickMessagePopup extends Activity implements
                 }
 
                 // Set the remaining values
+                qmReplyText.setInputType(InputType.TYPE_CLASS_TEXT | mInputMethod
+                        | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
+                        | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                        | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 qmReplyText.setText(qm.getReplyText());
                 qmReplyText.setSelection(qm.getReplyText().length());
                 qmReplyText.addTextChangedListener(new QmTextWatcher(mContext, qmTextCounter, qmSendButton,
@@ -1201,6 +1273,5 @@ public class QuickMessagePopup extends Activity implements
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {}
    }
-
 
 }

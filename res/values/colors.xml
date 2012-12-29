@@ -71,6 +71,8 @@
     <color name="qm_dark_bg">#ff020202</color>
     <color name="qm_dark_text">#ffefefef</color>
     <color name="qm_dark_text_fade">#ffafafaf</color>
+    <color name="quickmessage_body_dark_bg">#ff010101</color>
+    <color name="quickmessage_body_light_bg">#fff3f3f3</color>
 
     <!-- widget background colors for unread/read -->
     <color name="widget_unread_bgcolor">#8f2f2f2f</color>
