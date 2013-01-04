@@ -72,25 +72,11 @@
                     android:textColor="@color/message_sent"
                     android:textSize="16sp" />
 
-                <TextView android:id="@+id/sender_view"
-                    android:autoLink="all"
-                    android:paddingLeft="@dimen/message_item_text_padding_left_right"
-                    android:paddingRight="@dimen/message_item_text_padding_left_right"
-                    android:paddingTop="@dimen/message_item_text_padding_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/text_view"
-                    android:linksClickable="false"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/message_recieved"
-                    android:textStyle="bold"
-                    android:textSize="12sp" />
-
                 <LinearLayout
                     android:id="@+id/status_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/sender_view"
+                    android:layout_below="@id/text_view"
                     android:paddingLeft="@dimen/message_item_text_padding_left_right"
                     android:orientation="horizontal" >
 

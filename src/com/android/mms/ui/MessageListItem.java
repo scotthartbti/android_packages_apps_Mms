@@ -109,7 +109,6 @@ public class MessageListItem extends LinearLayout implements
     private ImageView mDeliveredIndicator;
     private ImageView mDetailsIndicator;
     private ImageButton mSlideShowButton;
-    private TextView mBodySenderView;
     private TextView mBodyTextView;
     private Button mDownloadButton;
     private TextView mDownloadingLabel;
@@ -166,7 +165,6 @@ public class MessageListItem extends LinearLayout implements
         super.onFinishInflate();
 
         mBodyTextView = (TextView) findViewById(R.id.text_view);
-        mBodySenderView = (TextView) findViewById(R.id.sender_view);
         mDateView = (TextView) findViewById(R.id.date_view);
         mLockedIndicator = (ImageView) findViewById(R.id.locked_indicator);
         mDeliveredIndicator = (ImageView) findViewById(R.id.delivered_indicator);
@@ -358,21 +356,6 @@ public class MessageListItem extends LinearLayout implements
         String msgSizeText = mContext.getString(R.string.message_size_label)
                                 + String.valueOf((mMessageItem.mMessageSize + 1023) / 1024)
                                 + mContext.getString(R.string.kilobyte);
-
-        if (mMessageItem.mType.equals("mms") && mGroupMmsEnabled) {
-            mBodySenderView.setText("from:" + mMessageItem.mContact);
-            mBodySenderView.setVisibility(View.VISIBLE);
-            if (mMessageItem.getBoxId() == 1) {
-                int mRecvColor = sp.getInt(ThemesMessageList.PREF_RECV_CONTACT_COLOR, 0xffffffff);
-                mBodySenderView.setTextColor(mRecvColor);
-            } else {
-                int mSentColor = sp.getInt(ThemesMessageList.PREF_SENT_CONTACT_COLOR, 0xffffffff);
-                mBodySenderView.setTextColor(mSentColor);
-            }
-        } else {
-            mBodySenderView.setVisibility(View.GONE);
-        }
-
         mBodyTextView.setText(formatMessage(mMessageItem, mMessageItem.mContact, null,
                                             mMessageItem.mSubject,
                                             mMessageItem.mHighlight,

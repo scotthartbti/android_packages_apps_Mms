@@ -25,8 +25,8 @@ All Rights Reserved. -->
     <dimen name="qm_dialog_button_bar_height">48dip</dimen>
 
     <!-- Message block layout -->
-    <dimen name="message_block_margin_left_right">74dip</dimen>
+    <dimen name="message_block_margin_left_right">68dip</dimen>
     <!-- Message block layout no avatar -->
-    <dimen name="message_block_margin_left_right_noavatar">14dip</dimen>
+    <dimen name="message_block_margin_left_right_noavatar">12dip</dimen>
 
 </resources>
