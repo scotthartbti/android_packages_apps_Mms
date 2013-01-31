@@ -1006,4 +1006,12 @@
     <string name="widget_date_textcolor_read">Read date text</string>
     <string name="widget_date_textcolor_unread">Unread date text</string>
 
+    <!-- Privacy mode -->
+    <string name="pref_title_notification_privacy_mode_enabled">Privacy mode</string>
+    <string name="pref_summary_notification_privacy_mode_enabled">Hide sender and message in status bar and disable Quick reply</string>
+    <string name="notification_single_title_privacy_mode">New message</string>
+    <string name="notification_single_text_privacy_mode">1 unread message</string>
+    <string name="notification_multiple_title_privacy_mode">New messages</string>
+    <string name="notification_multiple_text_privacy_mode"><xliff:g id="number" example="3">%1$s</xliff:g> unread messages</string>
+    <string name="notification_ticker_privacy_mode">New message received</string>
 </resources>
