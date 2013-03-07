@@ -61,19 +61,19 @@ import com.android.mms.util.Recycler;
 public class MessagingPreferenceActivity extends PreferenceActivity
             implements OnPreferenceChangeListener {
     // Symbolic names for the keys used for preference lookup
-    public static final String MMS_DELIVERY_REPORT_MODE = "pref_key_mms_delivery_reports";
-    public static final String EXPIRY_TIME              = "pref_key_mms_expiry";
-    public static final String PRIORITY                 = "pref_key_mms_priority";
-    public static final String READ_REPORT_MODE         = "pref_key_mms_read_reports";
-    public static final String SMS_DELIVERY_REPORT_MODE = "pref_key_sms_delivery_reports";
-    public static final String NOTIFICATION_ENABLED     = "pref_key_enable_notifications";
-    public static final String NOTIFICATION_VIBRATE     = "pref_key_vibrate";
-    public static final String NOTIFICATION_VIBRATE_WHEN= "pref_key_vibrateWhen";
-    public static final String NOTIFICATION_RINGTONE    = "pref_key_ringtone";
-    public static final String AUTO_RETRIEVAL           = "pref_key_mms_auto_retrieval";
-    public static final String RETRIEVAL_DURING_ROAMING = "pref_key_mms_retrieval_during_roaming";
-    public static final String AUTO_DELETE              = "pref_key_auto_delete";
-    public static final String GROUP_MMS_MODE           = "pref_key_mms_group_mms";
+    public static final String MMS_DELIVERY_REPORT_MODE  = "pref_key_mms_delivery_reports";
+    public static final String EXPIRY_TIME               = "pref_key_mms_expiry";
+    public static final String PRIORITY                  = "pref_key_mms_priority";
+    public static final String READ_REPORT_MODE          = "pref_key_mms_read_reports";
+    public static final String SMS_DELIVERY_REPORT_MODE  = "pref_key_sms_delivery_reports";
+    public static final String NOTIFICATION_ENABLED      = "pref_key_enable_notifications";
+    public static final String NOTIFICATION_VIBRATE      = "pref_key_vibrate";
+    public static final String NOTIFICATION_VIBRATE_WHEN = "pref_key_vibrateWhen";
+    public static final String NOTIFICATION_RINGTONE     = "pref_key_ringtone";
+    public static final String AUTO_RETRIEVAL            = "pref_key_mms_auto_retrieval";
+    public static final String RETRIEVAL_DURING_ROAMING  = "pref_key_mms_retrieval_during_roaming";
+    public static final String AUTO_DELETE               = "pref_key_auto_delete";
+    public static final String GROUP_MMS_MODE            = "pref_key_mms_group_mms";
 
     // Emoji and Unicode
     public static final String ENABLE_EMOJIS             = "pref_key_enable_emojis";
@@ -83,9 +83,9 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static final String SMS_SPLIT_COUNTER        = "pref_key_sms_split_counter";
 
     // Templates
-    public static final String MANAGE_TEMPLATES         = "pref_key_templates_manage";
-    public static final String SHOW_GESTURE             = "pref_key_templates_show_gesture";
-    public static final String GESTURE_SENSITIVITY      = "pref_key_templates_gestures_sensitivity";
+    public static final String MANAGE_TEMPLATES          = "pref_key_templates_manage";
+    public static final String SHOW_GESTURE              = "pref_key_templates_show_gesture";
+    public static final String GESTURE_SENSITIVITY       = "pref_key_templates_gestures_sensitivity";
     public static final String GESTURE_SENSITIVITY_VALUE = "pref_key_templates_gestures_sensitivity_value";
 
     // Timestamps
@@ -108,6 +108,9 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static final String QM_LOCKSCREEN_ENABLED     = "pref_key_qm_lockscreen";
     public static final String QM_CLOSE_ALL_ENABLED      = "pref_key_close_all";
     public static final String QM_DARK_THEME_ENABLED     = "pref_dark_theme";
+
+    private static final String DIRECT_CALL_PREF = "direct_call_pref";
+    public static final String MESSAGE_FONT_SIZE = "pref_key_mms_message_font_size";
 
     // Menu entries
     private static final int MENU_RESTORE_DEFAULTS    = 1;
@@ -144,6 +147,8 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     private CheckBoxPreference mEnableQmCloseAllPref;
     private CheckBoxPreference mEnableQmDarkThemePref;
 
+    private CheckBoxPreference mDirectCall;
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -176,6 +181,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mMmsReadReportPref = findPreference("pref_key_mms_read_reports");
         mMmsLimitPref = findPreference("pref_key_mms_delete_limit");
         mClearHistoryPref = findPreference("pref_key_mms_clear_history");
+        mDirectCall = (CheckBoxPreference) findPreference("direct_call_pref");
         mEnableNotificationsPref = (CheckBoxPreference) findPreference(NOTIFICATION_ENABLED);
         mEnablePrivacyModePref = (CheckBoxPreference) findPreference(PRIVACY_MODE_ENABLED);
         mVibratePref = (CheckBoxPreference) findPreference(NOTIFICATION_VIBRATE);
@@ -632,6 +638,27 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         boolean qmDarkThemeEnabled =
             prefs.getBoolean(MessagingPreferenceActivity.QM_DARK_THEME_ENABLED, false);
         return qmDarkThemeEnabled;
+    }
+
+    public static boolean getGroupMMSEnabled(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean groupMMSEnabled = prefs.getBoolean(MessagingPreferenceActivity.GROUP_MMS_MODE, false);
+        return groupMMSEnabled;
+    }
+
+    public static void enableGroupMMS(boolean enabled, Context context) {
+        // Store the value of GroupMMS in SharedPreferences
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+        editor.putBoolean(MessagingPreferenceActivity.GROUP_MMS_MODE, enabled);
+
+        editor.apply();
+    }
+
+    public static boolean getDirectCallEnabled(Context context) {
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    boolean directCallEnabled = prefs.getBoolean(MessagingPreferenceActivity.DIRECT_CALL_PREF,false);
+    return directCallEnabled;
     }
 
     private void registerListeners() {

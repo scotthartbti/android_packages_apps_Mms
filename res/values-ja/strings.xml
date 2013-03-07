@@ -343,7 +343,7 @@
     <string name="enumeration_comma" msgid="213598026698964628">"、 "</string>
     <string name="message_timestamp_format" msgid="4188999027493614617">"<xliff:g id="STRING_0">%1$s</xliff:g> - <xliff:g id="STRING_1">%2$s</xliff:g>"</string>
 
-   <!-- Cyanogenmod Extra entries -->
+    <!-- Cyanogenmod Extra entries -->
     <string name="pref_title_sms_split_counter">分割カウンタ</string>
     <string name="pref_summary_sms_split_counter">メッセージに分割数のカウンタを追加する。例: (1/2)</string>
     <string name="menu_insert_emoji">絵文字を挿入</string>
