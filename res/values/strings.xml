@@ -775,6 +775,14 @@
 
     <!-- In message list items, this string builds the timestamp line when the message is in a group [CHAR LIMIT=NONE] -->
     <string name="message_timestamp_format"><xliff:g id="string" example="Fred Flinstone">%1$s</xliff:g>\u0020-\u0020<xliff:g id="string" example="9:39AM">%2$s</xliff:g></string>
+    
+    <!-- Direct Call Feature -->
+    <string name="direct_call_title">Direct Call</string>
+    <string name="direct_call_summary">Picking up the phone calls the current contact</string>
 
+    <!-- Message Font size -->
+    <string name="pref_title_mms_message_font_size">Message font size</string>
+    <string name="pref_summary_mms_message_font_size">Change font size of message view</string>
+    <string name="pref_dialogtitle_mms_message_font_size">Select font size</string>
 </resources>
 
