@@ -19,6 +19,7 @@
 package com.android.mms.ui;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -26,6 +27,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -36,6 +40,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.RingtonePreference;
 import android.provider.SearchRecentSuggestions;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -109,18 +114,17 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     private Preference mClearHistoryPref;
     private CheckBoxPreference mEnableMultipartSMS;
     private Preference mSmsToMmsTextThreshold;
-    private ListPreference mVibrateWhenPref;
+    private CheckBoxPreference mVibratePref;
     private CheckBoxPreference mEnableNotificationsPref;
     private CheckBoxPreference mEnablePrivacyModePref;
     private CheckBoxPreference mMmsAutoRetrievialPref;
     private CheckBoxPreference mMmsRetrievalDuringRoamingPref;
+    private RingtonePreference mRingtonePref;
     private Recycler mSmsRecycler;
     private Recycler mMmsRecycler;
     private Preference mManageTemplate;
     private ListPreference mGestureSensitivity;
     private static final int CONFIRM_CLEAR_SEARCH_HISTORY_DIALOG = 3;
-    private CharSequence[] mVibrateEntries;
-    private CharSequence[] mVibrateValues;
 
     // QuickMessage
     private CheckBoxPreference mEnableQuickMessagePref;
@@ -162,7 +166,8 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mClearHistoryPref = findPreference("pref_key_mms_clear_history");
         mEnableNotificationsPref = (CheckBoxPreference) findPreference(NOTIFICATION_ENABLED);
         mEnablePrivacyModePref = (CheckBoxPreference) findPreference(PRIVACY_MODE_ENABLED);
-        mVibrateWhenPref = (ListPreference) findPreference(NOTIFICATION_VIBRATE_WHEN);
+        mVibratePref = (CheckBoxPreference) findPreference(NOTIFICATION_VIBRATE);
+        mRingtonePref = (RingtonePreference) findPreference(NOTIFICATION_RINGTONE);
         mManageTemplate = findPreference(MANAGE_TEMPLATES);
         mGestureSensitivity = (ListPreference) findPreference(GESTURE_SENSITIVITY);
 
@@ -184,9 +189,6 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mEnableQmLockscreenPref = (CheckBoxPreference) findPreference(QM_LOCKSCREEN_ENABLED);
         mEnableQmCloseAllPref = (CheckBoxPreference) findPreference(QM_CLOSE_ALL_ENABLED);
         mEnableQmDarkThemePref = (CheckBoxPreference) findPreference(QM_DARK_THEME_ENABLED);
-
-        mVibrateEntries = getResources().getTextArray(R.array.prefEntries_vibrateWhen);
-        mVibrateValues = getResources().getTextArray(R.array.prefValues_vibrateWhen);
 
         setMessagePreferences();
     }
@@ -268,14 +270,18 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         setEnabledQmCloseAllPref();
         setEnabledQmDarkThemePref();
 
-        // If needed, migrate vibration setting from a previous version
+        // If needed, migrate vibration setting from the previous tri-state setting stored in
+        // NOTIFICATION_VIBRATE_WHEN to the boolean setting stored in NOTIFICATION_VIBRATE.
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPreferences.contains(NOTIFICATION_VIBRATE_WHEN) &&
-                sharedPreferences.contains(NOTIFICATION_VIBRATE)) {
-            int stringId = sharedPreferences.getBoolean(NOTIFICATION_VIBRATE, false) ?
-                    R.string.prefDefault_vibrate_true :
-                    R.string.prefDefault_vibrate_false;
-            mVibrateWhenPref.setValue(getString(stringId));
+        if (sharedPreferences.contains(NOTIFICATION_VIBRATE_WHEN)) {
+            String vibrateWhen = sharedPreferences.
+                    getString(MessagingPreferenceActivity.NOTIFICATION_VIBRATE_WHEN, null);
+            boolean vibrate = "always".equals(vibrateWhen);
+            SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+            prefsEditor.putBoolean(NOTIFICATION_VIBRATE, vibrate);
+            prefsEditor.remove(NOTIFICATION_VIBRATE_WHEN);  // remove obsolete setting
+            prefsEditor.apply();
+            mVibratePref.setChecked(vibrate);
         }
 
         mManageTemplate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -313,7 +319,15 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         // Fix up the sms to mms treshold
         setSmsToMmsTextThreshold();
 
-        adjustVibrateSummary(mVibrateWhenPref.getValue());
+        String soundValue = sharedPreferences.getString(NOTIFICATION_RINGTONE, null);
+        setRingtoneSummary(soundValue);
+    }
+
+    private void setRingtoneSummary(String soundValue) {
+        Uri soundUri = TextUtils.isEmpty(soundValue) ? null : Uri.parse(soundValue);
+        Ringtone tone = soundUri != null ? RingtoneManager.getRingtone(this, soundUri) : null;
+        mRingtonePref.setSummary(tone != null ? tone.getTitle(this)
+                : getResources().getString(R.string.silent_ringtone));
     }
 
     private void setEnabledNotificationsPref() {
@@ -637,27 +651,16 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     }
 
     private void registerListeners() {
-        mVibrateWhenPref.setOnPreferenceChangeListener(this);
+        mRingtonePref.setOnPreferenceChangeListener(this);
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean result = false;
-        if (preference == mVibrateWhenPref) {
-            adjustVibrateSummary((String)newValue);
+        if (preference == mRingtonePref) {
+            setRingtoneSummary((String)newValue);
             result = true;
         }
         return result;
-    }
-
-    private void adjustVibrateSummary(String value) {
-        int len = mVibrateValues.length;
-        for (int i = 0; i < len; i++) {
-            if (mVibrateValues[i].equals(value)) {
-                mVibrateWhenPref.setSummary(mVibrateEntries[i]);
-                return;
-            }
-        }
-        mVibrateWhenPref.setSummary(null);
     }
 
     // For the group mms feature to be enabled, the following must be true:

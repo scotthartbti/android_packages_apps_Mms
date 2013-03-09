@@ -1,22 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-/*
- * Copyright (C) 2007-2008 Esmertec AG.
- * Copyright (C) 2007-2008 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
- -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007-2008 Esmertec AG
+     Copyright (C) 2007-2008 The Android Open Source Project
+     Copyright (C) 2013 The CyanogenMod Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
@@ -32,6 +30,7 @@
     <string name="menu_delete_all" msgid="808729454898114735">"Eliminar todas las conversaciones"</string>
     <string name="menu_delete" msgid="1851666911396479006">"Eliminar cadena"</string>
     <string name="menu_view" msgid="7448852683948080108">"Ver conversación"</string>
+    <string name="menu_debug_dump" msgid="6855869130206549643">"VOLCADO DE DEPURACIÓN"</string>
     <string name="refreshing" msgid="987335057871404222">"Actualizando\u2026"</string>
     <string name="menu_cell_broadcasts" msgid="5646161375983084660">"Difusiones móviles"</string>
     <string name="has_draft" msgid="2487465595514636160">"Borrador"</string>
@@ -55,6 +54,7 @@
     <string name="insufficient_drm_rights" msgid="6989074725969164383">"Derechos DRM insuficientes"</string>
     <string name="copy_message_text" msgid="4296252229544252834">"Copiar texto"</string>
     <string name="message_options" msgid="6838806653341967550">"Opciones del mensaje"</string>
+    <string name="slideshow_options" msgid="3501759384739796431">"Opciones de presentación"</string>
     <string name="done" msgid="7479926268660505871">"Listo"</string>
     <string name="move_up" msgid="7307578107431739359">"Mover arriba"</string>
     <string name="move_down" msgid="6356509518429479053">"Mover abajo"</string>
@@ -80,6 +80,7 @@
     <string name="remove" msgid="4625444913256213175">"Eliminar"</string>
     <string name="send" msgid="4589898724889248486">"Enviar"</string>
     <string name="mms" msgid="1587631213714914559">"MMS"</string>
+    <string name="send_mms" msgid="2933162044872550662">"Enviar MMS"</string>
     <string name="all_threads" msgid="2663426830306307194">"Todas las conversaciones"</string>
     <string name="type_to_compose_text_enter_to_send" msgid="3539985471008581265">"Escribir mensaje"</string>
     <string name="open_keyboard_to_compose_message" msgid="7860109685511253191">"Abrir teclado para escribir mensaje"</string>
@@ -91,7 +92,7 @@
     <string name="failed_to_add_media" msgid="7207464170168708485">"No puedes añadir <xliff:g id="NAME">%1$s</xliff:g> al mensaje."</string>
     <string name="failed_to_resize_image" msgid="5608354151631833669">"No se ha podido ajustar el tamaño de la imagen."</string>
     <string name="resize_image_error_information" msgid="3783200130776554475">"Esta imagen es demasiado grande para enviarla aunque se ajuste su tamaño."</string>
-    <string name="forward_prefix" msgid="276280492803486464">"Fwd:\u0020"</string>
+    <string name="forward_prefix" msgid="276280492803486464">"Rv: "</string>
     <string name="discard_message_reason" msgid="2667664943003796133">"El mensaje se descartará porque los destinatarios no son válidos."</string>
     <string name="has_invalid_recipient" msgid="1485388396900997383">"Destinatarios no válidos: &lt;<xliff:g id="NAME">%1$s</xliff:g>&gt;"</string>
     <string name="invalid_destination" msgid="4573835601024786416">"Dirección de destino no válida"</string>
@@ -103,7 +104,6 @@
     <string name="cannot_send_message_reason" msgid="8745080126044054343">"Los destinatarios del mensaje no son válidos."</string>
     <string name="cannot_forward_drm_obj" msgid="5047623751430559077">"No se puede reenviar el objeto DRM incluido en el mensaje."</string>
     <string name="converting_to_picture_message" msgid="2980023239017588627">"Convirtiendo en mensaje multimedia\u2026"</string>
-    <string name="converting_to_text_message" msgid="6374423235426015422">"Convirtiendo en mensaje de texto\u2026"</string>
     <string name="cannot_add_slide_anymore" msgid="4631404749618820994">"No puedes añadir más diapositivas."</string>
     <string name="cannot_add_picture_and_video" msgid="4954353772391381447">"No puedes añadir vídeos a una diapositiva que ya tenga imágenes o viceversa."</string>
     <string name="cannot_save_message" msgid="3375907366965264446">"No se puede guardar el mensaje."</string>
@@ -118,8 +118,8 @@
     <string name="preview_slideshow" msgid="6824095909448728427">"Vista previa"</string>
     <string name="replace_image" msgid="3171240952601443619">"Sustituir imagen"</string>
     <string name="duration_sec" msgid="6617032324007824096">"Duración (<xliff:g id="DURATION">%s</xliff:g> segundos)"</string>
-    <string name="duration_selector_title" msgid="5981097971537625852">"Duración de la diapositiva\u0020"</string>
-    <string name="layout_selector_title" msgid="7344600117972450771">"Diseño de presentación\u0020"</string>
+    <string name="duration_selector_title" msgid="5981097971537625852">"Duración de la diapositiva "</string>
+    <string name="layout_selector_title" msgid="7344600117972450771">"Diseño de presentación "</string>
     <string name="layout_top" msgid="6811021650398972346">"Diseño (arriba)"</string>
     <string name="layout_bottom" msgid="5822765871095491843">"Diseño (abajo)"</string>
     <string name="type_to_compose_text_or_leave_blank" msgid="7769792471457574059">"Escribir mensaje o dejar en blanco"</string>
@@ -160,25 +160,20 @@
     <string name="pref_summary_sms_delivery_reports" msgid="5852207702358546129">"Solicitar un informe de entrega cada vez que se envíe un mensaje"</string>
     <string name="pref_summary_auto_delete" msgid="7719538116486177613">"Eliminar mensajes antiguos al superar el límite de mensajes"</string>
     <string name="pref_summary_delete_limit" msgid="597128041393045216">"<xliff:g id="COUNT">%1$s</xliff:g> mensajes por conversación"</string>
+    <string name="pref_summary_mms_group_mms" msgid="2266928687440696745">"Utiliza MMS para enviar un único mensaje a varios destinatarios."</string>
     <string name="pref_title_manage_sim_messages" msgid="7820895261757881177">"Administrar mensajes de SIM"</string>
     <string name="pref_title_mms_delivery_reports" msgid="6666857926679451910">"Informes de entrega"</string>
+    <string name="pref_title_mms_group_mms" msgid="1251698526583908432">"Mensaje de grupo"</string>
     <string name="pref_title_mms_read_reports" msgid="4882179829495828541">"Informes de leídos"</string>
     <string name="pref_title_sms_delivery_reports" msgid="876064208254451038">"Informes de entrega"</string>
     <string name="pref_title_auto_delete" msgid="7227835692631701134">"Borrar mensajes antiguos"</string>
     <string name="pref_title_sms_delete" msgid="6890538316799296878">"Límite de mensajes de texto"</string>
     <string name="pref_title_mms_delete" msgid="7265878070847351664">"Límite de mensajes multimedia"</string>
     <string name="pref_title_notification_enabled" msgid="9118792213953729414">"Notificaciones"</string>
-    <string name="pref_summary_notification_enabled" msgid="619729096820999905">"Mostrar notificación de mensajes en la barra de estado"</string>
     <string name="pref_title_notification_vibrateWhen" msgid="4251208067092761057">"Vibración"</string>
-    <string name="pref_summary_notification_vibrateWhen" msgid="669655090822561447">"Vibrar también al notificar"</string>
-    <string name="pref_title_notification_ringtone" msgid="5467265237106229952">"Seleccionar tono"</string>
+    <string name="pref_title_notification_ringtone" msgid="8667533917574559659">"Sonido"</string>
     <string name="pref_messages_to_save" msgid="3202539743892934926">"Elige el número de mensajes que quieres guardar"</string>
-  <string-array name="prefEntries_vibrateWhen">
-    <item msgid="2520871831815631409">"Siempre"</item>
-    <item msgid="6069709696037750627">"Solo en modo silencio"</item>
-    <item msgid="7486145357487111435">"Nunca"</item>
-  </string-array>
-    <string name="prefDialogTitle_vibrateWhen" msgid="6419655771690242118">"Vibración"</string>
+    <string name="silent_ringtone" msgid="7981237991326592780">"Silencio"</string>
     <string name="pref_title_mms_auto_retrieval" msgid="4021878285474431355">"Recuperar automáticamente"</string>
     <string name="pref_summary_mms_auto_retrieval" msgid="925163257363757048">"Recuperar mensajes automáticamente"</string>
     <string name="pref_title_mms_retrieval_during_roaming" msgid="6016227402731817804">"En itinerancia"</string>
@@ -202,24 +197,24 @@
     <string name="loading_conversations" msgid="5510430408235967094">"Cargando conversaciones\u2026"</string>
     <string name="cannot_get_details" msgid="850292987983026806">"No se puede obtener información detallada."</string>
     <string name="message_details_title" msgid="9223295113731634528">"Detalles del mensaje"</string>
-    <string name="message_type_label" msgid="7975373966795945566">"Tipo:\u0020"</string>
+    <string name="message_type_label" msgid="7975373966795945566">"Tipo: "</string>
     <string name="text_message" msgid="8196464345251877972">"Mensaje de texto"</string>
     <string name="multimedia_message" msgid="1512644521083533071">"Mensaje multimedia"</string>
     <string name="multimedia_notification" msgid="4124031788554972308">"Notificación de mensaje multimedia"</string>
-    <string name="from_label" msgid="2055117571548171397">"De:\u0020"</string>
-    <string name="to_address_label" msgid="5837363600471845801">"Para:\u0020"</string>
-    <string name="bcc_label" msgid="530867161453958774">"CCO:\u0020"</string>
-    <string name="sent_label" msgid="2722190650145251584">"Enviado:\u0020"</string>
-    <string name="received_label" msgid="8618029024731693906">"Recibido:\u0020"</string>
-    <string name="saved_label" msgid="4183160415593488207">"Guardado\u0020"</string>
-    <string name="subject_label" msgid="8721241914144101631">"Asunto:\u0020"</string>
-    <string name="message_size_label" msgid="4698016210013319786">"Tamaño del mensaje:\u0020"</string>
-    <string name="priority_label" msgid="7397600367853359607">"Prioridad:\u0020"</string>
+    <string name="from_label" msgid="2055117571548171397">"De: "</string>
+    <string name="to_address_label" msgid="5837363600471845801">"Para: "</string>
+    <string name="bcc_label" msgid="530867161453958774">"Cco: "</string>
+    <string name="sent_label" msgid="2722190650145251584">"Enviado: "</string>
+    <string name="received_label" msgid="8618029024731693906">"Recibido: "</string>
+    <string name="saved_label" msgid="4183160415593488207">"Guardado "</string>
+    <string name="subject_label" msgid="8721241914144101631">"Asunto: "</string>
+    <string name="message_size_label" msgid="4698016210013319786">"Tamaño del mensaje: "</string>
+    <string name="priority_label" msgid="7397600367853359607">"Prioridad: "</string>
     <string name="priority_high" msgid="5627897207952009214">"Alta"</string>
     <string name="priority_normal" msgid="5715227727384683550">"Normal"</string>
     <string name="priority_low" msgid="8928782666023373987">"Baja"</string>
-    <string name="message_class_label" msgid="5115748690481550562">"Clase de mensaje:\u0020"</string>
-    <string name="error_code_label" msgid="5810068247647058769">"Código de error:\u0020"</string>
+    <string name="message_class_label" msgid="5115748690481550562">"Clase de mensaje: "</string>
+    <string name="error_code_label" msgid="5810068247647058769">"Código de error: "</string>
     <string name="menu_edit" msgid="3056513240155967777">"Editar"</string>
     <string name="menu_delete_messages" msgid="2610286783513247420">"Eliminar mensajes"</string>
     <string name="menu_lock" msgid="7603793126077557472">"Bloquear"</string>
@@ -238,9 +233,9 @@
     <string name="status_failed" msgid="1998776666856593544">"Con error"</string>
     <string name="status_unread" msgid="8555305495998700198">"No leídos"</string>
     <string name="status_rejected" msgid="2613641949065942678">"Rechazados:"</string>
-    <string name="recipient_label" msgid="3922667485312634446">"Destinatario:\u0020"</string>
-    <string name="status_label" msgid="7283375460919181660">"Estado:\u0020"</string>
-    <string name="delivered_label" msgid="3514011729156932928">"Enviado:\u0020"</string>
+    <string name="recipient_label" msgid="3922667485312634446">"Destinatario: "</string>
+    <string name="status_label" msgid="7283375460919181660">"Estado: "</string>
+    <string name="delivered_label" msgid="3514011729156932928">"Enviado: "</string>
     <string name="attach_image" msgid="6439985727687107742">"Imagen"</string>
     <string name="attach_take_photo" msgid="4280601313184373837">"Capturar imagen"</string>
     <string name="attach_video" msgid="4264272693501538294">"Vídeos"</string>
@@ -285,7 +280,7 @@
     <string name="saved_ringtone" msgid="3847363932276708626">"Tono guardado"</string>
     <string name="saved_ringtone_fail" msgid="4778500070919251116">"No se ha podido guardar el tono."</string>
     <string name="menu_insert_smiley" msgid="4964504393061025071">"Insertar emoticono"</string>
-    <string name="menu_insert_emoji">Insertar Emoji</string>
+    <string name="menu_group_participants" msgid="4288356090262299071">"Participantes del grupo"</string>
     <string name="select_link_title" msgid="3371818607625768447">"Seleccionar acción"</string>
     <string name="slide_number" msgid="1923958526266726635">"Diapositiva <xliff:g id="NUMBER">%s</xliff:g>"</string>
   <plurals name="slide_duration">
@@ -297,6 +292,7 @@
     <string name="storage_limits_activity" msgid="8810530813311077716">"Límites de almacenamiento"</string>
     <string name="change_duration_activity" msgid="7048606979485031693">"Cambiar duración"</string>
     <string name="edit_slideshow_activity" msgid="8751493388760050529">"Editar diapositiva"</string>
+    <string name="recipient_list_activity" msgid="1254938236543727019">"Participantes del grupo"</string>
     <string name="edit_slide_activity" msgid="8752829671778696983">"Editar diapositiva"</string>
     <string name="slideshow_activity" msgid="5658249461317434432">"Presentación"</string>
     <string name="class_0_message_activity" msgid="6631339964159861048">"Mensaje de clase 0"</string>
@@ -323,17 +319,15 @@
     <string name="sending_message" msgid="2054406576361149715">"ENVIANDO\u2026"</string>
     <string name="pick_too_many_recipients" msgid="650087588867628044">"Demasiados destinatarios"</string>
     <string name="adding_recipients" msgid="2962810172527532357">"Añadiendo destinatarios\u2026"</string>
-    <string name="draft_separator" msgid="5402575086540243019">",\u0020"</string>
-    <string name="message_count_format" msgid="4434763220590778012">"\u00a0<xliff:g id="NUMBER">%1$s</xliff:g>"</string>
+    <string name="draft_separator" msgid="5402575086540243019">", "</string>
+    <string name="message_count_format" msgid="4434763220590778012">" <xliff:g id="NUMBER">%1$s</xliff:g>"</string>
     <string name="message_count_notification" msgid="3629968600032690007">"<xliff:g id="NUMBER">%1$s</xliff:g> mensajes nuevos"</string>
-    <plurals name="message_count_notification_overflow">
-        <item quantity="one" msgid="3340591167508150806">"Otro mensaje (<xliff:g id="NUMBER">%1$s</xliff:g>)"</item>
-        <item quantity="other" msgid="1393002799298501480">"Otros <xliff:g id="NUMBER">%1$s</xliff:g> mensajes"</item>
-    </plurals>
+  <plurals name="message_count_notification_overflow">
+    <item quantity="one" msgid="3340591167508150806">"Otro mensaje (<xliff:g id="NUMBER">%1$s</xliff:g>)"</item>
+    <item quantity="other" msgid="1393002799298501480">"Otros <xliff:g id="NUMBER">%1$s</xliff:g> mensajes"</item>
+  </plurals>
     <string name="error_state" msgid="5177386717626893507">"Estado inconsistente"</string>
     <string name="error_state_text" msgid="7918866106335387710">"El estado de las conversaciones y los destinatarios no es correcto. Escribe un informe de error y envíalo a través de http://go/droidanizer."</string>
-    <string name="label_mms_push">Enviar MMS pendientes</string>
-    <string name="desc_mms_push">Enviar mensajes MMS pendientes en la bandeja de salida a la red</string>
   <plurals name="recipient_count">
     <item quantity="other" msgid="7338580381574463136">"<xliff:g id="NUMBER">%1$s</xliff:g> personas"</item>
   </plurals>
@@ -345,8 +339,13 @@
     <string name="attachment_picture" msgid="3709286281567284296">"Imagen"</string>
     <string name="notification_separator" msgid="2334673105226536422">"\u0020\u0020"</string>
     <string name="enumeration_comma" msgid="213598026698964628">",\u0020"</string>
-    <string name="pref_title_sms_split_counter">"Contador de división"</string>
-    <string name="pref_summary_sms_split_counter">"Añade un contador de división de mensajes. Ej. (1/2)"</string>
+    <string name="message_timestamp_format" msgid="4188999027493614617">"<xliff:g id="STRING_0">%1$s</xliff:g> - <xliff:g id="STRING_1">%2$s</xliff:g>"</string>
+
+    <!-- CYANOGENMOD ADDITIONS START -->
+
+    <string name="menu_insert_emoji">Insertar Emoji</string>
+    <string name="pref_title_sms_split_counter">Contador de división</string>
+    <string name="pref_summary_sms_split_counter">Añade un contador de división de mensajes. Ej. (1/2)</string>
     <string name="prefs_templates_settings">Plantillas SMS</string>
     <string name="pref_title_templates_manage">Plantillas</string>
     <string name="pref_summary_templates_manage">Administrar plantillas de SMS</string>
@@ -355,7 +354,7 @@
     <string name="pref_title_template_gestures_sensitivity">Sensibilidad gestual</string>
     <string name="template_save">Guardar</string>
     <string name="template_insert_hint">Insertar la plantilla de texto aquí</string>
-    <string name="template_empty_text">El campo de texto no puede estar vacio</string>
+    <string name="template_empty_text">El campo de texto no puede estar vacío</string>
     <string name="template_explanation">Insertar o modificar el texto de la plantilla y, opcionalmente, dibujar un gesto para asociarlo</string>
     <string name="template_edit">Editar</string>
     <string name="template_delete">Borrar</string>
@@ -370,31 +369,30 @@
     <string name="template_cancel_confirm_title">Aviso</string>
     <string name="template_cancel_confirm_text">Se va a borrar la plantilla. ¿Continuar?</string>
     <string name="gestures_already_present">Aviso: ¡Un gesto similar ya ha sido asociado a otra plantilla!</string>
-    <string name="pref_title_mms_notification_vibrate_settings">"Opciones de Vibración"</string>
-    <string name="pref_title_mms_notification_vibrate_pattern">"Patrón de vibración"</string>
-    <string name="pref_summary_mms_notification_vibrate_pattern">"Cambiar patrón de vibración"</string>
-    <string name="pref_title_mms_notification_vibrate_call">"Vibración durante llamadas"</string>
-    <string name="pref_summary_mms_notification_vibrate_call">"Permitir vibración durante una llamada"</string>
-    <string name="pref_title_mms_notification_vibrate_custom">"Patrón personalizado"</string>
-    <string name="pref_text_mms_notification_vibrate_custom">"Secuencia inactivo/activo en milisegundos: inactivo, activo, inactivo, activo,\u2026"</string>
+    <string name="pref_title_mms_notification_vibrate_pattern">Patrón de vibración</string>
+    <string name="pref_summary_mms_notification_vibrate_pattern">Cambiar patrón de vibración</string>
+    <string name="pref_title_mms_notification_vibrate_call">Vibración durante llamadas</string>
+    <string name="pref_summary_mms_notification_vibrate_call">Permitir vibración durante una llamada</string>
+    <string name="pref_title_mms_notification_vibrate_custom">Patrón personalizado</string>
+    <string name="pref_text_mms_notification_vibrate_custom">Secuencia inactivo/activo en milisegundos: inactivo, activo, inactivo, activo,\u2026</string>
     <string name="pref_extra_settings">Ajustes adicionales</string>
-    <string name="pref_title_strip_unicode">"Limpiar Unicode"</string>
-    <string name="pref_summary_strip_unicode">"Sustituir los caracteres que no son compatibles en los mensajes SMS"</string>
-    <string name="pref_title_enable_emojis">"Habilitar Emoji"</string>
-    <string name="pref_summary_enable_emojis">"Habilitar soporte para Emoji Unicode, una colección de 471 simpáticos emoticonos"</string>
-    <string name="pref_title_mms_full_timestamp">"Marca de tiempo completa"</string>
-    <string name="pref_summary_mms_full_timestamp">"Mostrar fecha y hora en las marcas de tiempo"</string>
-    <string name="pref_title_mms_use_sent_timestamp">"Marca de tiempo original"</string>
-    <string name="pref_summary_mms_use_sent_timestamp">"Mostrar fecha de envío en lugar de la fecha de recepción en las marcas de tiempo"</string>
-    <string name="pref_quickmessage">Mensaje Rápido</string>
-    <string name="pref_quickmessage_title">Habilitar mensaje rápido</string>
-    <string name="pref_quickmessage_summary">Muestra el cuadro de diálogo para mensaje rápido</string>
+    <string name="pref_title_strip_unicode">Limpiar Unicode</string>
+    <string name="pref_summary_strip_unicode">Sustituir los caracteres que no son compatibles en los mensajes SMS</string>
+    <string name="pref_title_enable_emojis">Habilitar Emoji</string>
+    <string name="pref_summary_enable_emojis">Habilitar soporte para Emoji Unicode, una colección de 471 simpáticos emoticonos</string>
+    <string name="pref_title_mms_full_timestamp">Marca de tiempo completa</string>
+    <string name="pref_summary_mms_full_timestamp">Mostrar fecha y hora en las marcas de tiempo</string>
+    <string name="pref_title_mms_use_sent_timestamp">Marca de tiempo original</string>
+    <string name="pref_summary_mms_use_sent_timestamp">Mostrar fecha de envío en lugar de la fecha de recepción en las marcas de tiempo</string>
+    <string name="pref_quickmessage">Respuesta rápida</string>
+    <string name="pref_quickmessage_title">Habilitar respuesta rápida</string>
+    <string name="pref_quickmessage_summary">Mostrar el cuadro de diálogo para una respuesta rápida</string>
     <string name="pref_wake_unlock_title">Despertar y desbloquear</string>
     <string name="pref_wake_unlock_summary">Despierta y desbloquea el dispositivo al recibir un mensaje (solamente con bloqueo de pantalla)</string>
     <string name="pref_close_all_title">Cerrar todo</string>
     <string name="pref_close_all_summary">Al pulsar Cerrar, se cerrarán todos los mensajes</string>
     <string name="pref_dark_theme_title">Usar tema oscuro</string>
-    <string name="pref_dark_theme_summary">Si no está seleccionado, se utilizará el tema \'claro\'</string>
+    <string name="pref_dark_theme_summary">Si no está seleccionado, se utilizará el tema claro</string>
     <string name="message_counter_separator">de</string>
     <string name="button_close">Cerrar</string>
     <string name="button_view">Ver</string>
@@ -402,4 +400,19 @@
     <string name="type_to_reply_text_enter_to_send">Escribir mensaje</string>
     <string name="toast_sending_message">Enviando mensaje\u2026</string>
     <string name="qm_quick_reply">Responder</string>
+    <string name="menu_add_to_calendar">Añadir al calendario</string>
+    <string name="pref_keyboard_emoji">Mostrar tecla de emoticonos</string>
+    <string name="pref_keyboard_new_line">Mostrar tecla Entrar</string>
+    <string name="pref_keyboard_unknown">Desconocido. Por favor, seleccionar nuevamente</string>
+    <string name="pref_title_input_type">Tipo de teclado</string>
+    <string name="qm_mark_read">Leer</string>
+    <string name="pref_title_notification_privacy_mode_enabled">Modo privacidad</string>
+    <string name="pref_summary_notification_privacy_mode_enabled">Ocultar remitente y mensaje en la barra de estado y deshabilitar la respuesta rápida</string>
+    <string name="notification_single_title_privacy_mode">Nuevo mensaje</string>
+    <string name="notification_single_text_privacy_mode">1 mensaje no leído</string>
+    <string name="notification_multiple_title_privacy_mode">Nuevos mensajes</string>
+    <string name="notification_multiple_text_privacy_mode"><xliff:g id="number" example="3">%1$s</xliff:g> mensajes no leídos</string>
+    <string name="notification_ticker_privacy_mode">Nuevo mensaje recibido</string>
+
+    <!-- CYANOGENMOD ADDITIONS END -->
 </resources>
