@@ -4066,6 +4066,13 @@ public class ComposeMessageActivity extends Activity
 
             // strip unicode chars before sending (if applicable)
             mWorkingMessage.setText(stripUnicodeIfRequested(mWorkingMessage.getText()));
+
+	    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String mSignature = prefs.getString(MessagingPreferenceActivity.MSG_SIGNATURE, "");
+            if (!mSignature.isEmpty()) {
+                mWorkingMessage.setText(mWorkingMessage.getText() + "\n" + mSignature);
+            }
+
             mWorkingMessage.send(mDebugRecipients);
 
             mSentMessage = true;
