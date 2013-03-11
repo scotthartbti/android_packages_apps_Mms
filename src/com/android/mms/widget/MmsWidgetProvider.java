@@ -31,7 +31,7 @@ import android.widget.RemoteViews;
 
 import com.android.mms.LogTag;
 import com.android.mms.R;
-import com.android.mms.themes.ThemesWidgets;
+import com.android.mms.themes.Constants;
 import com.android.mms.ui.ComposeMessageActivity;
 import com.android.mms.ui.ConversationList;
 
@@ -87,7 +87,7 @@ public class MmsWidgetProvider extends AppWidgetProvider {
             Log.v(TAG, "updateWidget appWidgetId: " + appWidgetId);
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        String layoutType = sp.getString(ThemesWidgets.PREF_WIDGET_LAYOUT, "**dark**");
+        String layoutType = sp.getString(Constants.PREF_WIDGET_LAYOUT, "**dark**");
         RemoteViews remoteViews;
         if (layoutType.equals("**light**")) {
             remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_light);

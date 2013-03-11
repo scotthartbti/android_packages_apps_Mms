@@ -168,7 +168,7 @@ import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.templates.TemplateGesturesLibrary;
 import com.android.mms.templates.TemplatesProvider.Template;
-import com.android.mms.themes.Themes;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.ui.ColorFilterMaker;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
@@ -3978,7 +3978,7 @@ public class ComposeMessageActivity extends Activity
 
             // add signature if set.
             sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            mSignature = sp.getString(Themes.PREF_SIGNATURE, "");
+            mSignature = sp.getString(Constants.PREF_SIGNATURE, "");
             if (!mSignature.isEmpty()) {
                 mSignature = "\n" + mSignature;
                 mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);

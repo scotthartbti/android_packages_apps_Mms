@@ -28,8 +28,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 
 import com.android.mms.R;
-import com.android.mms.themes.ThemesConversationList;
-import com.android.mms.themes.ThemesMessageList;
 import com.android.mms.ui.ColorFilterMaker;
 
 /**
@@ -211,91 +209,16 @@ public class SmileyParser {
      * @return A CharSequence annotated with ImageSpans covering any
      *         recognized emoticons.
      */
-    public CharSequence addSmileySpansRecv(CharSequence text) {
+    public CharSequence addSmileySpansColored(CharSequence text, int color) {
         SpannableStringBuilder builder = new SpannableStringBuilder(text);
-
-        int smileyMsgColor = sp.getInt(ThemesMessageList.PREF_RECV_SMILEY, 0xff33b5e5);
         Matcher matcher = mPattern.matcher(text);
         while (matcher.find()) {
             int resId = mSmileyToRes.get(matcher.group());
             ImageSpan mSpan = new ImageSpan(mContext, resId);
-            mSpan.getDrawable().setColorFilter(ColorFilterMaker.changeColor(smileyMsgColor, .32f));
+            mSpan.getDrawable().setColorFilter(ColorFilterMaker.changeColorAlpha(color, .32f,0f));
             builder.setSpan(mSpan, matcher.start(),
                         matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        return builder;
-    }
-
-    /**
-     * Adds ImageSpans to a CharSequence that replace textual emoticons such
-     * as :-) with a graphical version.
-     *
-     * @param text A CharSequence possibly containing emoticons
-     * @return A CharSequence annotated with ImageSpans covering any
-     *         recognized emoticons.
-     */
-    public CharSequence addSmileySpansSent(CharSequence text) {
-        SpannableStringBuilder builder = new SpannableStringBuilder(text);
-
-        int smileyMsgColor = sp.getInt(ThemesMessageList.PREF_SENT_SMILEY, 0xff33b5e5);
-        Matcher matcher = mPattern.matcher(text);
-        while (matcher.find()) {
-            int resId = mSmileyToRes.get(matcher.group());
-            ImageSpan mSpan = new ImageSpan(mContext, resId);
-            mSpan.getDrawable().setColorFilter(ColorFilterMaker.changeColor(smileyMsgColor, .32f));
-            builder.setSpan(mSpan, matcher.start(),
-                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return builder;
-    }
-
-    /**
-     * Adds ImageSpans to a CharSequence that replace textual emoticons such
-     * as :-) with a graphical version.
-     *
-     * @param text A CharSequence possibly containing emoticons
-     * @return A CharSequence annotated with ImageSpans covering any
-     *         recognized emoticons.
-     */
-    public CharSequence addSmileySpansUnread(CharSequence text) {
-        SpannableStringBuilder builder = new SpannableStringBuilder(text);
-
-        int smileyMsgColor = sp.getInt(ThemesConversationList.PREF_UNREAD_SMILEY, 0xff33b5e5);
-        Matcher matcher = mPattern.matcher(text);
-        while (matcher.find()) {
-            int resId = mSmileyToRes.get(matcher.group());
-            ImageSpan mSpan = new ImageSpan(mContext, resId);
-            mSpan.getDrawable().setColorFilter(ColorFilterMaker.changeColor(smileyMsgColor, .32f));
-            builder.setSpan(mSpan, matcher.start(),
-                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-
-        return builder;
-    }
-
-    /**
-     * Adds ImageSpans to a CharSequence that replace textual emoticons such
-     * as :-) with a graphical version.
-     *
-     * @param text A CharSequence possibly containing emoticons
-     * @return A CharSequence annotated with ImageSpans covering any
-     *         recognized emoticons.
-     */
-    public CharSequence addSmileySpansRead(CharSequence text) {
-        SpannableStringBuilder builder = new SpannableStringBuilder(text);
-
-        int smileyMsgColor = sp.getInt(ThemesConversationList.PREF_READ_SMILEY, 0xff33b5e5);
-        Matcher matcher = mPattern.matcher(text);
-        while (matcher.find()) {
-            int resId = mSmileyToRes.get(matcher.group());
-            ImageSpan mSpan = new ImageSpan(mContext, resId);
-            mSpan.getDrawable().setColorFilter(ColorFilterMaker.changeColor(smileyMsgColor, .32f));
-            builder.setSpan(mSpan, matcher.start(),
-                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-
         return builder;
     }
 }
-
-

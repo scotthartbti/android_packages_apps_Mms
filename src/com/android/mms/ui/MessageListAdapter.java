@@ -41,7 +41,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.android.mms.R;
-import com.android.mms.themes.ThemesMessageList;
+import com.android.mms.themes.Constants;
 import com.google.android.mms.MmsException;
 
 /**
@@ -229,10 +229,10 @@ public class MessageListAdapter extends CursorAdapter {
         int boxType = getItemViewType(cursor);
         mContext = context;
         sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String layoutType = sp.getString(ThemesMessageList.PREF_TEXT_CONV_LAYOUT, "**DEFAULT**");
+        String layoutType = sp.getString(Constants.PREF_TEXT_CONV_LAYOUT, "**DEFAULT**");
         View view;
 
-        if (sp.getBoolean(ThemesMessageList.PREF_SHOW_AVATAR, true)) {
+        if (sp.getBoolean(Constants.PREF_SHOW_AVATAR, true)) {
             if (layoutType.equals("**LAYOUTFROMLEFT**")) {
                 view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
                         boxType == INCOMING_ITEM_TYPE_MMS) ?

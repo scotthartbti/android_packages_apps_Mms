@@ -51,7 +51,7 @@ import com.android.mms.R;
 import com.android.mms.data.Contact;
 import com.android.mms.data.ContactList;
 import com.android.mms.data.Conversation;
-import com.android.mms.themes.ThemesWidgets;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.ui.ComposeMessageActivity;
 import com.android.mms.ui.ConversationList;
@@ -112,7 +112,7 @@ public class MmsWidgetService extends RemoteViewsService {
             mContext = context;
 
             sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-            layoutType = sp.getString(ThemesWidgets.PREF_WIDGET_LAYOUT, "**dark**");
+            layoutType = sp.getString(Constants.PREF_WIDGET_LAYOUT, "**dark**");
             mAppWidgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             mAppWidgetManager = AppWidgetManager.getInstance(context);
@@ -121,12 +121,12 @@ public class MmsWidgetService extends RemoteViewsService {
             }
             // Initialize colors
             Resources res = context.getResources();
-            SENDERS_TEXT_COLOR_READ = sp.getInt(ThemesWidgets.PREF_SENDERS_TEXTCOLOR_READ, 0xffefefef);
-            SENDERS_TEXT_COLOR_UNREAD = sp.getInt(ThemesWidgets.PREF_SENDERS_TEXTCOLOR_UNREAD, 0xffefefef);
-            SUBJECT_TEXT_COLOR_READ = sp.getInt(ThemesWidgets.PREF_SUBJECT_TEXTCOLOR_READ, 0xffcfcfcf);
-            SUBJECT_TEXT_COLOR_UNREAD = sp.getInt(ThemesWidgets.PREF_SUBJECT_TEXTCOLOR_UNREAD, 0xffcfcfcf);
-            DATE_TEXT_COLOR_READ = sp.getInt(ThemesWidgets.PREF_DATE_TEXTCOLOR_READ, 0xffbfbfbf);
-            DATE_TEXT_COLOR_UNREAD = sp.getInt(ThemesWidgets.PREF_DATE_TEXTCOLOR_UNREAD, 0xffbfbfbf);
+            SENDERS_TEXT_COLOR_READ = sp.getInt(Constants.PREF_SENDERS_TEXTCOLOR_READ, 0xffefefef);
+            SENDERS_TEXT_COLOR_UNREAD = sp.getInt(Constants.PREF_SENDERS_TEXTCOLOR_UNREAD, 0xffefefef);
+            SUBJECT_TEXT_COLOR_READ = sp.getInt(Constants.PREF_SUBJECT_TEXTCOLOR_READ, 0xffcfcfcf);
+            SUBJECT_TEXT_COLOR_UNREAD = sp.getInt(Constants.PREF_SUBJECT_TEXTCOLOR_UNREAD, 0xffcfcfcf);
+            DATE_TEXT_COLOR_READ = sp.getInt(Constants.PREF_DATE_TEXTCOLOR_READ, 0xffbfbfbf);
+            DATE_TEXT_COLOR_UNREAD = sp.getInt(Constants.PREF_DATE_TEXTCOLOR_UNREAD, 0xffbfbfbf);
         }
 
         @Override

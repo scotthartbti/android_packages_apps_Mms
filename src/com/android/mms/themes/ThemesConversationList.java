@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -37,6 +36,7 @@ import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceScreen;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.Display;
@@ -46,39 +46,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.android.mms.R;
 import com.android.mms.ui.ColorPickerPreference;
 
 public class ThemesConversationList extends PreferenceActivity implements
             OnPreferenceChangeListener {
-    // Menu entries
-    private static final int THEMES_RESTORE_DEFAULTS = 1;
-    private static final int THEMES_CUSTOM_IMAGE_DELETE = 0;
-
-    // background
-    public static final String PREF_CONV_LIST_BG = "pref_conv_list_bg";
-    private static final String CUSTOM_IMAGE = "conversation_list_image.jpg";
-    private static final int REQUEST_PICK_WALLPAPER = 201;
-    private static final int SELECT_WALLPAPER = 5;
-
-    // Colorpicker read
-    public static final String PREF_READ_BG = "pref_read_bg";
-    public static final String PREF_READ_CONTACT = "pref_read_contact";
-    public static final String PREF_READ_SUBJECT = "pref_read_subject";
-    public static final String PREF_READ_DATE = "pref_read_date";
-    public static final String PREF_READ_COUNT = "pref_read_count";
-    public static final String PREF_READ_SMILEY = "pref_read_smiley";
-
-    // Colorpicker unread
-    public static final String PREF_UNREAD_BG = "pref_unread_bg";
-    public static final String PREF_UNREAD_CONTACT = "pref_unread_contact";
-    public static final String PREF_UNREAD_SUBJECT = "pref_unread_subject";
-    public static final String PREF_UNREAD_DATE = "pref_unread_date";
-    public static final String PREF_UNREAD_COUNT = "pref_unread_count";
-    public static final String PREF_UNREAD_SMILEY = "pref_unread_smiley";
 
     // background
     ColorPickerPreference mConvListBackground;
@@ -96,140 +69,125 @@ public class ThemesConversationList extends PreferenceActivity implements
     ColorPickerPreference mUnreadDate;
     ColorPickerPreference mUnreadCount;
     ColorPickerPreference mUnreadSmiley;
+    ListPreference mContactFontSize;
+    ListPreference mFontSize;
+    ListPreference mDateFontSize;
 
-    private Preference mCustomImage;
-    private SharedPreferences sp;
-
-    private int seekbarProgress;
+    Preference mCustomImage;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        PreferenceScreen prefSet = getPreferenceScreen();
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
+    protected void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
 
-        loadThemePrefs();
+        loadPrefs();
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    public void loadThemePrefs() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateSummaries();
+        registerListeners();
+    }
 
+    public void loadPrefs() {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences_themes_convlist);
 
         mCustomImage = findPreference("pref_custom_image");
-
-        mConvListBackground = (ColorPickerPreference) findPreference(PREF_CONV_LIST_BG);
-        mConvListBackground.setOnPreferenceChangeListener(this);
-
-        mReadBg = (ColorPickerPreference) findPreference(PREF_READ_BG);
-        mReadBg.setOnPreferenceChangeListener(this);
-
-        mReadContact = (ColorPickerPreference) findPreference(PREF_READ_CONTACT);
-        mReadContact.setOnPreferenceChangeListener(this);
-
-        mReadCount = (ColorPickerPreference) findPreference(PREF_READ_COUNT);
-        mReadCount.setOnPreferenceChangeListener(this);
-
-        mReadDate = (ColorPickerPreference) findPreference(PREF_READ_DATE);
-        mReadDate.setOnPreferenceChangeListener(this);
-
-        mReadSubject = (ColorPickerPreference) findPreference(PREF_READ_SUBJECT);
-        mReadSubject.setOnPreferenceChangeListener(this);
-
-        mReadSmiley = (ColorPickerPreference) findPreference(PREF_READ_SMILEY);
-        mReadSmiley.setOnPreferenceChangeListener(this);
-
-        mUnreadBg = (ColorPickerPreference) findPreference(PREF_UNREAD_BG);
-        mUnreadBg.setOnPreferenceChangeListener(this);
-
-        mUnreadContact = (ColorPickerPreference) findPreference(PREF_UNREAD_CONTACT);
-        mUnreadContact.setOnPreferenceChangeListener(this);
-
-        mUnreadCount = (ColorPickerPreference) findPreference(PREF_UNREAD_COUNT);
-        mUnreadCount.setOnPreferenceChangeListener(this);
-
-        mUnreadDate = (ColorPickerPreference) findPreference(PREF_UNREAD_DATE);
-        mUnreadDate.setOnPreferenceChangeListener(this);
-
-        mUnreadSubject = (ColorPickerPreference) findPreference(PREF_UNREAD_SUBJECT);
-        mUnreadSubject.setOnPreferenceChangeListener(this);
-
-        mUnreadSmiley = (ColorPickerPreference) findPreference(PREF_UNREAD_SMILEY);
-        mUnreadSmiley.setOnPreferenceChangeListener(this);
+        mConvListBackground = (ColorPickerPreference) findPreference(Constants.PREF_CONV_LIST_BG);
+        mContactFontSize = (ListPreference) findPreference(Constants.PREF_CONV_CONTACT_FONT_SIZE);
+        mFontSize = (ListPreference) findPreference(Constants.PREF_CONV_FONT_SIZE);
+        mDateFontSize = (ListPreference) findPreference(Constants.PREF_CONV_DATE_FONT_SIZE);
+        mReadBg = (ColorPickerPreference) findPreference(Constants.PREF_READ_BG);
+        mReadContact = (ColorPickerPreference) findPreference(Constants.PREF_READ_CONTACT);
+        mReadCount = (ColorPickerPreference) findPreference(Constants.PREF_READ_COUNT);
+        mReadDate = (ColorPickerPreference) findPreference(Constants.PREF_READ_DATE);
+        mReadSubject = (ColorPickerPreference) findPreference(Constants.PREF_READ_SUBJECT);
+        mReadSmiley = (ColorPickerPreference) findPreference(Constants.PREF_READ_SMILEY);
+        mUnreadBg = (ColorPickerPreference) findPreference(Constants.PREF_UNREAD_BG);
+        mUnreadContact = (ColorPickerPreference) findPreference(Constants.PREF_UNREAD_CONTACT);
+        mUnreadCount = (ColorPickerPreference) findPreference(Constants.PREF_UNREAD_COUNT);
+        mUnreadDate = (ColorPickerPreference) findPreference(Constants.PREF_UNREAD_DATE);
+        mUnreadSubject = (ColorPickerPreference) findPreference(Constants.PREF_UNREAD_SUBJECT);
+        mUnreadSmiley = (ColorPickerPreference) findPreference(Constants.PREF_UNREAD_SMILEY);
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean result = false;
-
         if (preference == mConvListBackground) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mConvListBackground.setSummary(hex);
-
         } else if (preference == mReadBg) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mReadBg.setSummary(hex);
-
         } else if (preference == mReadContact) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mReadContact.setSummary(hex);
-
         } else if (preference == mReadCount) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mReadCount.setSummary(hex);
-
         } else if (preference == mReadDate) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mReadDate.setSummary(hex);
-
         } else if (preference == mReadSubject) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mReadSubject.setSummary(hex);
-
         } else if (preference == mReadSmiley) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mReadSmiley.setSummary(hex);
-
         } else if (preference == mUnreadBg) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mUnreadBg.setSummary(hex);
-
         } else if (preference == mUnreadContact) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mUnreadContact.setSummary(hex);
-
         } else if (preference == mUnreadCount) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mUnreadCount.setSummary(hex);
-
         } else if (preference == mUnreadDate) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mUnreadDate.setSummary(hex);
-
         } else if (preference == mUnreadSubject) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mUnreadSubject.setSummary(hex);
-
         } else if (preference == mUnreadSmiley) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mUnreadSmiley.setSummary(hex);
-
+        } else if (preference == mContactFontSize) {
+            int index = mContactFontSize.findIndexOfValue((String) newValue);
+            mContactFontSize.setSummary(mFontSize.getEntries()[index]);
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(this.getContentResolver(),
+                    Constants.PREF_CONV_CONTACT_FONT_SIZE, val);
+        } else if (preference == mFontSize) {
+            int index = mFontSize.findIndexOfValue((String) newValue);
+            mFontSize.setSummary(mFontSize.getEntries()[index]);
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(this.getContentResolver(),
+                    Constants.PREF_CONV_FONT_SIZE, val);
+        } else if (preference == mDateFontSize) {
+            int index = mDateFontSize.findIndexOfValue((String) newValue);
+            mDateFontSize.setSummary(mFontSize.getEntries()[index]);
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(this.getContentResolver(),
+                    Constants.PREF_CONV_DATE_FONT_SIZE, val);
         }
         return result;
     }
@@ -264,34 +222,65 @@ public class ThemesConversationList extends PreferenceActivity implements
             intent.putExtra(MediaStore.EXTRA_OUTPUT, getCustomImageExternalUri());
             intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
 
-            startActivityForResult(intent, REQUEST_PICK_WALLPAPER);
+            startActivityForResult(intent, Constants.REQUEST_PICK_WALLPAPER);
             return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
+    private void registerListeners() {
+        mConvListBackground.setOnPreferenceChangeListener(this);
+        mContactFontSize.setOnPreferenceChangeListener(this);
+        mContactFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),
+                Constants.PREF_CONV_CONTACT_FONT_SIZE, 16)));
+        mFontSize.setOnPreferenceChangeListener(this);
+        mFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),
+                Constants.PREF_CONV_FONT_SIZE, 16)));
+        mDateFontSize.setOnPreferenceChangeListener(this);
+        mDateFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),
+                Constants.PREF_CONV_DATE_FONT_SIZE, 16)));
+        mReadBg.setOnPreferenceChangeListener(this);
+        mReadContact.setOnPreferenceChangeListener(this);
+        mReadCount.setOnPreferenceChangeListener(this);
+        mReadDate.setOnPreferenceChangeListener(this);
+        mReadSubject.setOnPreferenceChangeListener(this);
+        mReadSmiley.setOnPreferenceChangeListener(this);
+        mUnreadBg.setOnPreferenceChangeListener(this);
+        mUnreadContact.setOnPreferenceChangeListener(this);
+        mUnreadCount.setOnPreferenceChangeListener(this);
+        mUnreadDate.setOnPreferenceChangeListener(this);
+        mUnreadSubject.setOnPreferenceChangeListener(this);
+        mUnreadSmiley.setOnPreferenceChangeListener(this);
+    }
+
+    private void updateSummaries() {
+        mContactFontSize.setSummary(mContactFontSize.getEntry());
+        mFontSize.setSummary(mFontSize.getEntry());
+        mDateFontSize.setSummary(mDateFontSize.getEntry());
+    }
+
     private void restoreThemeConversationListDefaultPreferences() {
         PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
         setPreferenceScreen(null);
-        loadThemePrefs();
+        loadPrefs();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.clear();
-        menu.add(0, THEMES_RESTORE_DEFAULTS, 0, R.string.restore_default);
-        menu.add(0, THEMES_CUSTOM_IMAGE_DELETE, 0, R.string.delete_custom_image);
+        menu.add(0, Constants.THEMES_RESTORE_DEFAULTS, 0, R.string.restore_default);
+        menu.add(0, Constants.THEMES_CUSTOM_IMAGE_DELETE, 0, R.string.delete_custom_image);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case THEMES_RESTORE_DEFAULTS:
+            case Constants.THEMES_RESTORE_DEFAULTS:
                 restoreThemeConversationListDefaultPreferences();
                 return true;
 
-            case THEMES_CUSTOM_IMAGE_DELETE:
+            case Constants.THEMES_CUSTOM_IMAGE_DELETE:
                 deleteCustomImage();
                 return true;
 
@@ -305,23 +294,23 @@ public class ThemesConversationList extends PreferenceActivity implements
     }
 
     private void deleteCustomImage() {
-        this.deleteFile(CUSTOM_IMAGE);
+        this.deleteFile(Constants.CONV_CUSTOM_IMAGE);
     }
 
     private Uri getCustomImageExternalUri() {
         File dir = this.getExternalCacheDir();
-        File wallpaper = new File(dir, CUSTOM_IMAGE);
+        File wallpaper = new File(dir, Constants.CONV_CUSTOM_IMAGE);
 
         return Uri.fromFile(wallpaper);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_PICK_WALLPAPER) {
+            if (requestCode == Constants.REQUEST_PICK_WALLPAPER) {
 
                 FileOutputStream wallpaperStream = null;
                 try {
-                    wallpaperStream = this.openFileOutput(CUSTOM_IMAGE,
+                    wallpaperStream = this.openFileOutput(Constants.CONV_CUSTOM_IMAGE,
                             Context.MODE_WORLD_READABLE);
                 } catch (FileNotFoundException e) {
                     return; // NOOOOO

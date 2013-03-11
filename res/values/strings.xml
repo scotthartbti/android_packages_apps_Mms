@@ -932,6 +932,9 @@
     <string name="sent_text_header">Sent texts</string>
     <string name="show_contact_avatar">Show contact avatar</string>
     <string name="text_conv_layout">Message conversation layout style</string>
+    <string name="contact_font_size_title">Contact font size</string>
+    <string name="font_size_title">Message font size</string>
+    <string name="date_font_size_title">Date font size</string>
     <string name="conversation_list_unread">Conversations list unread</string>
     <string name="conversation_list_read">Conversations list read</string>
     <!-- conv list read/unread -->
