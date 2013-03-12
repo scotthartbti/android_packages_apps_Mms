@@ -82,7 +82,7 @@ import com.android.mms.data.Contact;
 import com.android.mms.data.ContactList;
 import com.android.mms.data.Conversation;
 import com.android.mms.data.Conversation.ConversationQueryHandler;
-import com.android.mms.themes.ThemesConversationList;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.SmsRejectedReceiver;
 import com.android.mms.util.DraftCache;
@@ -152,7 +152,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         // Tell the list view which view to display when the list is empty
         listView.setEmptyView(findViewById(R.id.empty));
-        listView.setBackgroundColor(mPrefs.getInt(ThemesConversationList.PREF_CONV_LIST_BG, 0X00000000)); //list background
+        listView.setBackgroundColor(mPrefs.getInt(Constants.PREF_CONV_LIST_BG, 0X00000000)); //list background
         setBackground(this, (ViewGroup) findViewById(R.id.conv_list_screen)); // custom background
 
         initListAdapter();

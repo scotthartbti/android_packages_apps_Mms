@@ -17,8 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.android.mms.themes.ThemesMessageList;
-
 class ThemesCustomImageMsgList extends FrameLayout {
 
     private final String TAG = "ThemesCustomImageMsgList";
@@ -36,7 +34,7 @@ class ThemesCustomImageMsgList extends FrameLayout {
 
         sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        setBackgroundColor(sp.getInt(ThemesMessageList.PREF_MESSAGE_BG, 0x00000000)); // Message List background
+        setBackgroundColor(sp.getInt(Constants.PREF_MESSAGE_BG, 0x00000000)); // Message List background
         setCustomImageBackground();
     }
 

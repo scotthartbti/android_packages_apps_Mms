@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -35,6 +36,7 @@ import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceScreen;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.Display;
@@ -46,44 +48,11 @@ import android.view.View;
 import android.view.Window;
 
 import com.android.mms.R;
+import com.android.mms.themes.Constants;
 import com.android.mms.ui.ColorPickerPreference;
 
 public class ThemesMessageList extends PreferenceActivity implements
-            Preference.OnPreferenceChangeListener {
-    // Menu entries
-    private static final int THEMES_RESTORE_DEFAULTS = 1;
-    private static final int THEMES_CUSTOM_IMAGE_DELETE = 0;
-
-    // Layout Style
-    public static final String PREF_TEXT_CONV_LAYOUT = "pref_text_conv_layout";
-
-    // Msg background
-    public static final String PREF_MESSAGE_BG = "pref_message_bg";
-
-    private static final String CUSTOM_IMAGE = "message_list_image.jpg";
-    private static final int REQUEST_PICK_WALLPAPER = 201;
-    private static final int SELECT_WALLPAPER = 5;
-
-    // Bubble types
-    public static final String PREF_BUBBLE_TYPE = "pref_bubble_type";
-    public static final String PREF_BUBBLE_FILL_PARENT = "pref_bubble_fill_parent";
-
-    // Checkbox preferences
-    public static final String PREF_USE_CONTACT = "pref_use_contact";
-    public static final String PREF_SHOW_AVATAR = "pref_show_avatar";
-
-    // Colorpicker preferences send
-    public static final String PREF_SENT_TEXTCOLOR = "pref_sent_textcolor";
-    public static final String PREF_SENT_CONTACT_COLOR = "pref_sent_contact_color";
-    public static final String PREF_SENT_DATE_COLOR = "pref_sent_date_color";
-    public static final String PREF_SENT_TEXT_BG = "pref_sent_text_bg";
-    public static final String PREF_SENT_SMILEY = "pref_sent_smiley";
-    // Colorpicker preferences received
-    public static final String PREF_RECV_TEXTCOLOR = "pref_recv_textcolor";
-    public static final String PREF_RECV_CONTACT_COLOR = "pref_recv_contact_color";
-    public static final String PREF_RECV_DATE_COLOR = "pref_recv_date_color";
-    public static final String PREF_RECV_TEXT_BG = "pref_recv_text_bg";
-    public static final String PREF_RECV_SMILEY = "pref_recv_smiley";
+            OnPreferenceChangeListener {
 
     // message background
     ColorPickerPreference mMessageBackground;
@@ -100,150 +69,134 @@ public class ThemesMessageList extends PreferenceActivity implements
     ColorPickerPreference mRecvTextBgColor;
     ColorPickerPreference mRecvSmiley;
 
-    private CheckBoxPreference mUseContact;
-    private CheckBoxPreference mShowAvatar;
-    private CheckBoxPreference mBubbleFillParent;
-    private ListPreference mTextLayout;
-    private ListPreference mBubbleType;
-    private Preference mCustomImage;
-    private SharedPreferences sp;
+    CheckBoxPreference mUseContact;
+    CheckBoxPreference mShowAvatar;
+    CheckBoxPreference mBubbleFillParent;
+    ListPreference mTextLayout;
+    ListPreference mContactFontSize;
+    ListPreference mFontSize;
+    ListPreference mDateFontSize;
+    ListPreference mBubbleType;
+    Preference mCustomImage;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
 
-        loadThemePrefs();
+        loadPrefs();
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    public void loadThemePrefs() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateSummaries();
+        registerListeners();
+    }
 
+    private void loadPrefs() {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences_themes_msglist);
 
         PreferenceScreen prefSet = getPreferenceScreen();
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mUseContact = (CheckBoxPreference) prefSet.findPreference(PREF_USE_CONTACT);
-        mShowAvatar = (CheckBoxPreference) prefSet.findPreference(PREF_SHOW_AVATAR);
-        mBubbleFillParent = (CheckBoxPreference) prefSet.findPreference(PREF_BUBBLE_FILL_PARENT);
-
-        mTextLayout = (ListPreference) findPreference(PREF_TEXT_CONV_LAYOUT);
-        mTextLayout.setOnPreferenceChangeListener(this);
-        mTextLayout.setSummary(mTextLayout.getEntry());
-
-        mBubbleType = (ListPreference) findPreference(PREF_BUBBLE_TYPE);
-        mBubbleType.setOnPreferenceChangeListener(this);
-        mBubbleType.setSummary(mBubbleType.getEntry());
-
+        mUseContact = (CheckBoxPreference) prefSet.findPreference(Constants.PREF_USE_CONTACT);
+        mShowAvatar = (CheckBoxPreference) prefSet.findPreference(Constants.PREF_SHOW_AVATAR);
+        mBubbleFillParent = (CheckBoxPreference) prefSet.findPreference(Constants.PREF_BUBBLE_FILL_PARENT);
+        mTextLayout = (ListPreference) findPreference(Constants.PREF_TEXT_CONV_LAYOUT);
+        mContactFontSize = (ListPreference) findPreference(Constants.PREF_CONTACT_FONT_SIZE);
+        mFontSize = (ListPreference) findPreference(Constants.PREF_FONT_SIZE);
+        mDateFontSize = (ListPreference) findPreference(Constants.PREF_DATE_FONT_SIZE);
+        mBubbleType = (ListPreference) findPreference(Constants.PREF_BUBBLE_TYPE);
+        mMessageBackground = (ColorPickerPreference) findPreference(Constants.PREF_MESSAGE_BG);
+        mSentTextColor = (ColorPickerPreference) findPreference(Constants.PREF_SENT_TEXTCOLOR);
+        mSentContactColor = (ColorPickerPreference) findPreference(Constants.PREF_SENT_TEXTCOLOR);
+        mSentDateColor = (ColorPickerPreference) findPreference(Constants.PREF_SENT_TEXTCOLOR);
+        mSentTextBgColor = (ColorPickerPreference) findPreference(Constants.PREF_SENT_TEXTCOLOR);
+        mSentSmiley = (ColorPickerPreference) findPreference(Constants.PREF_SENT_SMILEY);
+        mRecvTextColor = (ColorPickerPreference) findPreference(Constants.PREF_RECV_TEXTCOLOR);
+        mRecvContactColor = (ColorPickerPreference) findPreference(Constants.PREF_RECV_TEXTCOLOR);
+        mRecvDateColor = (ColorPickerPreference) findPreference(Constants.PREF_RECV_TEXTCOLOR);
+        mRecvTextBgColor = (ColorPickerPreference) findPreference(Constants.PREF_RECV_TEXT_BG);
+        mRecvSmiley = (ColorPickerPreference) findPreference(Constants.PREF_RECV_SMILEY);
         mCustomImage = findPreference("pref_custom_image");
-
-        mMessageBackground = (ColorPickerPreference) findPreference(PREF_MESSAGE_BG);
-        mMessageBackground.setOnPreferenceChangeListener(this);
-
-        mSentTextColor = (ColorPickerPreference) findPreference(PREF_SENT_TEXTCOLOR);
-        mSentTextColor.setOnPreferenceChangeListener(this);
-
-        mSentContactColor = (ColorPickerPreference) findPreference(PREF_SENT_TEXTCOLOR);
-        mSentContactColor.setOnPreferenceChangeListener(this);
-
-        mSentDateColor = (ColorPickerPreference) findPreference(PREF_SENT_TEXTCOLOR);
-        mSentDateColor.setOnPreferenceChangeListener(this);
-
-        mSentTextBgColor = (ColorPickerPreference) findPreference(PREF_SENT_TEXTCOLOR);
-        mSentTextBgColor.setOnPreferenceChangeListener(this);
-
-        mSentSmiley = (ColorPickerPreference) findPreference(PREF_SENT_SMILEY);
-        mSentSmiley.setOnPreferenceChangeListener(this);
-
-        mRecvTextColor = (ColorPickerPreference) findPreference(PREF_RECV_TEXTCOLOR);
-        mRecvTextColor.setOnPreferenceChangeListener(this);
-
-        mRecvContactColor = (ColorPickerPreference) findPreference(PREF_RECV_TEXTCOLOR);
-        mRecvContactColor.setOnPreferenceChangeListener(this);
-
-        mRecvDateColor = (ColorPickerPreference) findPreference(PREF_RECV_TEXTCOLOR);
-        mRecvDateColor.setOnPreferenceChangeListener(this);
-
-        mRecvTextBgColor = (ColorPickerPreference) findPreference(PREF_RECV_TEXT_BG);
-        mRecvTextBgColor.setOnPreferenceChangeListener(this);
-
-        mRecvSmiley = (ColorPickerPreference) findPreference(PREF_RECV_SMILEY);
-        mRecvSmiley.setOnPreferenceChangeListener(this);
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean result = false;
-
         if (preference == mMessageBackground) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mMessageBackground.setSummary(hex);
-
-
         } else if (preference == mSentTextColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mSentTextColor.setSummary(hex);
-
         } else if (preference == mSentContactColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mSentContactColor.setSummary(hex);
-
         } else if (preference == mSentDateColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mSentDateColor.setSummary(hex);
-
         } else if (preference == mSentTextBgColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mSentTextBgColor.setSummary(hex);
-
         } else if (preference == mSentSmiley) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mSentSmiley.setSummary(hex);
-
         } else if (preference == mRecvTextColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mRecvTextColor.setSummary(hex);
-
         } else if (preference == mRecvContactColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mRecvContactColor.setSummary(hex);
-
         } else if (preference == mRecvDateColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mRecvDateColor.setSummary(hex);
-
         } else if (preference == mRecvTextBgColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mRecvTextBgColor.setSummary(hex);
-
         } else if (preference == mRecvSmiley) {
             String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
                     .valueOf(newValue)));
             mRecvSmiley.setSummary(hex);
-
         } else if (preference == mTextLayout) {
             int index = mTextLayout.findIndexOfValue((String) newValue);
             mTextLayout.setSummary(mTextLayout.getEntries()[index]);
             return true;
-
+        } else if (preference == mContactFontSize) {
+            int index = mContactFontSize.findIndexOfValue((String) newValue);
+            mContactFontSize.setSummary(mFontSize.getEntries()[index]);
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(this.getContentResolver(),
+                    Constants.PREF_CONTACT_FONT_SIZE, val);
+        } else if (preference == mFontSize) {
+            int index = mFontSize.findIndexOfValue((String) newValue);
+            mFontSize.setSummary(mFontSize.getEntries()[index]);
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(this.getContentResolver(),
+                    Constants.PREF_FONT_SIZE, val);
+        } else if (preference == mDateFontSize) {
+            int index = mDateFontSize.findIndexOfValue((String) newValue);
+            mDateFontSize.setSummary(mFontSize.getEntries()[index]);
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(this.getContentResolver(),
+                    Constants.PREF_DATE_FONT_SIZE, val);
         } else if (preference == mBubbleType) {
             int index = mBubbleType.findIndexOfValue((String) newValue);
             mBubbleType.setSummary(mBubbleType.getEntries()[index]);
             return true;
-
         }
         return result;
     }
@@ -278,7 +231,7 @@ public class ThemesMessageList extends PreferenceActivity implements
             intent.putExtra(MediaStore.EXTRA_OUTPUT, getCustomImageExternalUri());
             intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
 
-            startActivityForResult(intent, REQUEST_PICK_WALLPAPER);
+            startActivityForResult(intent, Constants.REQUEST_PICK_WALLPAPER);
             return true;
 
         } else if (preference == mUseContact) {
@@ -296,25 +249,58 @@ public class ThemesMessageList extends PreferenceActivity implements
     private void restoreThemeMessageListDefaultPreferences() {
         PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
         setPreferenceScreen(null);
-        loadThemePrefs();
+        loadPrefs();
+    }
+
+    private void registerListeners() {
+        mTextLayout.setOnPreferenceChangeListener(this);
+        mContactFontSize.setOnPreferenceChangeListener(this);
+        mContactFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),
+                Constants.PREF_CONTACT_FONT_SIZE, 16)));
+        mFontSize.setOnPreferenceChangeListener(this);
+        mFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),
+                Constants.PREF_FONT_SIZE, 16)));
+        mDateFontSize.setOnPreferenceChangeListener(this);
+        mDateFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),
+                Constants.PREF_DATE_FONT_SIZE, 16)));
+        mBubbleType.setOnPreferenceChangeListener(this);
+        mMessageBackground.setOnPreferenceChangeListener(this);
+        mSentTextColor.setOnPreferenceChangeListener(this);
+        mSentContactColor.setOnPreferenceChangeListener(this);
+        mSentDateColor.setOnPreferenceChangeListener(this);
+        mSentTextBgColor.setOnPreferenceChangeListener(this);
+        mSentSmiley.setOnPreferenceChangeListener(this);
+        mRecvTextColor.setOnPreferenceChangeListener(this);
+        mRecvContactColor.setOnPreferenceChangeListener(this);
+        mRecvDateColor.setOnPreferenceChangeListener(this);
+        mRecvTextBgColor.setOnPreferenceChangeListener(this);
+        mRecvSmiley.setOnPreferenceChangeListener(this);
+    }
+
+    private void updateSummaries() {
+        mTextLayout.setSummary(mTextLayout.getEntry());
+        mContactFontSize.setSummary(mContactFontSize.getEntry());
+        mFontSize.setSummary(mFontSize.getEntry());
+        mDateFontSize.setSummary(mDateFontSize.getEntry());
+        mBubbleType.setSummary(mBubbleType.getEntry());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.clear();
-        menu.add(0, THEMES_RESTORE_DEFAULTS, 0, R.string.restore_default);
-        menu.add(0, THEMES_CUSTOM_IMAGE_DELETE, 0, R.string.delete_custom_image);
+        menu.add(0, Constants.THEMES_RESTORE_DEFAULTS, 0, R.string.restore_default);
+        menu.add(0, Constants.THEMES_CUSTOM_IMAGE_DELETE, 0, R.string.delete_custom_image);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case THEMES_RESTORE_DEFAULTS:
+            case Constants.THEMES_RESTORE_DEFAULTS:
                 restoreThemeMessageListDefaultPreferences();
                 return true;
 
-            case THEMES_CUSTOM_IMAGE_DELETE:
+            case Constants.THEMES_CUSTOM_IMAGE_DELETE:
                 deleteCustomImage();
                 return true;
 
@@ -328,23 +314,23 @@ public class ThemesMessageList extends PreferenceActivity implements
     }
 
     private void deleteCustomImage() {
-        this.deleteFile(CUSTOM_IMAGE);
+        this.deleteFile(Constants.MSG_CUSTOM_IMAGE);
     }
 
     private Uri getCustomImageExternalUri() {
         File dir = this.getExternalCacheDir();
-        File wallpaper = new File(dir, CUSTOM_IMAGE);
+        File wallpaper = new File(dir, Constants.MSG_CUSTOM_IMAGE);
 
         return Uri.fromFile(wallpaper);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_PICK_WALLPAPER) {
+            if (requestCode == Constants.REQUEST_PICK_WALLPAPER) {
 
                 FileOutputStream wallpaperStream = null;
                 try {
-                    wallpaperStream = this.openFileOutput(CUSTOM_IMAGE,
+                    wallpaperStream = this.openFileOutput(Constants.MSG_CUSTOM_IMAGE,
                             Context.MODE_WORLD_READABLE);
                 } catch (FileNotFoundException e) {
                     return; // NOOOOO

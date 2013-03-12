@@ -39,6 +39,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract.Profile;
+import android.provider.Settings;
 import android.provider.Telephony.Sms;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
@@ -47,6 +48,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LineHeightSpan;
 import android.text.style.StyleSpan;
@@ -75,7 +77,8 @@ import com.android.mms.data.Contact;
 import com.android.mms.data.WorkingMessage;
 import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
-import com.android.mms.themes.ThemesMessageList;
+import com.android.mms.themes.Constants;
+import com.android.mms.themes.Preferences;
 import com.android.mms.transaction.Transaction;
 import com.android.mms.transaction.TransactionBundle;
 import com.android.mms.transaction.TransactionService;
@@ -175,9 +178,9 @@ public class MessageListItem extends LinearLayout implements
 
     // Message block background
     private void getMessageBlockBackground() {
-        String bubbleType = sp.getString(ThemesMessageList.PREF_BUBBLE_TYPE, "**NONE**");
-        String layoutType = sp.getString(ThemesMessageList.PREF_TEXT_CONV_LAYOUT, "**DEFAULT**");
-        mBubbleFillParent = sp.getBoolean(ThemesMessageList.PREF_BUBBLE_FILL_PARENT, false);
+        String bubbleType = sp.getString(Constants.PREF_BUBBLE_TYPE, "**NONE**");
+        String layoutType = sp.getString(Constants.PREF_TEXT_CONV_LAYOUT, "**DEFAULT**");
+        mBubbleFillParent = sp.getBoolean(Constants.PREF_BUBBLE_FILL_PARENT, false);
         if (mBubbleFillParent) {
                 mMessageBlock.getLayoutParams().width = LayoutParams.MATCH_PARENT; // Stretch Bubble
         } else {
@@ -302,11 +305,11 @@ public class MessageListItem extends LinearLayout implements
         mMultiRecipients = convHasMultiRecipients;
 
         // Theme settings
-        mSentTextBgColor = sp.getInt(ThemesMessageList.PREF_SENT_TEXT_BG, 0x85afafaf);
-        mRecvTextBgColor = sp.getInt(ThemesMessageList.PREF_RECV_TEXT_BG, 0x85afafaf);
+        mSentTextBgColor = sp.getInt(Constants.PREF_SENT_TEXT_BG, 0x85afafaf);
+        mRecvTextBgColor = sp.getInt(Constants.PREF_RECV_TEXT_BG, 0x85afafaf);
         getMessageBlockBackground();
-        mUseContact = sp.getBoolean(ThemesMessageList.PREF_USE_CONTACT, false);
-        mBubbleFillParent = sp.getBoolean(ThemesMessageList.PREF_BUBBLE_FILL_PARENT, false);
+        mUseContact = sp.getBoolean(Constants.PREF_USE_CONTACT, false);
+        mBubbleFillParent = sp.getBoolean(Constants.PREF_BUBBLE_FILL_PARENT, false);
 
         setLongClickable(false);
         setClickable(false);    // let the list view handle clicks on the item normally. When
@@ -366,13 +369,13 @@ public class MessageListItem extends LinearLayout implements
         // Set date and background colors
         int mColor = 0;
         if (mMessageItem.getBoxId() == 1) {
-            mColor = sp.getInt(ThemesMessageList.PREF_RECV_DATE_COLOR, 0xcdffffff);
+            mColor = sp.getInt(Constants.PREF_RECV_DATE_COLOR, 0xcdffffff);
          } else {
-            mColor = sp.getInt(ThemesMessageList.PREF_SENT_DATE_COLOR, 0xcdffffff);
+            mColor = sp.getInt(Constants.PREF_SENT_DATE_COLOR, 0xcdffffff);
         }
         mDateView.setBackgroundColor(0x00000000);
         mDateView.setTextColor(mColor);
-        setBackgroundColor(sp.getInt(ThemesMessageList.PREF_MESSAGE_BG, 0X00000000));
+        setBackgroundColor(sp.getInt(Constants.PREF_MESSAGE_BG, 0X00000000));
 
         switch (mMessageItem.getMmsDownloadStatus()) {
             case DownloadManager.STATE_DOWNLOADING:
@@ -458,7 +461,7 @@ public class MessageListItem extends LinearLayout implements
         mAvatar.setImageDrawable(avatarDrawable);
 
         // Show/Hide the avatar
-        if (sp.getBoolean(ThemesMessageList.PREF_SHOW_AVATAR, true)) {
+        if (sp.getBoolean(Constants.PREF_SHOW_AVATAR, true)) {
             mAvatar.setVisibility(View.VISIBLE);
         } else {
             mAvatar.setVisibility(View.GONE);
@@ -507,6 +510,10 @@ public class MessageListItem extends LinearLayout implements
             mBodyTextView.setText(formattedMessage);
         }
 
+        int textFontSize = Settings.System.getInt(mContext.getContentResolver(),
+                Constants.PREF_FONT_SIZE, 16);
+        mBodyTextView.setTextSize(textFontSize);
+
         // Debugging code to put the URI of the image attachment in the body of the list item.
         if (DEBUG) {
             String debugText = null;
@@ -536,13 +543,16 @@ public class MessageListItem extends LinearLayout implements
         // Set date and background colors
         int mColor = 0;
         if (mMessageItem.getBoxId() == 1) {
-            mColor = sp.getInt(ThemesMessageList.PREF_RECV_DATE_COLOR, 0xcdffffff);
+            mColor = sp.getInt(Constants.PREF_RECV_DATE_COLOR, 0xcdffffff);
          } else {
-            mColor = sp.getInt(ThemesMessageList.PREF_SENT_DATE_COLOR, 0xcdffffff);
+            mColor = sp.getInt(Constants.PREF_SENT_DATE_COLOR, 0xcdffffff);
         }
+        int dateFontSize = Settings.System.getInt(mContext.getContentResolver(),
+                Constants.PREF_DATE_FONT_SIZE, 16);
+        mDateView.setTextSize(dateFontSize);
         mDateView.setBackgroundColor(0x00000000);
         mDateView.setTextColor(mColor);
-        setBackgroundColor(sp.getInt(ThemesMessageList.PREF_MESSAGE_BG, 0X00000000));
+        setBackgroundColor(sp.getInt(Constants.PREF_MESSAGE_BG, 0x00000000));
 
         if (mMessageItem.isSms()) {
             showMmsView(false);
@@ -722,28 +732,32 @@ public class MessageListItem extends LinearLayout implements
             } catch (NullPointerException e) {
             }
             if (mMessageItem.getBoxId() == 1) {
-                mColor = sp.getInt(ThemesMessageList.PREF_RECV_CONTACT_COLOR, 0xffffffff);
+                mColor = sp.getInt(Constants.PREF_RECV_CONTACT_COLOR, 0xffffffff);
             } else {
-                mColor = sp.getInt(ThemesMessageList.PREF_SENT_CONTACT_COLOR, 0xffffffff);
+                mColor = sp.getInt(Constants.PREF_SENT_CONTACT_COLOR, 0xffffffff);
             }
-
+            int contactFontSize = Settings.System.getInt(mContext.getContentResolver(),
+                    Constants.PREF_CONTACT_FONT_SIZE, 16);
             buf.append(msgItem.mContact + ": ");
             buf.setSpan(new StyleSpan(Typeface.BOLD), 0, contactLength, 0);
+            buf.setSpan(new AbsoluteSizeSpan(contactFontSize), 0, contactLength, 0);
             buf.setSpan(new ForegroundColorSpan(mColor), 0, contactLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         boolean hasSubject = !TextUtils.isEmpty(subject);
+        final int recvColor = Preferences.receivedSmileyColor(sp);
+        final int sentColor = Preferences.sentSmileyColor(sp);
         SmileyParser parser = SmileyParser.getInstance();
         EmojiParser emojiParser = EmojiParser.getInstance();
         if (hasSubject) {
             CharSequence smilizedSubject;
             if (mMessageItem.getBoxId() == 1) {
-                smilizedSubject = parser.addSmileySpansRecv(subject);
+                smilizedSubject = parser.addSmileySpansColored(subject, recvColor);
                 if (enableEmojis) {
                     smilizedSubject = emojiParser.addEmojiSpans(smilizedSubject);
                 }
             } else {
-                smilizedSubject = parser.addSmileySpansSent(subject);
+                smilizedSubject = parser.addSmileySpansColored(subject, sentColor);
                 if (enableEmojis) {
                     smilizedSubject = emojiParser.addEmojiSpans(smilizedSubject);
                 }
@@ -766,12 +780,12 @@ public class MessageListItem extends LinearLayout implements
                     buf.append(" - ");
                 }
                 if (mMessageItem.getBoxId() == 1) {
-                    smileyBody = parser.addSmileySpansRecv(body);
+                    smileyBody = parser.addSmileySpansColored(body, recvColor);
                     if (enableEmojis) {
                         smileyBody = emojiParser.addEmojiSpans(smileyBody);
                     }
                 } else {
-                    smileyBody = parser.addSmileySpansSent(body);
+                    smileyBody = parser.addSmileySpansColored(body, sentColor);
                     if (enableEmojis) {
                         smileyBody = emojiParser.addEmojiSpans(smileyBody);
                     }
@@ -783,9 +797,9 @@ public class MessageListItem extends LinearLayout implements
         // Set the color of the text for messages
         mColor = 0;
         if (mMessageItem.getBoxId() == 1) {
-            mColor = sp.getInt(ThemesMessageList.PREF_RECV_TEXTCOLOR, 0xffffffff);
+            mColor = sp.getInt(Constants.PREF_RECV_TEXTCOLOR, 0xffffffff);
         } else {
-            mColor = sp.getInt(ThemesMessageList.PREF_SENT_TEXTCOLOR, 0xffffffff);
+            mColor = sp.getInt(Constants.PREF_SENT_TEXTCOLOR, 0xffffffff);
         }
 
         buf.setSpan(new ForegroundColorSpan(mColor), contactLength, buf.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

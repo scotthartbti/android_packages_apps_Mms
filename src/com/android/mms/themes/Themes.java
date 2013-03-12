@@ -5,18 +5,15 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Process;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceScreen;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.android.mms.R;
@@ -25,34 +22,34 @@ import com.android.mms.ui.ColorPickerPreference;
 public class Themes extends PreferenceActivity implements
             OnPreferenceChangeListener {
 
-    // add Signature
-    public static final String PREF_SIGNATURE = "pref_signature";
-
     // restart mms
     private static final String PREF_RESTART_MMS = "pref_restart_mms";
 
-    private EditTextPreference mAddSignature;
-    private Preference mRestartMms;
-    private SharedPreferences sp;
+    EditTextPreference mAddSignature;
+    Preference mRestartMms;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+
+        loadPrefs();
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerListeners();
+    }
+
+    public void loadPrefs() {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences_themes);
 
-        PreferenceScreen prefSet = getPreferenceScreen();
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-
         mRestartMms = (Preference) findPreference(PREF_RESTART_MMS);
-
-        mAddSignature = (EditTextPreference) findPreference(PREF_SIGNATURE);
-        mAddSignature.setOnPreferenceChangeListener(this);
-        mAddSignature.setText(sp.getString(PREF_SIGNATURE,""));
+        mAddSignature = (EditTextPreference) findPreference(Constants.PREF_SIGNATURE);
     }
 
     @Override
@@ -60,8 +57,9 @@ public class Themes extends PreferenceActivity implements
         boolean result = false;
 
         if (preference == mAddSignature) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString(PREF_SIGNATURE, (String) newValue);
+            editor.putString(Constants.PREF_SIGNATURE, (String) newValue);
             editor.commit();
         }
         return result;
@@ -77,6 +75,27 @@ public class Themes extends PreferenceActivity implements
             return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // The user clicked on the Messaging icon in the action bar. Take them back from
+                // wherever they came from
+                finish();
+                return true;
+        }
+        return false;
+    }
+
+    private void registerListeners() {
+        mAddSignature.setOnPreferenceChangeListener(this);
+    }
+
+    private void setSignature() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mAddSignature.setText(sp.getString(Constants.PREF_SIGNATURE, ""));
     }
 
     private void restartFirstActivity() {

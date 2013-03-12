@@ -124,6 +124,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,6 +140,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -168,7 +170,7 @@ import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.templates.TemplateGesturesLibrary;
 import com.android.mms.templates.TemplatesProvider.Template;
-import com.android.mms.themes.Themes;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.ui.ColorFilterMaker;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
@@ -346,6 +348,7 @@ public class ComposeMessageActivity extends Activity
 
     private AlertDialog mSmileyDialog;
     private AlertDialog mEmojiDialog;
+    private AlertDialog mQuickSmileyDialog;
     private View mEmojiView;
     private ProgressDialog mProgressDialog;
 
@@ -2030,13 +2033,11 @@ public class ComposeMessageActivity extends Activity
 
         resetConfiguration(getResources().getConfiguration());
 
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-        mGestureSensitivity = prefs
-                .getInt(MessagingPreferenceActivity.GESTURE_SENSITIVITY_VALUE, 3);
-        boolean showGesture = prefs.getBoolean(MessagingPreferenceActivity.SHOW_GESTURE, false);
-        boolean stripUnicode = prefs.getBoolean(MessagingPreferenceActivity.STRIP_UNICODE, false);
-        inputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE, Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
+        sp = PreferenceManager.getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
+        mGestureSensitivity = sp.getInt(MessagingPreferenceActivity.GESTURE_SENSITIVITY_VALUE, 3);
+        boolean showGesture = sp.getBoolean(MessagingPreferenceActivity.SHOW_GESTURE, false);
+        boolean stripUnicode = sp.getBoolean(MessagingPreferenceActivity.STRIP_UNICODE, false);
+        inputMethod = Integer.parseInt(sp.getString(MessagingPreferenceActivity.INPUT_TYPE, Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
 
         mLibrary = TemplateGesturesLibrary.getStore(this);
 
@@ -2050,6 +2051,7 @@ public class ComposeMessageActivity extends Activity
         gestureOverlayView.addOnGesturePerformedListener(this);
         setContentView(gestureOverlayView);
         setProgressBarVisibility(false);
+        setContentView(R.layout.compose_message_activity);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -2455,9 +2457,7 @@ public class ComposeMessageActivity extends Activity
         mIsRunning = true;
         updateThreadIdIfRunning();
         mConversation.markAsRead(true);
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-        inputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE, Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
+        inputMethod = Integer.parseInt(sp.getString(MessagingPreferenceActivity.INPUT_TYPE, Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
         Log.d("MMS Input Type", Integer.toString(inputMethod));
         mTextEditor.setInputType(InputType.TYPE_CLASS_TEXT|
                                 inputMethod|
@@ -2857,9 +2857,7 @@ public class ComposeMessageActivity extends Activity
         if (!mWorkingMessage.hasSlideshow()) {
             menu.add(0, MENU_INSERT_SMILEY, 0, R.string.menu_insert_smiley).setIcon(
                     R.drawable.ic_menu_emoticons);
-            SharedPreferences prefs = PreferenceManager
-                    .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-            boolean enableEmojis = prefs.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);
+            boolean enableEmojis = sp.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);
             if (enableEmojis) {
                 menu.add(0, MENU_INSERT_EMOJI, 0, R.string.menu_insert_emoji);
             }
@@ -3563,9 +3561,7 @@ public class ComposeMessageActivity extends Activity
         // TextView.setTextKeepState() doesn't like null input.
         if (text != null) {
             // Restore the emojis if necessary
-            SharedPreferences prefs = PreferenceManager
-                    .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-            boolean enableEmojis = prefs.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);
+            boolean enableEmojis = sp.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);
             if (enableEmojis) {
                 mTextEditor.setTextKeepState(EmojiParser.getInstance().addEmojiSpans(text));
             } else {
@@ -3576,6 +3572,16 @@ public class ComposeMessageActivity extends Activity
             }
         } else {
             mTextEditor.setText("");
+        }
+        if (sp.getBoolean(MessagingPreferenceActivity.ENABLE_QUICK_SMILEY_BTN, false)) {
+            ImageButton quickEmojis = (ImageButton) mBottomPanel.findViewById(R.id.add_emoji);
+            quickEmojis.setVisibility(View.VISIBLE);
+            quickEmojis.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showQuickSmileyList();
+                }
+            });
         }
     }
 
@@ -3977,8 +3983,7 @@ public class ComposeMessageActivity extends Activity
             removeRecipientsListeners();
 
             // add signature if set.
-            sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            mSignature = sp.getString(Themes.PREF_SIGNATURE, "");
+            mSignature = sp.getString(Constants.PREF_SIGNATURE, "");
             if (!mSignature.isEmpty()) {
                 mSignature = "\n" + mSignature;
                 mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);
@@ -4525,6 +4530,8 @@ public class ComposeMessageActivity extends Activity
                 public boolean setViewValue(View view, Object data, String textRepresentation) {
                     if (view instanceof ImageView) {
                         Drawable img = getResources().getDrawable((Integer)data);
+                        int smileyColor = sp.getInt(Constants.PREF_SENT_SMILEY, 0xFF33b5e5);
+                        img.setColorFilter(ColorFilterMaker.changeColorAlpha(smileyColor, .32f,0f));
                         ((ImageView)view).setImageDrawable(img);
                         return true;
                     }
@@ -4640,6 +4647,67 @@ public class ComposeMessageActivity extends Activity
         editText.setText("");
 
         mEmojiDialog.show();
+    }
+
+    public void showQuickSmileyList() {
+        final Resources res = getResources();
+        final LayoutInflater dialogInflater = (LayoutInflater)this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        boolean enableEmojis = sp.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);
+
+        // Adapter that shows a list of string resources
+        final ArrayAdapter<Integer> adapter =
+                new ArrayAdapter<Integer>(this, R.layout.select_dialog_item) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final TextView result = (TextView) dialogInflater.inflate(R.layout.select_dialog_item, parent, false);
+
+                final int resId = getItem(position);
+                result.setText(resId);
+                return result;
+            }
+        };
+        adapter.add(R.string.menu_insert_smiley);
+
+        if (enableEmojis) {
+            adapter.add(R.string.menu_insert_emoji);
+        }
+
+        final OnClickListener clickListener = new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean dismissDialog;
+                final int resId = adapter.getItem(which);
+                switch (resId) {
+                    case R.string.menu_insert_smiley: {
+                        dismissDialog = true;
+                        showSmileyDialog();
+                        break;
+                    }
+                    case R.string.menu_insert_emoji: {
+                        dismissDialog = true;
+                        showEmojiDialog();
+                        break;
+                    }
+                    default: {
+                        dismissDialog = true;
+                        Log.e(TAG, "Unexpected resource: "
+                                + res.getResourceEntryName(resId));
+                    }
+                }
+                if (dismissDialog) {
+                    dialog.dismiss();
+                }
+            }
+        };
+
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+
+        b.setTitle(getString(R.string.quick_smiley_title));
+        b.setCancelable(true);
+        b.setSingleChoiceItems(adapter, -1, clickListener);
+        mQuickSmileyDialog = b.create();
+        mQuickSmileyDialog.show();
     }
 
     private CharSequence[] getContactInfoData(long contactId) {
