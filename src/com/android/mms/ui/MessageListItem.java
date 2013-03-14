@@ -745,23 +745,20 @@ public class MessageListItem extends LinearLayout implements
         }
 
         boolean hasSubject = !TextUtils.isEmpty(subject);
-        final int recvColor = Preferences.receivedSmileyColor(sp);
-        final int sentColor = Preferences.sentSmileyColor(sp);
         SmileyParser parser = SmileyParser.getInstance();
         EmojiParser emojiParser = EmojiParser.getInstance();
         if (hasSubject) {
             CharSequence smilizedSubject;
             if (mMessageItem.getBoxId() == 1) {
-                smilizedSubject = parser.addSmileySpansColored(subject, recvColor);
-                if (enableEmojis) {
-                    smilizedSubject = emojiParser.addEmojiSpans(smilizedSubject);
-                }
+                mColor = Preferences.receivedSmileyColor(sp);
             } else {
-                smilizedSubject = parser.addSmileySpansColored(subject, sentColor);
-                if (enableEmojis) {
-                    smilizedSubject = emojiParser.addEmojiSpans(smilizedSubject);
-                }
+                mColor = Preferences.sentSmileyColor(sp);
             }
+            smilizedSubject = parser.addSmileySpansColored(subject, mColor);
+            if (enableEmojis) {
+                smilizedSubject = emojiParser.addEmojiSpans(smilizedSubject);
+            }
+
             // Can't use the normal getString() with extra arguments for string replacement
             // because it doesn't preserve the SpannableText returned by addSmileySpans.
             // We have to manually replace the %s with our text.
@@ -780,16 +777,15 @@ public class MessageListItem extends LinearLayout implements
                     buf.append(" - ");
                 }
                 if (mMessageItem.getBoxId() == 1) {
-                    smileyBody = parser.addSmileySpansColored(body, recvColor);
-                    if (enableEmojis) {
-                        smileyBody = emojiParser.addEmojiSpans(smileyBody);
-                    }
+                    mColor = Preferences.receivedSmileyColor(sp);
                 } else {
-                    smileyBody = parser.addSmileySpansColored(body, sentColor);
-                    if (enableEmojis) {
-                        smileyBody = emojiParser.addEmojiSpans(smileyBody);
-                    }
+                    mColor = Preferences.sentSmileyColor(sp);
                 }
+                smileyBody = parser.addSmileySpansColored(body, mColor);
+                if (enableEmojis) {
+                    smileyBody = emojiParser.addEmojiSpans(smileyBody);
+                }
+
                 buf.append(smileyBody);
             }
         }

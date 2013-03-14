@@ -75,7 +75,14 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -132,25 +139,16 @@ import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.view.ViewStub;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
+import android.widget.*;
+import android.widget.ImageView.ScaleType;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.internal.telephony.TelephonyIntents;
 import com.android.internal.telephony.TelephonyProperties;
@@ -404,6 +402,8 @@ public class ComposeMessageActivity extends Activity
     // signature
     private String mSignature;
     private SharedPreferences sp;
+    // image background
+    private Bitmap mImageBackground;
 
     private int inputMethod;
 
@@ -2425,6 +2425,7 @@ public class ComposeMessageActivity extends Activity
         if (mExitOnSent) {
             outState.putBoolean("exit_on_sent", mExitOnSent);
         }
+        setBackground(); // custom background
     }
 
     @Override
@@ -2464,6 +2465,8 @@ public class ComposeMessageActivity extends Activity
                                 InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|
                                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|
                                 InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
+        setBackground(); // custom background
     }
 
     @Override
@@ -2502,6 +2505,7 @@ public class ComposeMessageActivity extends Activity
 
         mConversation.markAsRead(true);
         mIsRunning = false;
+        setBackground(); // custom background
     }
 
     @Override
@@ -3755,6 +3759,7 @@ public class ComposeMessageActivity extends Activity
                 smoothScrollToEnd(false, height - oldHeight);
             }
         });
+        setBackground(); // custom background
 
         mBottomPanel = findViewById(R.id.bottom_panel);
         mTextEditor = (EditText) findViewById(R.id.embedded_text_editor);
@@ -4708,6 +4713,20 @@ public class ComposeMessageActivity extends Activity
         b.setSingleChoiceItems(adapter, -1, clickListener);
         mQuickSmileyDialog = b.create();
         mQuickSmileyDialog.show();
+    }
+
+    private void setBackground() {
+        final String CUSTOM_IMAGE_PATH = "/data/data/com.android.mms/files/message_list_image.jpg";
+        File file = new File(CUSTOM_IMAGE_PATH);
+
+        mMsgListView.setBackgroundColor(sp.getInt(Constants.PREF_MESSAGE_BG, 0x00000000)); //list background
+
+        if (file.exists()) {
+            mImageBackground = BitmapFactory.decodeFile(CUSTOM_IMAGE_PATH);
+            Drawable d = new BitmapDrawable(getResources(), mImageBackground);
+            d.setColorFilter(sp.getInt(Constants.PREF_MESSAGE_BG, 0x00000000), PorterDuff.Mode.OVERLAY);
+            mMsgListView.setBackgroundDrawable(d);
+        }
     }
 
     private CharSequence[] getContactInfoData(long contactId) {

@@ -72,6 +72,7 @@ public class ThemesMessageList extends PreferenceActivity implements
     CheckBoxPreference mUseContact;
     CheckBoxPreference mShowAvatar;
     CheckBoxPreference mBubbleFillParent;
+    EditTextPreference mAddSignature;
     ListPreference mTextLayout;
     ListPreference mContactFontSize;
     ListPreference mFontSize;
@@ -99,9 +100,9 @@ public class ThemesMessageList extends PreferenceActivity implements
     private void loadPrefs() {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences_themes_msglist);
-
         PreferenceScreen prefSet = getPreferenceScreen();
 
+        mAddSignature = (EditTextPreference) findPreference(Constants.PREF_SIGNATURE);
         mUseContact = (CheckBoxPreference) prefSet.findPreference(Constants.PREF_USE_CONTACT);
         mShowAvatar = (CheckBoxPreference) prefSet.findPreference(Constants.PREF_SHOW_AVATAR);
         mBubbleFillParent = (CheckBoxPreference) prefSet.findPreference(Constants.PREF_BUBBLE_FILL_PARENT);
@@ -197,6 +198,11 @@ public class ThemesMessageList extends PreferenceActivity implements
             int index = mBubbleType.findIndexOfValue((String) newValue);
             mBubbleType.setSummary(mBubbleType.getEntries()[index]);
             return true;
+        } else if (preference == mAddSignature) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(Constants.PREF_SIGNATURE, (String) newValue);
+            editor.commit();
         }
         return result;
     }
@@ -252,7 +258,13 @@ public class ThemesMessageList extends PreferenceActivity implements
         loadPrefs();
     }
 
+    private void setSignature() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mAddSignature.setText(sp.getString(Constants.PREF_SIGNATURE, ""));
+    }
+
     private void registerListeners() {
+        mAddSignature.setOnPreferenceChangeListener(this);
         mTextLayout.setOnPreferenceChangeListener(this);
         mContactFontSize.setOnPreferenceChangeListener(this);
         mContactFontSize.setValue(Integer.toString(Settings.System.getInt(this.getContentResolver(),

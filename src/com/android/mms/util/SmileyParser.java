@@ -22,13 +22,13 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 
 import com.android.mms.R;
-import com.android.mms.ui.ColorFilterMaker;
 
 /**
  * A class for annotating a CharSequence with spans to convert textual emoticons
@@ -215,9 +215,9 @@ public class SmileyParser {
         while (matcher.find()) {
             int resId = mSmileyToRes.get(matcher.group());
             ImageSpan mSpan = new ImageSpan(mContext, resId);
-            mSpan.getDrawable().setColorFilter(ColorFilterMaker.changeColorAlpha(color, .32f,0f));
+            mSpan.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             builder.setSpan(mSpan, matcher.start(),
-                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return builder;
     }
