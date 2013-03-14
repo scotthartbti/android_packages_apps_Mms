@@ -49,7 +49,7 @@
     <!-- Context menu item on an individual conversation for viewing that conversation -->
     <string name="menu_view">View thread</string>
     <!-- Menu item for debugging - do not localize -->
-    <string name="menu_debug_dump" translatable="false">DEBUG DUMP</string>
+    <string name="menu_debug_dump">DEBUG DUMP</string>
     <!-- Message that appears on screen while SIM card messages are retrieved -->
     <string name="refreshing">Refreshing\u2026</string>
 
@@ -163,6 +163,8 @@
     <string name="send">Send</string>
     <!-- Text to appear directly below the "Send" text on the SMS/MMS send button. The "MMS" text is on a second line in a smaller font. This is similar to saying "Send (mms)". -->
     <string name="mms">MMS</string>
+    <!-- Content description for the send button when sending an mms (imperative verb) -->
+    <string name="send_mms">Send MMS</string>
 
     <!-- Menu item in conversation screen for returning to the conversation list -->
     <string name="all_threads">All threads</string>
@@ -215,8 +217,6 @@
 
     <!-- Brief message that appears when converting a message from SMS to MMS. -->
     <string name="converting_to_picture_message">Converting to multimedia message\u2026</string>
-    <!-- Brief message that appears when converting a message from MMS to SMS. -->
-    <string name="converting_to_text_message">Converting to text message\u2026</string>
     <!-- Brief message that appears when the maximum number of slides has been reached -->
     <string name="cannot_add_slide_anymore">Can\'t add more slides.</string>
     <!-- Brief message that appears when user tries to add picture to a slide which already has a video. -->
@@ -329,10 +329,14 @@
     <string name="pref_summary_auto_delete">Delete old messages as limits are reached</string>
     <!-- Settings item description for integer auto-delete sms message limit -->
     <string name="pref_summary_delete_limit"><xliff:g id="count">%1$s</xliff:g> messages per conversation</string>
+    <!-- Settings item description for boolean MMS enable group MMS setting -->
+    <string name="pref_summary_mms_group_mms">Use MMS to send a single message when there are multiple recipients</string>
     <!-- Settings item for entering SIM card message screen -->
     <string name="pref_title_manage_sim_messages">Manage SIM card messages</string>
     <!-- Settings item for boolean option to enable/disable MMS delivery reports -->
     <string name="pref_title_mms_delivery_reports">Delivery reports</string>
+    <!-- Settings item for boolean option to enable/disable MMS group messages -->
+    <string name="pref_title_mms_group_mms">Group messaging</string>
     <!-- Settings item for boolean option to enable/disable MMS read reports -->
     <string name="pref_title_mms_read_reports">Read reports</string>
     <!-- Settings item for boolean option to enable/disable SMS delivery reports -->
@@ -345,7 +349,7 @@
     <string name="pref_title_mms_delete">Multimedia message limit</string>
     <!-- Settings item for boolean option to display message notifications -->
     <string name="pref_title_notification_enabled">Notifications</string>
-     <!-- Settings item for boolean option to vibrate during message notification -->
+    <!-- Settings item for boolean option to vibrate during message notification -->
     <string name="pref_title_notification_vibrateWhen">Vibrate</string>
     <!-- Settings item for entering ringtone selection screen -->
     <string name="pref_title_notification_ringtone">Sound</string>
@@ -355,10 +359,6 @@
     <!-- Settings item for the soft keyboard picker -->
     <string name="pref_title_input_type">Soft keyboard type</string>
     <string name="pref_summary_input_type">Select the soft keyboard to use when composing messages</string>
-    <!-- Settings item for boolean option for group MMS sending/receiving -->
-    <string name="pref_title_mms_group_mms">Group messaging</string>
-    <!-- Settings item description for boolean group MMS sending/receiving -->
-    <string name="pref_summary_mms_group_mms">Enable group MMS sending and receiving</string>
 
     <!-- Settings item for SMS Split 160 characters setting -->
     <string name="pref_title_sms_split_160">SMS split</string>
@@ -372,19 +372,9 @@
     <string name="silent_ringtone">Silent</string>
 
     <!-- The value to use when migrating from old versions for a true vibrate setting -->
-    <string name="prefDefault_vibrate_true" translatable="false">always</string>
+    <string translatable="false" name="prefDefault_vibrate_true">always</string>
     <!-- The value to use when migrating from old versions for a false vibrate setting -->
-    <string name="prefDefault_vibrate_false" translatable="false">never</string>
-
-    <!-- The vibrateWhen values -->
-    <string-array name="prefValues_vibrateWhen" translatable="false">
-        <item>always</item>
-        <item>silent</item>
-        <item>never</item>
-    </string-array>
-
-    <!-- Dialog title for the Vibrate dialog -->
-    <string name="prefDialogTitle_vibrateWhen">Vibrate</string>
+    <string translatable="false" name="prefDefault_vibrate_false">never</string>
 
     <!-- Settings item for boolean option to auto-retrieve incoming MMS messages -->
     <string name="pref_title_mms_auto_retrieval">Auto-retrieve</string>
@@ -627,23 +617,17 @@
     <string name="copy_to_sdcard_success">Attachment saved.</string>
     <!-- Toast message on failed copy to shared storage [CHAR LIMIT=30] -->
     <string name="copy_to_sdcard_fail">Couldn\'t save attachment.</string>
-    <!-- File name used to copy an attachment to the shared storage
-    if the received location is not a valid file name -->
-    <string translatable="false" name="copy_to_sdcard_filename_fallback">mms</string>
     <!-- Menu title to save a sound as a ringtone -->
     <string name="save_ringtone">Save as ringtone</string>
     <!-- Toast message on successful copying ringtone to drm provider -->
     <string name="saved_ringtone">Ringtone saved.</string>
     <!-- Toast message on failed copying ringtone to drm provider -->
     <string name="saved_ringtone_fail">Couldn\'t save ringtone.</string>
-    <!-- Menu item  [CHAR LIMIT=40] -->
-    <string name="menu_group_participants">Group participants</string>
-    <!-- File name used to save a sound as a ringtone
-    if the received location is not a valid file name -->
-    <string translatable="false" name="save_ringtone_filename_fallback">mms_ringtone</string>
     <!-- Menu item -->
     <string name="menu_insert_smiley">Insert smiley</string>
     <string name="menu_insert_emoji">Insert emojis</string>
+    <!-- Menu item  [CHAR LIMIT=40] -->
+    <string name="menu_group_participants">Group participants</string>
 
     <!-- Quick smiley title -->
     <string name="quick_smiley_title">Quick smiley insert</string>
@@ -908,14 +892,14 @@
     <!-- Start of adding custom theme'n aspects to Mms
          Much thanks to @DroidJunk (jimmy miller) for the guide -->
     <!-- MMS THEME SETTINGS -->
-    <string name="themes">Mms theme Settings</string>
+    <string name="mms_themes">Mms theme settings</string>
     <string name="themes_summary">Change the way mms looks</string>
-    <string name="themes_conv_list_title">Conversations list</string>
-    <string name="themes_conv_list_summary">Convs list screen colors</string>
-    <string name="themes_msg_list_title">Messaging style</string>
-    <string name="themes_msg_list_summary">Messaging view color and style</string>
-    <string name="themes_widget_title">Widgets colors</string>
-    <string name="themes_widget_summary">Text colors on the messaging widget</string>
+    <string name="themes_conv_list_title">Conversations list view</string>
+    <string name="themes_conv_list_summary">Change conversation list view style, text colors, and more.</string>
+    <string name="themes_msg_list_title">Message list view</string>
+    <string name="themes_msg_list_summary">Change messaging list view style, text colors, and more</string>
+    <string name="themes_widget_title">Widgets theme style</string>
+    <string name="themes_widget_summary">Change widget style dark/light, and set the text colors</string>
     <string name="background_colors">Background</string>
     <string name="restore_defaults">Restore default settings</string>
     <string name="delete_custom_image">Delete background image</string>
