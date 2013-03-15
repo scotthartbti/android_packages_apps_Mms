@@ -20,15 +20,44 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference
-        android:title="@string/themes"
-        android:summary="@string/themes_summary"
-        android:key="pref_themes">
-        <intent
-            android:action="android.intent.action.MAIN"
-            android:targetClass="com.android.mms.themes.Themes"
-            android:targetPackage="com.android.mms" />
-    </Preference>
+    <PreferenceCategory
+        android:title="@string/mms_themes"
+        android:key="pref_mms_themes">
+
+        <Preference
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:title="@string/themes_conv_list_title"
+            android:summary="@string/themes_conv_list_summary"
+            android:key="pref_themes_conversation_list">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.android.mms.themes.ThemesConversationList"
+                android:targetPackage="com.android.mms" />
+        </Preference>
+
+        <Preference
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:title="@string/themes_msg_list_title"
+            android:summary="@string/themes_msg_list_summary"
+            android:key="pref_themes_message_list">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.android.mms.themes.ThemesMessageList"
+                android:targetPackage="com.android.mms" />
+        </Preference>
+
+        <Preference
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:title="@string/themes_widget_title"
+            android:summary="@string/themes_widget_summary"
+            android:key="pref_themes_widgets_list">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.android.mms.themes.ThemesWidgets"
+                android:targetPackage="com.android.mms" />
+        </Preference>
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/pref_sms_storage_title"

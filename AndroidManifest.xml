@@ -349,11 +349,6 @@
             android:label="@string/template_new_title">
         </activity>
         <activity
-            android:name=".themes.Themes"
-            android:theme="@style/MmsHoloTheme"
-            android:label="@string/themes" >
-        </activity>
-        <activity
             android:name=".themes.ThemesConversationList"
             android:theme="@style/MmsHoloTheme"
             android:label="@string/themes_conv_list_title" >

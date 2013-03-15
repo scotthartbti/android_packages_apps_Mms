@@ -19,13 +19,9 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/msg_list_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.android.mms.themes.ThemesCustomImageMsgList
-        android:id="@+id/msg_list_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"

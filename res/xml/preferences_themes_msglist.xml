@@ -60,6 +60,15 @@
         android:title="@string/bubble_fill_parent_title"
         android:defaultValue="false" />
 
+    <EditTextPreference
+        android:layout="?android:attr/preferenceLayoutChild"
+        android:key="pref_signature"
+        android:dialogTitle="@string/add_signature_title"
+        android:hint="@string/enter_text"
+        android:title="@string/add_signature_title"
+        android:summary="@string/add_signature_summary"
+        android:defaultValue="" />
+
     <PreferenceCategory
         android:key="pref_background_colors"
         android:title="@string/background_colors">

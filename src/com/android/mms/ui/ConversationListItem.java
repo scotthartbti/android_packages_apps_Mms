@@ -225,14 +225,15 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
 
         SmileyParser parser = SmileyParser.getInstance();
         // Subject
-        final int unreadColor = Preferences.unreadSmileyColor(sp);
-        final int readColor = Preferences.readSmileyColor(sp);
+        int mColor = 0;
         CharSequence smileySubject;
         if (mConversation.hasUnreadMessages()) {
-            smileySubject = parser.addSmileySpansColored(conversation.getSnippet(), unreadColor);
+            mColor = Preferences.unreadSmileyColor(sp);
         } else {
-            smileySubject = parser.addSmileySpansColored(conversation.getSnippet(), readColor);
+            mColor = Preferences.readSmileyColor(sp);
         }
+        smileySubject = parser.addSmileySpansColored(conversation.getSnippet(), mColor);
+
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
         boolean enableEmojis = prefs.getBoolean(MessagingPreferenceActivity.ENABLE_EMOJIS, false);

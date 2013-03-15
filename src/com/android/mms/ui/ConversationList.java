@@ -42,6 +42,7 @@ import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
@@ -129,7 +130,8 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     private final static String LAST_LIST_OFFSET = "last_list_offset";
 
     private ListView listView;
-    private static Bitmap mCustomImageBackground;
+    // image background
+    private Bitmap mImageBackground;
 
     static private final String CHECKED_MESSAGE_LIMITS = "checked_message_limits";
 
@@ -152,8 +154,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         // Tell the list view which view to display when the list is empty
         listView.setEmptyView(findViewById(R.id.empty));
-        listView.setBackgroundColor(mPrefs.getInt(Constants.PREF_CONV_LIST_BG, 0X00000000)); //list background
-        setBackground(this, (ViewGroup) findViewById(R.id.conv_list_screen)); // custom background
+        setBackground(); // custom background
 
         initListAdapter();
 
@@ -182,6 +183,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         outState.putInt(LAST_LIST_POS, mSavedFirstVisiblePosition);
         outState.putInt(LAST_LIST_OFFSET, mSavedFirstItemOffset);
+        setBackground(); // custom background
     }
 
     @Override
@@ -196,6 +198,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         View firstChild = listView.getChildAt(0);
         mSavedFirstItemOffset = (firstChild == null) ? 0 : firstChild.getTop();
         mIsRunning = false;
+        setBackground(); // custom background
     }
 
     private void setupActionBar() {
@@ -333,6 +336,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     protected void onResume() {
         super.onResume();
         mIsRunning = true;
+        setBackground(); // custom background
     }
 
     @Override
@@ -694,31 +698,17 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             .show();
     }
 
-    public static void setBackground(Context context, ViewGroup layout) {
+    private void setBackground() {
         final String CUSTOM_IMAGE_PATH = "/data/data/com.android.mms/files/conversation_list_image.jpg";
         File file = new File(CUSTOM_IMAGE_PATH);
 
+        listView.setBackgroundColor(mPrefs.getInt(Constants.PREF_CONV_LIST_BG, 0x00000000)); //list background
+
         if (file.exists()) {
-            ViewParent parent =  layout.getParent();
-            if (parent != null) {
-                //change parent to show background correctly on scale
-                RelativeLayout rlout = new RelativeLayout(context);
-                ((ViewGroup) parent).removeView(layout);
-                layout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                ((ViewGroup) parent).addView(rlout); // change parent to new layout
-                rlout.addView(layout);
-                // create framelayout and add imageview to set background
-                FrameLayout flayout = new FrameLayout(context);
-                flayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                ImageView mCustomImage = new ImageView(flayout.getContext());
-                mCustomImage.setScaleType(ScaleType.CENTER_CROP);
-                flayout.addView(mCustomImage, -1, -1);
-                mCustomImageBackground = BitmapFactory.decodeFile(CUSTOM_IMAGE_PATH);
-                Drawable d = new BitmapDrawable(context.getResources(), mCustomImageBackground);
-                mCustomImage.setImageDrawable(d);
-                // add background to lock screen.
-                rlout.addView(flayout,0);
-            }
+            mImageBackground = BitmapFactory.decodeFile(CUSTOM_IMAGE_PATH);
+            Drawable d = new BitmapDrawable(getResources(), mImageBackground);
+            d.setColorFilter(mPrefs.getInt(Constants.PREF_CONV_LIST_BG, 0x00000000), PorterDuff.Mode.SRC_ATOP);
+            listView.setBackgroundDrawable(d);
         }
     }
 
