@@ -45,7 +45,7 @@ public class MmsSystemEventReceiver extends BroadcastReceiver {
     private static final String TAG = "MmsSystemEventReceiver";
     private static MmsSystemEventReceiver sMmsSystemEventReceiver;
 
-    private static void wakeUpService(Context context) {
+    public static void wakeUpService(Context context) {
         if (Log.isLoggable(LogTag.TRANSACTION, Log.VERBOSE)) {
             Log.v(TAG, "wakeUpService: start transaction service ...");
         }
