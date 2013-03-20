@@ -153,9 +153,20 @@ import android.widget.*;
 import android.widget.ImageView.ScaleType;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.internal.telephony.TelephonyIntents;
 import com.android.internal.telephony.TelephonyProperties;
+import com.android.internal.util.CharSequences;
 import com.android.mms.LogTag;
 import com.android.mms.MmsApp;
 import com.android.mms.MmsConfig;
@@ -328,6 +339,7 @@ public class ComposeMessageActivity extends Activity
 
     private RecipientsEditor mRecipientsEditor;  // UI control for editing recipients
     private ImageButton mRecipientsPicker;       // UI control for recipients picker
+    private ImageButton mRecipientsSelector;       // UI control for recipients selector
 
     private boolean mIsKeyboardOpen;             // Whether any keyboard is open
     private boolean mIsHardKeyboardOpen;         // Whether the hard keyboard is open
@@ -1963,12 +1975,15 @@ public class ComposeMessageActivity extends Activity
             View stubView = stub.inflate();
             mRecipientsEditor = (RecipientsEditor) stubView.findViewById(R.id.recipients_editor);
             mRecipientsPicker = (ImageButton) stubView.findViewById(R.id.recipients_picker);
+            mRecipientsSelector = (ImageButton) stubView.findViewById(R.id.recipients_selector);
         } else {
             mRecipientsEditor = (RecipientsEditor)findViewById(R.id.recipients_editor);
             mRecipientsEditor.setVisibility(View.VISIBLE);
             mRecipientsPicker = (ImageButton)findViewById(R.id.recipients_picker);
+            mRecipientsSelector = (ImageButton)findViewById(R.id.recipients_selector);
         }
         mRecipientsPicker.setOnClickListener(this);
+        mRecipientsSelector.setOnClickListener(this);
 
         mRecipientsEditor.setAdapter(new ChipsRecipientAdapter(this));
         mRecipientsEditor.populate(recipients);
@@ -2084,6 +2099,7 @@ public class ComposeMessageActivity extends Activity
         mBackgroundQueryHandler = new BackgroundQueryHandler(mContentResolver);
 
         initialize(savedInstanceState, 0);
+        updateEasySelector();
 
         if (TRACE) {
             android.os.Debug.startMethodTracing("compose");
@@ -2560,6 +2576,7 @@ public class ComposeMessageActivity extends Activity
                                 InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
         setBackground(); // custom background
+        updateEasySelector();
     }
 
     @Override
@@ -3717,6 +3734,9 @@ public class ComposeMessageActivity extends Activity
             confirmSendMessageIfNeeded();
         } else if ((v == mRecipientsPicker)) {
             launchMultiplePhonePicker();
+        } else if ((v == mRecipientsSelector)) {
+            //Toast.makeText(getApplicationContext(), "click sur selecteur", Toast.LENGTH_LONG).show();
+            launchRecipientsSelector();
         }
     }
 
@@ -3738,6 +3758,100 @@ public class ComposeMessageActivity extends Activity
             intent.putExtra(Intents.EXTRA_PHONE_URIS, uris);
         }
         startActivityForResult(intent, REQUEST_CODE_PICK);
+    }
+
+    private ArrayList<CharSequence[]> getContactsNumbersInfo() {
+        final String[] projection = new String[] {
+                Phone.NUMBER,
+                Phone.TYPE,
+                Phone.LABEL,
+                Phone.DISPLAY_NAME,
+                Phone.IS_PRIMARY
+        };
+        final String where = Phone.NUMBER + " NOT NULL";
+        final String orderBy = Phone.DISPLAY_NAME + ", "
+              + "CASE WHEN " + Phone.IS_PRIMARY + " = 0 THEN 1 ELSE 0 END";
+
+        final Cursor cursor = getContentResolver().query(Phone.CONTENT_URI,
+                projection, where, null, orderBy);
+
+        if (cursor == null) {
+            return null;
+        }
+
+        final int count = cursor.getCount();
+
+        if (count == 0) {
+            cursor.close();
+            return null;
+        }
+
+        final ArrayList<CharSequence[]> items = new ArrayList<CharSequence[]>(count);
+
+        for (int i = 0; i < count; i++) {
+            cursor.moveToPosition(i);
+
+            String number = cursor.getString(0);
+            int type = cursor.getInt(1);
+            String label = cursor.getString(2);
+            String name = cursor.getString(3);
+
+            items.add(i, new CharSequence[] {name, Phone.getTypeLabel(getResources(), type, label), number});
+        }
+
+        cursor.close();
+
+        return items;
+    }
+
+    private void launchRecipientsSelector() {
+        final int displayNameColumn = 0;
+        final int labelColumn = 1;
+        final int numberColumn = 2;
+
+        final ArrayList<CharSequence[]> data = getContactsNumbersInfo();
+
+        if (data == null) {
+            return;
+        }
+
+        final int count = data.size();
+        final CharSequence[] entries = new CharSequence[count];
+        for (int i = 0; i < count; i++) {
+            entries[i] = data.get(i)[displayNameColumn] + " - " + data.get(i)[labelColumn]
+                    + "\n" + data.get(i)[numberColumn];
+        }
+
+        final boolean[] numbersChecked = new boolean[entries.length];
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.ic_contact_picture);
+        builder.setTitle(R.string.add_recipients);
+
+        builder.setMultiChoiceItems(entries, null, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                numbersChecked[which] = isChecked;
+            }
+        });
+
+        builder.setPositiveButton(R.string.add_recipients_positive_button,
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < count; i++) {
+                    if (numbersChecked[i]) {
+                        int start = mRecipientsEditor.getSelectionStart();
+                        int end = mRecipientsEditor.getSelectionEnd();
+                        mRecipientsEditor.getText().replace(
+                                Math.min(start, end), Math.max(start, end), data.get(i)[numberColumn] + ",");
+                    }
+                }
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+
+        builder.show();
     }
 
     @Override
@@ -5134,5 +5248,17 @@ public class ComposeMessageActivity extends Activity
                 return builder.create();
         }
         return super.onCreateDialog(id, args);
+    }
+
+    void updateEasySelector() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
+        LinearLayout mEasySelector = (LinearLayout) findViewById(R.id.button_multi_selection);
+        if (mEasySelector == null) return;
+        if (prefs.getBoolean("pref_easy_selector", false) == true) {
+            mEasySelector.setVisibility(View.VISIBLE);
+        } else {
+            mEasySelector.setVisibility(View.GONE);
+        }
     }
 }
