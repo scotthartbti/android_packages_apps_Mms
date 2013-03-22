@@ -779,6 +779,7 @@
     <!-- Direct Call Feature -->
     <string name="direct_call_title">Direct Call</string>
     <string name="direct_call_summary">Picking up the phone calls the current contact</string>
+    <string name="pref_char_settings">Char settings</string> 
 
     <!-- Message Font size -->
     <string name="pref_title_mms_message_font_size">Message font size</string>
@@ -789,5 +790,9 @@
     <string name="msg_sig_title">Signature</string>
     <string name="msg_sig_summary">Set a custom Signature for messages</string>
     <string name="msg_sig_enter_text">Enter signature text</string>
+
+    <!-- Avatar -->
+    <string name="hide_avatar">Hide Avatar</string>
+    <string name="hide_avatar_summary">Hide avatar in the conversations list screen</string> 
 </resources>
 
