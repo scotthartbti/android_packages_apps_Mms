@@ -61,11 +61,8 @@
     <color name="background">#ff000000</color>
     <color name="darkgray_backgrounds">#ff111111</color>
     <color name="dividers">#ff202020</color>
-    <color name="background">#ffffff</color>
-    <color name="darkgray_backgrounds">#888888</color>
+    <color name="quickmessage_body_dark_bg">#ff010101</color>
     <color name="quickmessage_body_light_bg">#fff3f3f3</color>
-    <color name="quickmessage_body_dark_bg">#ff1e1e1e</color>
-    <color name="dividers">#eeeeee</color>
     <color name="transparent">#00000000</color>
 
     <!-- Quick messaging colors -->
@@ -76,8 +73,6 @@
     <color name="qm_dark_bg">#ff020202</color>
     <color name="qm_dark_text">#ffefefef</color>
     <color name="qm_dark_text_fade">#ffafafaf</color>
-    <color name="quickmessage_body_dark_bg">#ff010101</color>
-    <color name="quickmessage_body_light_bg">#fff3f3f3</color>
 
     <!-- widget background colors for unread/read -->
     <color name="widget_unread_bgcolor">#8f2f2f2f</color>
