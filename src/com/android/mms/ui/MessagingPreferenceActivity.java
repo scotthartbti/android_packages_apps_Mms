@@ -77,17 +77,11 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static final String AUTO_DELETE              = "pref_key_auto_delete";
     public static final String GROUP_MMS_MODE           = "pref_key_mms_group_mms";
 
-    // Emoji
-    public static final String ENABLE_EMOJIS             = "pref_key_enable_emojis";
-
     // Unicode
     public static final String UNICODE_STRIPPING            = "pref_key_unicode_stripping";
     public static final String UNICODE_STRIPPING_VALUE      = "pref_key_unicode_stripping_value";
     public static final int UNICODE_STRIPPING_LEAVE_INTACT  = 0;
     public static final int UNICODE_STRIPPING_NON_DECODABLE = 1;
-
-    // Split sms
-    public static final String SMS_SPLIT_COUNTER        = "pref_key_sms_split_counter";
 
     // Templates
     public static final String MANAGE_TEMPLATES         = "pref_key_templates_manage";
