@@ -453,18 +453,13 @@ public class ComposeMessageActivity extends Activity
     // that would switch the message from 7-bit GSM encoding (160 char limit)
     // to 16-bit Unicode encoding (70 char limit).
 
-    private static class StripUnicode implements InputFilter {
+    private class StripUnicode implements InputFilter {
+
         private CharsetEncoder gsm =
             Charset.forName("gsm-03.38-2000").newEncoder();
 
         private Pattern diacritics =
             Pattern.compile("\\p{InCombiningDiacriticalMarks}");
-
-        private boolean mStripNonDecodableOnly = false;
-
-        StripUnicode(boolean stripping) {
-            mStripNonDecodableOnly = stripping;
-        }
 
         public CharSequence filter(CharSequence source, int start, int end,
                                    Spanned dest, int dstart, int dend) {
@@ -476,7 +471,7 @@ public class ComposeMessageActivity extends Activity
                 char c = source.charAt(i);
 
                 // Character is encodable by GSM, skip filtering
-                if (mStripNonDecodableOnly && gsm.canEncode(c)) {
+                if (gsm.canEncode(c)) {
                     output.append(c);
                 }
                 // Character requires Unicode, try to replace it
@@ -2066,15 +2061,11 @@ public class ComposeMessageActivity extends Activity
 
         resetConfiguration(getResources().getConfiguration());
 
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-        mGestureSensitivity = prefs
-                .getInt(MessagingPreferenceActivity.GESTURE_SENSITIVITY_VALUE, 3);
-        boolean showGesture = prefs.getBoolean(MessagingPreferenceActivity.SHOW_GESTURE, false);
-        int unicodeStripping = prefs.getInt(MessagingPreferenceActivity.UNICODE_STRIPPING_VALUE,
-                MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT);
-        mInputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE,
-                Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
+        sp = PreferenceManager.getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
+        mGestureSensitivity = sp.getInt(MessagingPreferenceActivity.GESTURE_SENSITIVITY_VALUE, 3);
+        boolean showGesture = sp.getBoolean(MessagingPreferenceActivity.SHOW_GESTURE, false);
+        boolean stripUnicode = sp.getBoolean(MessagingPreferenceActivity.STRIP_UNICODE, false);
+        inputMethod = Integer.parseInt(sp.getString(MessagingPreferenceActivity.INPUT_TYPE, Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
 
         mLibrary = TemplateGesturesLibrary.getStore(this);
 
@@ -2098,11 +2089,8 @@ public class ComposeMessageActivity extends Activity
 
         LengthFilter lengthFilter = new LengthFilter(MmsConfig.getMaxTextLimit());
 
-        if (unicodeStripping != MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT) {
-            boolean stripNonDecodableOnly = unicodeStripping == MessagingPreferenceActivity
-                    .UNICODE_STRIPPING_NON_DECODABLE;
-            mTextEditor.setFilters(new InputFilter[] { new StripUnicode(stripNonDecodableOnly),
-                    lengthFilter });
+        if (stripUnicode) {
+            mTextEditor.setFilters(new InputFilter[] { new StripUnicode(), lengthFilter });
         } else {
             mTextEditor.setFilters(new InputFilter[] { lengthFilter });
         }
