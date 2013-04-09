@@ -121,7 +121,7 @@
             android:key="pref_key_sms_EnableMultipartSMS"
             android:title="@string/pref_title_sms_EnableMultipartSMS"
             android:summary="@string/pref_summary_sms_EnableMultipartSMS"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
         <Preference
             android:key="pref_key_sms_SmsToMmsTextThreshold"
