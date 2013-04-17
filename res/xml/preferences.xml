@@ -332,6 +332,12 @@
                 android:targetClass="com.android.mms.BlacklistSetting" />
         </PreferenceScreen>
 
+        <Preference
+            android:key="pref_text_area_size"
+            android:persistent="false"
+            android:title="@string/pref_text_area_size_title"
+            android:summary="@string/pref_text_area_size_summary" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

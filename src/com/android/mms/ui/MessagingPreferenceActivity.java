@@ -104,6 +104,12 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     // Blacklist
     public static final String BUTTON_BLACKLIST  = "button_blacklist";
 
+    // Text Area
+    private static final String PREF_TEXT_AREA_SIZE      = "pref_text_area_size";
+    public static final String TEXT_AREA_SIZE            = "text_area_size";
+    private static final int TEXT_AREA_LIMIT_MIN         = 2;
+    private static final int TEXT_AREA_LIMIT_MAX         = 15;
+
     // Menu entries
     private static final int MENU_RESTORE_DEFAULTS    = 1;
 
@@ -126,6 +132,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     private RingtonePreference mRingtonePref;
     private Recycler mSmsRecycler;
     private Recycler mMmsRecycler;
+    private Preference mTextAreaSize;
     private Preference mManageTemplate;
     private ListPreference mGestureSensitivity;
     private static final int CONFIRM_CLEAR_SEARCH_HISTORY_DIALOG = 3;
@@ -191,6 +198,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mRingtonePref = (RingtonePreference) findPreference(NOTIFICATION_RINGTONE);
         mManageTemplate = findPreference(MANAGE_TEMPLATES);
         mGestureSensitivity = (ListPreference) findPreference(GESTURE_SENSITIVITY);
+	mTextAreaSize = findPreference(PREF_TEXT_AREA_SIZE);
 
         mEnableMultipartSMS = (CheckBoxPreference)findPreference("pref_key_sms_EnableMultipartSMS");
         mSmsToMmsTextThreshold = findPreference("pref_key_sms_SmsToMmsTextThreshold");
@@ -287,6 +295,9 @@ public class MessagingPreferenceActivity extends PreferenceActivity
 
         // Privacy mode
         setEnabledPrivacyModePref();
+
+	// Text Area
+        setTextAreaSummary();
 
         // QuickMessage
         setEnabledQuickMessagePref();
@@ -399,6 +410,24 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mEnableQmDarkThemePref.setChecked(getQmDarkThemeEnabled(this));
     }
 
+    private void setTextAreaSize(Context context, int value) {
+        SharedPreferences.Editor editPrefs =
+            PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editPrefs.putInt(TEXT_AREA_SIZE, value);
+        editPrefs.apply();
+    }
+
+    private int getTextAreaSize(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getInt(TEXT_AREA_SIZE, 3);
+    }
+
+    private void setTextAreaSummary() {
+        mTextAreaSize.setSummary(
+                getString(R.string.pref_text_area_size_summary,
+                        getTextAreaSize(this)));
+    }
+
     private void setSmsDisplayLimit() {
         mSmsLimitPref.setSummary(
                 getString(R.string.pref_summary_delete_limit,
@@ -466,6 +495,14 @@ public class MessagingPreferenceActivity extends PreferenceActivity
                     MmsConfig.getSmsToMmsTextThresholdMin()-1,
                     MmsConfig.getSmsToMmsTextThresholdMax()-1,
                     R.string.pref_title_sms_SmsToMmsTextThreshold).show();
+
+	} else if (preference == mTextAreaSize) {
+            new NumberPickerDialog(this,
+                    mTextAreaSizeListener,
+                    getTextAreaSize(this),
+                    TEXT_AREA_LIMIT_MIN,
+                    TEXT_AREA_LIMIT_MAX,
+                    R.string.pref_text_area_size_title).show();
 
         } else if (preference == mManageSimPref) {
             startActivity(new Intent(this, ManageSimMessages.class));
@@ -560,6 +597,14 @@ public class MessagingPreferenceActivity extends PreferenceActivity
                     setSmsToMmsTextThreshold();
                 }
         };
+
+     NumberPickerDialog.OnNumberSetListener mTextAreaSizeListener =
+        new NumberPickerDialog.OnNumberSetListener() {
+            public void onNumberSet(int value) {
+                setTextAreaSize(MessagingPreferenceActivity.this, value);
+                setTextAreaSummary();
+            }
+    };
 
     @Override
     protected Dialog onCreateDialog(int id) {
