@@ -92,6 +92,7 @@ public class Contact {
     private boolean mQueryPending;
     private boolean mIsMe;          // true if this contact is me!
     private boolean mSendToVoicemail;   // true if this contact should not put up notification
+    private String mCustomNotification;
 
     public interface UpdateListener {
         public void onUpdate(Contact updated);
@@ -122,6 +123,7 @@ public class Contact {
         mPresenceResId = 0;
         mIsStale = true;
         mSendToVoicemail = false;
+	mCustomNotification = null;
     }
     @Override
     public String toString() {
@@ -230,6 +232,10 @@ public class Contact {
 
     public synchronized String getNumber() {
         return mNumber;
+    }
+
+    public synchronized String getCustomNotification() {
+        return mCustomNotification;
     }
 
     public synchronized void setNumber(String number) {
@@ -424,7 +430,8 @@ public class Contact {
                 Phone.CONTACT_PRESENCE,         // 5
                 Phone.CONTACT_STATUS,           // 6
                 Phone.NORMALIZED_NUMBER,        // 7
-                Contacts.SEND_TO_VOICEMAIL      // 8
+                Contacts.SEND_TO_VOICEMAIL,     // 8
+		Contacts.CUSTOM_NOTIFICATION    // 9
         };
 
         private static final int PHONE_ID_COLUMN = 0;
@@ -436,6 +443,7 @@ public class Contact {
         private static final int CONTACT_STATUS_COLUMN = 6;
         private static final int PHONE_NORMALIZED_NUMBER = 7;
         private static final int SEND_TO_VOICEMAIL = 8;
+	private static final int CUSTOM_NOTIFICATION = 9;
 
         private static final String[] SELF_PROJECTION = new String[] {
                 Phone._ID,                      // 0
@@ -457,7 +465,8 @@ public class Contact {
                 Email.CONTACT_PRESENCE,       // 2
                 Email.CONTACT_ID,             // 3
                 Phone.DISPLAY_NAME,           // 4
-                Contacts.SEND_TO_VOICEMAIL    // 5
+                Contacts.SEND_TO_VOICEMAIL,    // 5
+		Contacts.CUSTOM_NOTIFICATION  // 6
         };
         private static final int EMAIL_ID_COLUMN = 0;
         private static final int EMAIL_NAME_COLUMN = 1;
@@ -465,6 +474,7 @@ public class Contact {
         private static final int EMAIL_CONTACT_ID_COLUMN = 3;
         private static final int EMAIL_CONTACT_NAME_COLUMN = 4;
         private static final int EMAIL_SEND_TO_VOICEMAIL_COLUMN = 5;
+	private static final int EMAIL_CUSTOM_NOTIFICATION_COLUMN = 6;
 
         private final Context mContext;
 
@@ -690,6 +700,10 @@ public class Contact {
                 return true;
             }
 
+	    if (!TextUtils.equals(orig.mCustomNotification, newContactData.mCustomNotification)) {
+                return true;
+            }
+
             String oldName = emptyIfNull(orig.mName);
             String newName = emptyIfNull(newContactData.mName);
             if (!oldName.equals(newName)) {
@@ -742,6 +756,7 @@ public class Contact {
                     c.mNumberE164 = entry.mNumberE164;
                     c.mName = entry.mName;
                     c.mSendToVoicemail = entry.mSendToVoicemail;
+		    c.mCustomNotification = entry.mCustomNotification;
 
                     c.notSynchronizedUpdateNameAndNumber();
 
@@ -911,10 +926,12 @@ public class Contact {
                 contact.mPresenceText = cursor.getString(CONTACT_STATUS_COLUMN);
                 contact.mNumberE164 = cursor.getString(PHONE_NORMALIZED_NUMBER);
                 contact.mSendToVoicemail = cursor.getInt(SEND_TO_VOICEMAIL) == 1;
+		contact.mCustomNotification = cursor.getString(CUSTOM_NOTIFICATION);
                 if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
                     log("fillPhoneTypeContact: name=" + contact.mName + ", number="
                             + contact.mNumber + ", presence=" + contact.mPresenceResId
-                            + " SendToVoicemail: " + contact.mSendToVoicemail);
+                            + " SendToVoicemail: " + contact.mSendToVoicemail
+                            + " CustomNotification: " + contact.mCustomNotification);
                 }
             }
             byte[] data = loadAvatarData(contact);
@@ -1021,6 +1038,8 @@ public class Contact {
                             entry.mPersonId = cursor.getLong(EMAIL_CONTACT_ID_COLUMN);
                             entry.mSendToVoicemail =
                                     cursor.getInt(EMAIL_SEND_TO_VOICEMAIL_COLUMN) == 1;
+			    entry.mCustomNotification = 
+                                    cursor.getString(EMAIL_CUSTOM_NOTIFICATION_COLUMN);
 
                             String name = cursor.getString(EMAIL_NAME_COLUMN);
                             if (TextUtils.isEmpty(name)) {
