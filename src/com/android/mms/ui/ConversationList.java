@@ -163,7 +163,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         setTitle(R.string.app_label);
         boolean checkedMessageLimits = mPrefs.getBoolean(CHECKED_MESSAGE_LIMITS, false);
         if (DEBUG) Log.v(TAG, "checkedMessageLimits: " + checkedMessageLimits);
-        if (!checkedMessageLimits || DEBUG) {
+        if (!checkedMessageLimits) {
             runOneTimeStorageLimitCheckForLegacyMessages();
         }
 
