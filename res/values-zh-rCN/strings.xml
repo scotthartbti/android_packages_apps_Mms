@@ -479,5 +479,6 @@
     <!-- Settings item description for boolean SMS Split 160 characters setting -->
     <string name="pref_summary_sms_split_counter">在分割的消息中加入编号，例如：(1/2)</string>
 
-    <!-- **** CYANOGENMOD ADDITIONS END **** -->
+    <string name="storage_warning_title">"你的手机内存已满"</string>
+    <string name="storage_warning_content">"你将不会接受新的短/彩信"</string>
 </resources>
