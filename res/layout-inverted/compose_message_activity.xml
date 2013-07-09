@@ -22,7 +22,37 @@
     android:id="@+id/msg_list_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff000000">
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/recipients_subject_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ViewStub android:id="@+id/recipients_editor_stub"
+            android:layout="@layout/recipients_editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        />
+
+        <EditText android:id="@+id/subject"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textColor="@color/compose_message_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:capitalize="sentences"
+            android:autoText="true"
+            android:singleLine="true"
+            android:hint="@string/subject_hint"
+            android:visibility="gone"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
