@@ -47,6 +47,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.internal.telephony.util.BlacklistUtils;
 import com.android.mms.MmsApp;
 import com.android.mms.MmsConfig;
 import com.android.mms.R;
@@ -112,6 +113,9 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static final String USER_AGENT               = "pref_key_mms_user_agent";
     public static final String USER_AGENT_CUSTOM        = "pref_key_mms_user_agent_custom";
 
+    // Blacklist
+    public static final String BLACKLIST                 = "pref_blacklist";
+
     // Menu entries
     private static final int MENU_RESTORE_DEFAULTS    = 1;
 
@@ -147,6 +151,9 @@ public class MessagingPreferenceActivity extends PreferenceActivity
 
     private CheckBoxPreference mDirectCall;
 
+    // Blacklist
+    private PreferenceScreen mBlacklist;
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -162,9 +169,20 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         super.onResume();
 
         // Since the enabled notifications pref can be changed outside of this activity,
-        // we have to reload it whenever we resume.
+        // we have to reload it whenever we resume, including the blacklist summary
         setEnabledNotificationsPref();
+        updateBlacklistSummary();
         registerListeners();
+    }
+
+    private void updateBlacklistSummary() {
+        if (mBlacklist != null) {
+            if (BlacklistUtils.isBlacklistEnabled(this)) {
+                mBlacklist.setSummary(R.string.blacklist_summary);
+            } else {
+                mBlacklist.setSummary(R.string.blacklist_summary_disabled);
+            }
+        }
     }
 
     private void loadPrefs() {
@@ -206,6 +224,9 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mEnableQmLockscreenPref = (CheckBoxPreference) findPreference(QM_LOCKSCREEN_ENABLED);
         mEnableQmCloseAllPref = (CheckBoxPreference) findPreference(QM_CLOSE_ALL_ENABLED);
         mEnableQmDarkThemePref = (CheckBoxPreference) findPreference(QM_DARK_THEME_ENABLED);
+
+        // Blacklist screen - Needed for setting summary
+        mBlacklist = (PreferenceScreen) findPreference(BLACKLIST);
 
         setMessagePreferences();
     }
