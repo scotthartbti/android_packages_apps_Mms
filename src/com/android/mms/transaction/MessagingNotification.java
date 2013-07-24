@@ -822,7 +822,7 @@ public class MessagingNotification {
             Bitmap attachmentBitmap,
             Contact contact,
             int attachmentType) {
-        if (AddressUtils.isSuppressedSprintVVM(context, address)) {
+        if (MmsConfig.isSuppressedSprintVVM(address)) {
             return null;
         }
         Intent clickIntent = ComposeMessageActivity.createIntent(context, threadId);
