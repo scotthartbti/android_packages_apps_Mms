@@ -101,9 +101,6 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static final String QM_CLOSE_ALL_ENABLED      = "pref_key_close_all";
     public static final String QM_DARK_THEME_ENABLED     = "pref_dark_theme";
 
-    // Blacklist
-    public static final String BUTTON_BLACKLIST  = "button_blacklist";
-
     private static final String DIRECT_CALL_PREF         = "direct_call_pref";
     public static final String MESSAGE_FONT_SIZE         = "pref_key_mms_message_font_size";
 
@@ -149,8 +146,6 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     private CheckBoxPreference mEnableQmDarkThemePref;
 
     private CheckBoxPreference mDirectCall;
-    // Blacklist
-    private PreferenceScreen mButtonBlacklist;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -170,18 +165,6 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         // we have to reload it whenever we resume.
         setEnabledNotificationsPref();
         registerListeners();
-        updateBlacklistSummary();
-    }
-
-    private void updateBlacklistSummary() {
-        if (mButtonBlacklist != null) {
-            if (PreferenceManager.getDefaultSharedPreferences(this).
-                    getBoolean("button_enable_blacklist", false)) {
-                mButtonBlacklist.setSummary(R.string.blacklist_summary);
-            } else {
-                mButtonBlacklist.setSummary(R.string.blacklist_summary_disabled);
-            }
-        }
     }
 
     private void loadPrefs() {
@@ -223,9 +206,6 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mEnableQmLockscreenPref = (CheckBoxPreference) findPreference(QM_LOCKSCREEN_ENABLED);
         mEnableQmCloseAllPref = (CheckBoxPreference) findPreference(QM_CLOSE_ALL_ENABLED);
         mEnableQmDarkThemePref = (CheckBoxPreference) findPreference(QM_DARK_THEME_ENABLED);
-
-        // Blacklist
-        mButtonBlacklist = (PreferenceScreen) findPreference(BUTTON_BLACKLIST);
 
         setMessagePreferences();
     }
