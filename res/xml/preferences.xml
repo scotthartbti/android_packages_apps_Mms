@@ -337,8 +337,6 @@
             android:entryValues="@array/pref_mms_user_agent_values"
             android:dialogTitle="@string/pref_title_mms_user_agent" />
 
-    </PreferenceCategory>
-
         <Preference
             android:key="pref_text_area_size"
             android:persistent="false"
