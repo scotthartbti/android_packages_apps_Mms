@@ -777,7 +777,11 @@
     <string name="message_timestamp_format"><xliff:g id="string" example="Fred Flinstone">%1$s</xliff:g>\u0020-\u0020<xliff:g id="string" example="9:39AM">%2$s</xliff:g></string>
 
     <string name="pref_summary_input_type">Select the soft keyboard to use when composing messages</string>
-    
+
+<!-- Screen on when SMS/MMS is received -->
+    <string name="pref_title_wake_screen_on_incoming_sms">Screen on for new SMS/MMS</string>
+    <string name="pref_summary_wake_screen_on_incoming_sms">The screen will be powered on if a new SMS or MMS is received.</string>
+
     <!-- Direct Call Feature -->
     <string name="direct_call_title">Direct Call</string>
     <string name="direct_call_summary">Picking up the phone calls the current contact</string>
