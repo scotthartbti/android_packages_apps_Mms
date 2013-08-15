@@ -15,7 +15,8 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <plurals name="template_confirm_delete_conversation">
-        <item quantity="one">Один шаблон будет удалён</item>
-        <item quantity="other">Будет удалено <xliff:g id="number" example="15">%1$s</xliff:g> шаблона (ов)</item>
+        <item quantity="one">Будет удалён <xliff:g id="number" example="1">%1$s</xliff:g> шаблон.</item>
+        <item quantity="few">Будет удалено <xliff:g id="number" example="2">%1$s</xliff:g> шаблона.</item>
+        <item quantity="many">Будет удалено <xliff:g id="number" example="5">%1$s</xliff:g> шаблонов.</item>
     </plurals>
 </resources>
