@@ -129,6 +129,10 @@ public class MessagingPreferenceActivity extends PreferenceActivity
 
     private SharedPreferences sp;
 
+    // Delay send
+    public static final String SEND_DELAY_DURATION       = "pref_key_send_delay";
+
+    private ListPreference mMessageSendDelayPref;
     private Preference mSmsLimitPref;
     private Preference mSmsDeliveryReportPref;
     private CheckBoxPreference mSmsSplitCounterPref;
@@ -252,6 +256,10 @@ public class MessagingPreferenceActivity extends PreferenceActivity
 
         // Blacklist screen - Needed for setting summary
         mBlacklist = (PreferenceScreen) findPreference(BLACKLIST);
+
+        // SMS Sending Delay
+        mMessageSendDelayPref = (ListPreference) findPreference(SEND_DELAY_DURATION);
+        mMessageSendDelayPref.setSummary(mMessageSendDelayPref.getEntry());
 
         setMessagePreferences();
     }
@@ -396,6 +404,13 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mInputTypePref.setValue(inputType);
         adjustInputTypeSummary(mInputTypePref.getValue());
         mInputTypePref.setOnPreferenceChangeListener(this);
+
+        mMessageSendDelayPref.setOnPreferenceChangeListener(this);
+    }
+
+    public static long getMessageSendDelayDuration(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return Long.valueOf(prefs.getString(SEND_DELAY_DURATION, "0"));
     }
 
     private void setRingtoneSummary(String soundValue) {
@@ -734,6 +749,12 @@ public class MessagingPreferenceActivity extends PreferenceActivity
             editor.putString(MSG_SIGNATURE, (String) newValue);
             editor.commit();
             mSignature.setText(sp.getString(MSG_SIGNATURE, ""));
+            result = true;
+        } else if (preference == mMessageSendDelayPref) {
+            String value = (String) newValue;
+            mMessageSendDelayPref.setValue(value);
+            mMessageSendDelayPref.setSummary(mMessageSendDelayPref.getEntry());
+            result = true;
         }
         return result;
     }
