@@ -393,15 +393,6 @@ public class Conversation {
                                 threadUri);
                         mContext.getContentResolver().update(threadUri, sReadContentValues,
                                 UNREAD_SELECTION, null);
-                        try {
-                            mContext.getContentResolver().update(threadUri,
-                                    sReadContentValues, UNREAD_SELECTION, null);
-                        } catch (SQLiteFullException e) {
-                            Log.e(TAG, "Database is full", e);
-                            showStorageFullToast(mContext);
-                        } finally {
-                            return null;
-                        }
                     }
                     setHasUnreadMessages(false);
                 }
