@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/avatar"
             android:layout_alignParentRight="true"
-            android:background="@drawable/hairline_left"
             android:orientation="vertical" >
 
             <TextView android:id="@+id/name"

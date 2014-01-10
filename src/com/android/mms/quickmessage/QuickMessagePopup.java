@@ -801,7 +801,7 @@ public class QuickMessagePopup extends Activity implements
                 if (!mDarkTheme) {
                     // We are using a holo.light background with a holo.dark activity theme
                     // Override the EditText background to use the holo.light theme
-                    qmReplyText.setBackgroundResource(R.drawable.edit_text_holo_light);
+                    qmReplyText.setBackgroundResource(R.drawable.edit_text_holo_custom);
                 }
 
                 // Set the remaining values

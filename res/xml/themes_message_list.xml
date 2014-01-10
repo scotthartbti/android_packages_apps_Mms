@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="pref_text_conv_layout"
+        android:title="@string/text_conv_layout"
+        android:entries="@array/text_conv_layout_styles"
+        android:entryValues="@array/text_conv_layout_values"
+        android:defaultValue="default" />
+
+    <CheckBoxPreference
+        android:key="pref_show_avatar"
+        android:title="@string/show_contact_avatar"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="pref_use_contact"
+        android:title="@string/show_contact_name"
+        android:defaultValue="false" />
+
+    <EditTextPreference
+        android:key="pref_signature"
+        android:dialogTitle="@string/add_signature_title"
+        android:hint="@string/enter_text"
+        android:title="@string/add_signature_title"
+        android:summary="@string/add_signature_summary"
+        android:defaultValue="" />
+
+    <PreferenceCategory
+        android:key="pref_bubble_style"
+        android:title="@string/bubble_style_title">
+
+        <ListPreference
+            android:key="pref_bubble_type"
+            android:title="@string/text_bubble_title"
+            android:entries="@array/text_bubble_styles"
+            android:entryValues="@array/text_bubble_values"
+            android:defaultValue="bubble_none" />
+
+        <CheckBoxPreference
+            android:key="pref_bubble_fill_parent"
+            android:title="@string/bubble_fill_parent_title"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_font_sizes"
+        android:title="@string/font_sizes_title">
+
+        <TextSizeSeekBarPreference
+            android:key="pref_contact_font_size"
+            android:title="@string/contact_font_size_title"
+            android:defaultValue="16"
+            android:dependency="pref_use_contact" />
+
+        <TextSizeSeekBarPreference
+            android:key="pref_font_size"
+            android:title="@string/font_size_title"
+            android:defaultValue="16" />
+
+        <TextSizeSeekBarPreference
+            android:key="pref_date_font_size"
+            android:title="@string/date_font_size_title"
+            android:defaultValue="16" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_background_colors"
+        android:title="@string/background_colors">
+
+        <Preference
+            android:key="pref_custom_image"
+            android:title="@string/custom_image_title"
+            android:summary="@string/custom_image_summary" />
+
+        <ColorPickerPreference
+            android:key="pref_message_bg"
+            android:title="@string/main_bg"
+            android:defaultValue="@color/default_message_background"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="true"
+            android:alphaSlider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_recv_text"
+        android:title="@string/recv_text_header">
+
+        <ColorPickerPreference
+            android:key="pref_recv_text_bg"
+            android:title="@string/message_background"
+            android:defaultValue="@color/default_recv_text_bg"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_recv_contact_color"
+            android:dependency="pref_use_contact"
+            android:title="@string/contact_color"
+            android:defaultValue="@color/default_recv_contact_color"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_recv_textcolor"
+            android:title="@string/text_color"
+            android:defaultValue="@color/default_recv_textcolor"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_recv_date_color"
+            android:title="@string/date_color"
+            android:defaultValue="@color/default_recv_datecolor"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_sent_text"
+        android:title="@string/sent_text_header">
+
+        <ColorPickerPreference
+            android:key="pref_sent_text_bg"
+            android:title="@string/message_background"
+            android:defaultValue="@color/default_sent_text_bg"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_sent_contact_color"
+            android:dependency="pref_use_contact"
+            android:title="@string/contact_color"
+            android:defaultValue="@color/default_sent_contact_color"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_sent_textcolor"
+            android:title="@string/text_color"
+            android:defaultValue="@color/default_sent_textcolor"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_sent_date_color"
+            android:title="@string/date_color"
+            android:defaultValue="@color/default_sent_datecolor"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

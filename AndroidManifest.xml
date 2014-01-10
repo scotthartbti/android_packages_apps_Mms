@@ -45,6 +45,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INSTALL_DRM" />
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <!-- Needed for QuickMessage -->
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -377,7 +378,16 @@
             android:theme="@style/MmsHoloTheme"
             android:label="@string/template_new_title">
         </activity>
-
+        <activity
+            android:name=".themes.ThemesConversationList"
+            android:theme="@style/MmsHoloTheme"
+            android:label="@string/themes_conv_list_title" >
+        </activity>
+        <activity
+            android:name=".themes.ThemesMessageList"
+            android:theme="@style/MmsHoloTheme"
+            android:label="@string/themes_msg_list_title" >
+        </activity>
         <provider
             android:name=".templates.TemplatesProvider"
             android:exported="true"

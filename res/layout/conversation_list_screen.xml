@@ -19,8 +19,9 @@
 -->
 
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/conv_list_screen"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"  >
+    android:layout_height="match_parent" >
 
     <ListView android:id="@android:id/list"
         style="?android:attr/listViewWhiteStyle"
@@ -29,8 +30,8 @@
         android:layout_below="@+id/banner_sms_promo"
         android:drawSelectorOnTop="false"
         android:scrollbarStyle="insideOverlay"
-        android:background="@color/background"
-        android:cacheColorHint="@color/background"
+        android:background="@color/transparent"
+        android:cacheColorHint="@color/transparent"
         android:fadingEdgeLength="16dip" />
 
     <TextView android:id="@+id/empty"

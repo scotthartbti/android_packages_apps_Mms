@@ -19,6 +19,7 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/msg_list_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -27,6 +28,7 @@
         android:id="@+id/recipients_subject_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/semi_transparent"
         android:paddingTop="5dip"
         android:paddingBottom="5dip"
         android:paddingLeft="5dip"
@@ -70,7 +72,7 @@
             android:visibility="gone"
             android:fadingEdge="none"
             android:layout_marginBottom="1dip"
-            android:cacheColorHint="@color/background"
+            android:cacheColorHint="@color/transparent"
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbarStyle="insideOverlay"
             android:paddingBottom="@dimen/input_text_height_adjusted"
@@ -125,7 +127,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background" >
+                android:background="@color/semi_transparent" >
 
                 <EditText
                     android:textColor="@color/compose_message_edit_text"

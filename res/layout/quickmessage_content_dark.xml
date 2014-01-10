@@ -30,8 +30,8 @@
 
         <android.widget.QuickContactBadge
             android:id="@+id/contactBadge"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
             android:layout_gravity="center"
             android:background="@drawable/ic_contact_picture"
             android:clickable="false"
@@ -55,7 +55,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="2"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?android:attr/textColorPrimary"
+                android:textColor="@color/qm_dark_text"
                 android:textColorLink="?android:attr/textColorPrimary" />
 
             <TextView
@@ -63,17 +63,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:textColor="?android:attr/textColorTertiary" />
+                android:textColor="@color/qm_dark_text_fade" />
         </LinearLayout>
     </LinearLayout>
-
-    <!-- Blue divider line below sender info -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="@android:color/holo_blue_light"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp" />
 
     <!-- Message body -->
     <ScrollView
@@ -83,8 +75,8 @@
         android:layout_weight="1"
         android:fillViewport="true"
         android:minHeight="72dp"
-        android:background="@color/quickmessage_body_dark_bg"
         android:paddingTop="4dp"
+        android:background="@color/qm_dark_bg"
         android:paddingBottom="4dp" >
 
         <TextView
@@ -98,7 +90,7 @@
             android:paddingRight="8dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="16sp"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/qm_dark_text"
             android:textColorLink="?android:attr/textColorPrimary" />
     </ScrollView>
 
@@ -108,10 +100,10 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/quickmessage_body_dark_bg"
+        android:background="@color/qm_dark_bg"
         android:paddingTop="4dp"
         android:paddingLeft="6dp"
-        android:paddingBottom="2dp" >
+        android:paddingBottom="10dp" >
 
         <ImageButton
             android:id="@+id/templates_button"
@@ -137,7 +129,7 @@
             android:nextFocusRight="@+id/send_button"
             android:hint="@string/type_to_reply_text_enter_to_send"
             android:minHeight="@dimen/input_text_height"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/qm_dark_text"
             android:textColorHint="?android:attr/textColorTertiary"
             android:textCursorDrawable = "@null"
             android:maxLines="@integer/qm_message_response_max_lines"
@@ -147,6 +139,7 @@
         <LinearLayout
             android:id="@+id/button_with_counter"
             android:orientation="vertical"
+            android:background="@color/qm_dark_bg"
             android:layout_gravity="bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
@@ -157,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|bottom"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorTertiary"
+                android:textColor="@color/qm_dark_text_fade"
                 android:paddingLeft="3dip"
                 android:paddingRight="3dip"
                 android:paddingBottom="4dip"

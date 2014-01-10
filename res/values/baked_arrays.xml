@@ -85,4 +85,54 @@
         <item>@string/send_delay_30seconds</item>
     </string-array>
 
+    <!-- Themes Arrays -->
+    <!-- Layout styles values -->
+    <string-array name="text_conv_layout_styles">
+        <item>@string/layout_default</item>
+        <item>@string/layout_from_left</item>
+        <item>@string/layout_from_right</item>
+    </string-array>
+
+    <string-array name="text_conv_layout_values" translatable="false">
+        <item>default</item>
+        <item>layoutLeft</item>
+        <item>layoutRight</item>
+    </string-array>
+
+    <!-- Bubble styles -->
+    <string-array name="text_bubble_styles">
+        <item>@string/bubble_none</item>
+        <item>@string/bubble</item>
+        <item>@string/circle</item>
+        <item>@string/circle_holo</item>
+        <item>@string/rect</item>
+        <item>@string/rect_holo</item>
+        <!-- <item>@string/frame</item>
+        <item>@string/frame_holo</item>
+        <item>@string/frame2</item> -->
+    </string-array>
+
+    <string-array name="text_bubble_values" translatable="false">
+        <item>bubble_none</item>
+        <item>bubble</item>
+        <item>circle</item>
+        <item>circle_holo</item>
+        <item>rect</item>
+        <item>rect_holo</item>
+        <!-- <item>frame</item>
+        <item>frame_holo</item>
+        <item>frame2</item> -->
+    </string-array>
+
+    <!-- widget styles -->
+    <string-array name="widget_layout_styles">
+        <item>@string/widget_layout_dark</item>
+        <item>@string/widget_layout_light</item>
+    </string-array>
+
+    <string-array name="widget_layout_values" translatable="false">
+        <item>**dark**</item>
+        <item>**light**</item>
+    </string-array>
+
 </resources>

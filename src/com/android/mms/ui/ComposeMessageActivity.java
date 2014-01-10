@@ -75,7 +75,15 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.gesture.Prediction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -118,24 +126,26 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.view.ViewStub;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+import android.widget.ImageView.ScaleType;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.android.internal.telephony.util.BlacklistUtils;
 import com.android.internal.telephony.TelephonyIntents;
@@ -156,6 +166,7 @@ import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.templates.TemplateGesturesLibrary;
 import com.android.mms.templates.TemplatesProvider.Template;
+import com.android.mms.themes.Constants;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.SmsReceiverService;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
@@ -285,6 +296,10 @@ public class ComposeMessageActivity extends Activity
     // messages+draft after the max delay.
     private static final int LOADING_MESSAGES_AND_DRAFT_MAX_DELAY_MS = 500;
 
+    // Custom background image
+    private static final String CUSTOM_IMAGE_PATH =
+            "/data/data/com.android.mms/files/message_list_image.jpg";
+
     private ContentResolver mContentResolver;
 
     private BackgroundQueryHandler mBackgroundQueryHandler;
@@ -345,6 +360,10 @@ public class ComposeMessageActivity extends Activity
 
     private String mDebugRecipients;
 
+    // custom background
+    private Bitmap mImageBackground;
+    private File mImageFile;
+
     private GestureLibrary mLibrary;
     private SimpleCursorAdapter mTemplatesCursorAdapter;
     private double mGestureSensitivity;
@@ -390,6 +409,10 @@ public class ComposeMessageActivity extends Activity
     // keys for extras and icicles
     public final static String THREAD_ID = "thread_id";
     private final static String RECIPIENTS = "recipients";
+
+    // signature
+    private String mSignature;
+    private SharedPreferences sp;
 
     @SuppressWarnings("unused")
     public static void log(String logMsg) {
@@ -1941,14 +1964,13 @@ public class ComposeMessageActivity extends Activity
 
         resetConfiguration(getResources().getConfiguration());
 
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-        mGestureSensitivity = prefs
-                .getInt(MessagingPreferenceActivity.GESTURE_SENSITIVITY_VALUE, 3);
-        boolean showGesture = prefs.getBoolean(MessagingPreferenceActivity.SHOW_GESTURE, false);
-        int unicodeStripping = prefs.getInt(MessagingPreferenceActivity.UNICODE_STRIPPING_VALUE,
+        sp = PreferenceManager.getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
+
+        mGestureSensitivity = sp.getInt(MessagingPreferenceActivity.GESTURE_SENSITIVITY_VALUE, 3);
+        boolean showGesture = sp.getBoolean(MessagingPreferenceActivity.SHOW_GESTURE, false);
+        int unicodeStripping = sp.getInt(MessagingPreferenceActivity.UNICODE_STRIPPING_VALUE,
                 MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT);
-        mInputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE,
+        mInputMethod = Integer.parseInt(sp.getString(MessagingPreferenceActivity.INPUT_TYPE,
                 Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
 
         mLibrary = TemplateGesturesLibrary.getStore(this);
@@ -1963,6 +1985,9 @@ public class ComposeMessageActivity extends Activity
         gestureOverlayView.addOnGesturePerformedListener(this);
         setContentView(gestureOverlayView);
         setProgressBarVisibility(false);
+
+        // Used for custom background file
+        mImageFile = new File(CUSTOM_IMAGE_PATH);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -2377,9 +2402,7 @@ public class ComposeMessageActivity extends Activity
         }, 100);
 
         // Load the selected input type
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences((Context) ComposeMessageActivity.this);
-        mInputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE,
+        mInputMethod = Integer.parseInt(sp.getString(MessagingPreferenceActivity.INPUT_TYPE,
                 Integer.toString(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE)));
         mTextEditor.setInputType(InputType.TYPE_CLASS_TEXT | mInputMethod
                 | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
@@ -2389,6 +2412,9 @@ public class ComposeMessageActivity extends Activity
         mIsRunning = true;
         updateThreadIdIfRunning();
         mConversation.markAsRead(true);
+
+        // custom background
+        setCustomBackground();
     }
 
     @Override
@@ -2470,6 +2496,11 @@ public class ComposeMessageActivity extends Activity
     protected void onDestroy() {
         if (TRACE) {
             android.os.Debug.stopMethodTracing();
+        }
+        // recycle custom background image
+        if (mImageBackground != null) {
+            mImageBackground.recycle();
+            mImageBackground = null;
         }
 
         super.onDestroy();
@@ -3931,6 +3962,13 @@ public class ComposeMessageActivity extends Activity
             // them back once the recipient list has settled.
             removeRecipientsListeners();
 
+            // add signature if set.
+            mSignature = sp.getString(Constants.PREF_SIGNATURE, "");
+            if (!mSignature.isEmpty()) {
+                mSignature = "\n" + mSignature;
+                mWorkingMessage.setText(mWorkingMessage.getText() + mSignature);
+            }
+
             // strip unicode chars before sending (if applicable)
             mWorkingMessage.setText(stripUnicodeIfRequested(mWorkingMessage.getText()));
             mWorkingMessage.send(mDebugRecipients);
@@ -4440,6 +4478,25 @@ public class ComposeMessageActivity extends Activity
             }
 
             MmsWidgetProvider.notifyDatasetChanged(getApplicationContext());
+        }
+    }
+
+    private void setCustomBackground() {
+        // Set where this background goes first
+        LinearLayout msgBackground = (LinearLayout) findViewById(R.id.msg_list_bg);
+
+        int dColor = getResources().getColor(R.color.default_message_background);
+
+        // Message listview custom background
+        if (mImageFile.exists()) {
+            mImageBackground = BitmapFactory.decodeFile(CUSTOM_IMAGE_PATH);
+            Drawable d = new BitmapDrawable(getResources(), mImageBackground);
+            d.setColorFilter(sp.getInt(
+                    Constants.PREF_MESSAGE_BG, dColor), PorterDuff.Mode.SRC_ATOP);
+            msgBackground.setBackgroundDrawable(d);
+        } else {
+            // Message listview background color
+            msgBackground.setBackgroundColor(sp.getInt(Constants.PREF_MESSAGE_BG, dColor));
         }
     }
 

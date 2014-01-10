@@ -155,4 +155,74 @@
     <string name="send_delay_30seconds">30 seconds</string>
     <string name="sent_countdown">Message delivery countdown</string>
 
+    <!-- Start of adding custom theme'n aspects to Mms
+         Much thanks to @DroidJunk (jimmy miller) for the guide -->
+    <!-- MMS THEME SETTINGS -->
+    <string name="mms_themes">Theme settings</string>
+    <string name="themes_conv_list_title">Conversation listview</string>
+    <string name="themes_conv_list_summary">Setup the listview colors and style</string>
+    <string name="themes_msg_list_title">Messaging view</string>
+    <string name="themes_msg_list_summary">Setup messaging style, bubbles, text colors, and more</string>
+    <string name="themes_widget_title">Widget style</string>
+    <string name="themes_widget_summary">Change style dark or light, plus set the text colors</string>
+    <string name="background_colors">Background</string>
+    <string name="restore_defaults">Restore default settings</string>
+    <string name="delete_custom_image">Delete background image</string>
+    <string name="custom_image_title">Custom image</string>
+    <string name="custom_image_summary">Set custom image background</string>
+    <!-- Themes preference categorys -->
+    <string name="main_bg">Main background</string>
+    <string name="font_sizes_title">Font sizes</string>
+    <string name="bubble_style_title">Bubble style</string>
+    <string name="recv_text_header">Received messages</string>
+    <string name="sent_text_header">Sent messages</string>
+    <string name="show_contact_avatar">Show contact avatar</string>
+    <string name="text_conv_layout">Message layout style</string>
+    <string name="contact_font_size_title">Contact = </string>
+    <string name="font_size_title">Message = </string>
+    <string name="date_font_size_title">Date = </string>
+    <string name="conversation_list_unread">Conversations list unread</string>
+    <string name="conversation_list_read">Conversations list read</string>
+    <!-- Conversation layout styles -->
+    <string name="layout_default">Default layout</string>
+    <string name="layout_from_left">Layout from left</string>
+    <string name="layout_from_right">Layout from right</string>
+    <!-- add signature -->
+    <string name="add_signature_title">Text message signature</string>
+    <string name="add_signature_summary">Set a custom signature for your texts</string>
+    <string name="enter_text">enter text</string>
+    <!-- conv list colors -->
+    <string name="background">Background</string>
+    <string name="contact">Contact</string>
+    <string name="subject">Subject</string>
+    <string name="date">Date</string>
+    <string name="message_count">Message count</string>
+    <!-- bubbles -->
+    <string name="text_bubble_title">Set bubble style</string>
+    <string name="bubble_fill_parent_title">Bubble fill parent view</string>
+    <string name="bubble">Bubble</string>
+    <string name="bubble_none">No bubble</string>
+    <string name="rect">Rectangle</string>
+    <string name="rect_holo">Holo rectangle</string>
+    <string name="circle">Circle</string>
+    <string name="circle_holo">Holo circle</string>
+    <string name="frame2">Frame with arrow</string>
+    <string name="frame_holo">Outer Frame</string>
+    <string name="frame">Frame no arrow</string>
+    <!-- Contact use -->
+    <string name="show_contact_name">Show contact names</string>
+    <!-- Sent colors -->
+    <string name="message_background">Background</string>
+    <string name="contact_color">Contact</string>
+    <string name="text_color">Message</string>
+    <string name="date_color">Date</string>
+    <!-- widgets -->
+    <string name="widget_layout_dark">Dark</string>
+    <string name="widget_layout_light">Light</string>
+    <string name="widget_layout">Widget style</string>
+    <string name="widget_read">Read colors</string>
+    <string name="widget_unread">Unread colors</string>
+    <string name="widget_senders_text_color">Senders text</string>
+    <string name="widget_subject_text_color">Subject text</string>
+    <string name="widget_date_text_color">Date text</string>
 </resources>

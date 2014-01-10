@@ -18,6 +18,7 @@
  * limitations under the License.
  */
 -->
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="pref_key_root">
     <Preference
@@ -42,14 +43,40 @@
         </intent>
     </Preference>
 
-    <PreferenceCategory android:title="@string/pref_sms_storage_title"
-        android:key="pref_key_storage_settings">
-<!--
+    <PreferenceCategory
+        android:title="@string/mms_themes"
+        android:key="pref_mms_themes">
+
         <Preference
-            android:key="pref_key_mms_clear_history"
-            android:title="@string/pref_mms_clear_search_history_title"
-            android:summary="@string/pref_mms_clear_search_history_summary" />
--->
+            android:title="@string/themes_conv_list_title"
+            android:summary="@string/themes_conv_list_summary"
+            android:key="pref_themes_conversation_list">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.android.mms.themes.ThemesConversationList"
+                android:targetPackage="com.android.mms" />
+        </Preference>
+
+        <Preference
+            android:title="@string/themes_msg_list_title"
+            android:summary="@string/themes_msg_list_summary"
+            android:key="pref_themes_message_list">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.android.mms.themes.ThemesMessageList"
+                android:targetPackage="com.android.mms" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_sms_storage_title"
+        android:key="pref_key_storage_settings">
+
+        <!--<Preference android:key="pref_key_mms_clear_history"
+                android:title="@string/pref_mms_clear_search_history_title"
+                android:summary="@string/pref_mms_clear_search_history_summary" /> -->
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_key_auto_delete"

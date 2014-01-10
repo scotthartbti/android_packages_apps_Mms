@@ -41,6 +41,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.android.mms.R;
+import com.android.mms.themes.Constants;
 import com.google.android.mms.MmsException;
 
 /**
@@ -126,6 +127,7 @@ public class MessageListAdapter extends CursorAdapter {
     private boolean mIsGroupConversation;
     private boolean mFullTimestamp;
     private boolean mSentTimestamp;
+    private SharedPreferences sp;
 
     public MessageListAdapter(
             Context context, Cursor c, ListView listView,
@@ -225,10 +227,47 @@ public class MessageListAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int boxType = getItemViewType(cursor);
-        View view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
-                boxType == INCOMING_ITEM_TYPE_MMS) ?
-                        R.layout.message_list_item_recv : R.layout.message_list_item_send,
-                        parent, false);
+        mContext = context;
+        sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String layoutType = sp.getString(Constants.PREF_TEXT_CONV_LAYOUT, "default");
+        View view;
+
+        if (sp.getBoolean(Constants.PREF_SHOW_AVATAR, true)) {
+            if (layoutType.equals("layoutLeft")) {
+                view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        R.layout.message_list_item_recv :
+                        R.layout.message_list_item_recv, parent, false);
+            } else if (layoutType.equals("layoutRight")) {
+                view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        R.layout.message_list_item_send :
+                        R.layout.message_list_item_send, parent, false);
+            } else {
+                view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        R.layout.message_list_item_recv :
+                        R.layout.message_list_item_send, parent, false);
+            }
+        } else {
+            if (layoutType.equals("layoutLeft")) {
+                view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        R.layout.message_list_item_recv_noavatar :
+                        R.layout.message_list_item_recv_noavatar, parent, false);
+            } else if (layoutType.equals("layoutRight")) {
+                view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        R.layout.message_list_item_send_noavatar :
+                        R.layout.message_list_item_send_noavatar, parent, false);
+            } else {
+                view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        R.layout.message_list_item_recv_noavatar :
+                        R.layout.message_list_item_send_noavatar, parent, false);
+            }
+        }
+
         if (boxType == INCOMING_ITEM_TYPE_MMS || boxType == OUTGOING_ITEM_TYPE_MMS) {
             // We've got an mms item, pre-inflate the mms portion of the view
             view.findViewById(R.id.mms_layout_view_stub).setVisibility(View.VISIBLE);

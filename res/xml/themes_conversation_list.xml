@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="pref_conv_font_sizes"
+        android:title="@string/font_sizes_title">
+
+        <TextSizeSeekBarPreference
+            android:key="pref_conv_contact_font_size"
+            android:title="@string/contact_font_size_title"
+            android:defaultValue="16" />
+
+        <TextSizeSeekBarPreference
+            android:key="pref_conv_font_size"
+            android:title="@string/font_size_title"
+            android:defaultValue="16" />
+
+        <TextSizeSeekBarPreference
+            android:key="pref_conv_date_font_size"
+            android:title="@string/date_font_size_title"
+            android:defaultValue="16" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_background_colors"
+        android:title="@string/background_colors">
+
+        <Preference
+            android:key="pref_custom_image"
+            android:title="@string/custom_image_title"
+            android:summary="@string/custom_image_summary" />
+
+        <ColorPickerPreference
+            android:key="conversation_list_background"
+            android:title="@string/main_bg"
+            android:defaultValue="@color/default_conv_list_background"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_conversation_list_read"
+        android:title="@string/conversation_list_read">
+
+        <ColorPickerPreference
+            android:key="pref_read_bg"
+            android:title="@string/background"
+            android:defaultValue="@color/default_read_bg"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_read_contact"
+            android:title="@string/contact"
+            android:defaultValue="@color/default_read_contact"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_read_subject"
+            android:title="@string/subject"
+            android:defaultValue="@color/default_read_subject"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_read_date"
+            android:title="@string/date"
+            android:defaultValue="@color/default_read_date"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_read_count"
+            android:title="@string/message_count"
+            android:defaultValue="@color/default_read_count"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_conversation_list_unread"
+        android:title="@string/conversation_list_unread">
+
+        <ColorPickerPreference
+            android:key="pref_unread_bg"
+            android:title="@string/background"
+            android:defaultValue="@color/default_unread_bg"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_unread_contact"
+            android:title="@string/contact"
+            android:defaultValue="@color/default_unread_contact"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_unread_subject"
+            android:title="@string/subject"
+            android:defaultValue="@color/default_unread_subject"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_unread_date"
+            android:title="@string/date"
+            android:defaultValue="@color/default_unread_date"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+        <ColorPickerPreference
+            android:key="pref_unread_count"
+            android:title="@string/message_count"
+            android:defaultValue="@color/default_unread_count"
+            android:enableDefaultColorPanels="true"
+            android:inputEnabled="false"
+            android:alphaSlider="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
