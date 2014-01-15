@@ -46,10 +46,10 @@
             <LinearLayout
                 android:id="@+id/message_block"
                 android:minHeight="@dimen/avatar_width_height"
-                android:layout_width="wrap_content"
+                android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/avatar"
-                android:layout_alignParentLeft="false"
+                android:layout_alignParentLeft="true"
                 android:background="@drawable/hairline_right"
                 android:orientation="vertical" >
 
@@ -99,10 +99,9 @@
                         android:visibility="gone" />
 
                     <TextView android:id="@+id/date_view"
-                        android:background="@color/date_view_background"
+                        android:background="@drawable/listitem_background"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/message_item_text_padding_left_right"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/text_hairline" />
                 </LinearLayout>
