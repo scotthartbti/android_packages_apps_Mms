@@ -36,7 +36,7 @@
             android:title="@string/text_bubble_title"
             android:entries="@array/text_bubble_styles"
             android:entryValues="@array/text_bubble_values"
-            android:defaultValue="bubble_none" />
+            android:defaultValue="circle_holo" />
 
         <CheckBoxPreference
             android:key="pref_bubble_fill_parent"

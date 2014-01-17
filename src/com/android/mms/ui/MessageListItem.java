@@ -171,7 +171,7 @@ public class MessageListItem extends LinearLayout implements
     // Message block background
     private void getMessageBlockBackground() {
         String layoutType = sp.getString(Constants.PREF_TEXT_CONV_LAYOUT, "default");
-        String bubbleType = sp.getString(Constants.PREF_BUBBLE_TYPE, "bubble_none");
+        String bubbleType = sp.getString(Constants.PREF_BUBBLE_TYPE, "circle_holo");
         boolean bubbleWrap = sp.getBoolean(Constants.PREF_BUBBLE_FILL_PARENT, false);
         boolean layoutLeft = layoutType.equals("layoutLeft");
         boolean layoutRight = layoutType.equals("layoutRight");

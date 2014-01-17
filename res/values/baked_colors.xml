@@ -78,12 +78,12 @@
     <!-- == Messages list view default colors == -->
     <color name="default_message_background">#00000000</color>
     <!-- Read defaults -->
-    <color name="default_recv_text_bg">#85afafaf</color>
+    <color name="default_recv_text_bg">#ff000000</color>
     <color name="default_recv_contact_color">#ffffffff</color>
     <color name="default_recv_textcolor">#ffefefef</color>
     <color name="default_recv_datecolor">#ffcfcfcf</color>
     <!-- Unread defaults -->
-    <color name="default_sent_text_bg">#85afafaf</color>
+    <color name="default_sent_text_bg">#ff7d7d7d</color>
     <color name="default_sent_contact_color">#ffffffff</color>
     <color name="default_sent_textcolor">#ffefefef</color>
     <color name="default_sent_datecolor">#ffcfcfcf</color>
