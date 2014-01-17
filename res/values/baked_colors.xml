@@ -63,20 +63,20 @@
     <!-- == Conversation list default colors == -->
     <color name="default_conv_list_background">#30000000</color>
     <!-- Read defaults -->
-    <color name="default_read_bg">#60000000</color>
+    <color name="default_read_bg">#ca6a6a6a</color>
     <color name="default_read_contact">#ffffffff</color>
     <color name="default_read_subject">#ffefefef</color>
     <color name="default_read_date">#ffcfcfcf</color>
     <color name="default_read_count">#ffafafaf</color>
     <!-- Unread defaults -->
-    <color name="default_unread_bg">#90afafaf</color>
-    <color name="default_unread_contact">#ff101010</color>
-    <color name="default_unread_subject">#ff1f1f1f</color>
-    <color name="default_unread_date">#ff242424</color>
-    <color name="default_unread_count">#ff303030</color>
+    <color name="default_unread_bg">#f6424141</color>
+    <color name="default_unread_contact">#ffffffff</color>
+    <color name="default_unread_subject">#ffefefef</color>
+    <color name="default_unread_date">#ffcfcfcf</color>
+    <color name="default_unread_count">##ffafafaf</color>
 
     <!-- == Messages list view default colors == -->
-    <color name="default_message_background">#00000000</color>
+    <color name="default_message_background">#ea333333</color>
     <!-- Read defaults -->
     <color name="default_recv_text_bg">#ff000000</color>
     <color name="default_recv_contact_color">#ffffffff</color>
