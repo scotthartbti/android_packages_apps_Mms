@@ -225,4 +225,9 @@
     <string name="widget_senders_text_color">Senders text</string>
     <string name="widget_subject_text_color">Subject text</string>
     <string name="widget_date_text_color">Date text</string>
+
+    <string name="add_recipients">Add recipients</string>
+    <string name="groups_header">Groups</string>
+    <string name="no_recipients">No contacts</string>
+    <string name="hint_findContacts">Find contacts</string>
 </resources>
