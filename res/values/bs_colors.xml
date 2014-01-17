@@ -73,7 +73,7 @@
     <color name="default_unread_contact">#ffffffff</color>
     <color name="default_unread_subject">#ffefefef</color>
     <color name="default_unread_date">#ffcfcfcf</color>
-    <color name="default_unread_count">##ffafafaf</color>
+    <color name="default_unread_count">#ffafafaf</color>
 
     <!-- == Messages list view default colors == -->
     <color name="default_message_background">#ea333333</color>
