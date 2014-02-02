@@ -961,7 +961,7 @@ public class MessagingNotification {
         }
         // Always have to set the small icon or the notification is ignored
         if (Settings.System.getInt(context.getContentResolver(),
-                Settings.System.MMS_BREATH, 0) == 1) {
+                Settings.System.KEY_SMS_BREATH, 0) == 1) {
                noti.setSmallIcon(R.drawable.stat_notify_sms_breath);
            } else {    
                noti.setSmallIcon(R.drawable.stat_notify_sms);
