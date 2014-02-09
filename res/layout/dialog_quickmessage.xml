@@ -34,7 +34,6 @@
         android:id="@+id/pager_arrow"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:src="@drawable/line_divider_arrow"
         android:layout_gravity="center_horizontal|bottom"
         android:scaleType="fitXY" />
 

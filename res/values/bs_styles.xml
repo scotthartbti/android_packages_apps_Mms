@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="WidgetTitleLight" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#121212</item>
-        <item name="android:singleLine">true</item>
+    <style name="QuickMessageDark" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:textAppearance">@style/QuickMessageTextDark</item>
+    </style>
+    <style name="QuickMessageTextDark" parent="@android:style/TextAppearance.Holo">
+        <item name="android:textColor">@color/qm_dark_text</item>
+        <item name="android:textColorHighlight">@color/qm_holo_blue_light</item>
+        <item name="android:textColorHint">@color/qm_hint_text</item>
+        <item name="android:textColorLink">@color/qm_link_text</item>
+    </style>
+    <style name="QuickMessageLight" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:textAppearance">@style/QuickMessageTextLight</item>
+    </style>
+    <style name="QuickMessageTextLight" parent="@android:style/TextAppearance.Holo">
+        <item name="android:textColor">@color/qm_light_text</item>
+        <item name="android:textColorHighlight">@color/qm_holo_blue_light</item>
+        <item name="android:textColorHint">@color/qm_hint_text</item>
+        <item name="android:textColorLink">@color/qm_link_text</item>
     </style>
 </resources>

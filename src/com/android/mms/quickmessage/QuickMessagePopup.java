@@ -169,6 +169,8 @@ public class QuickMessagePopup extends Activity implements
         mCloseClosesAll = prefs.getBoolean(MessagingPreferenceActivity.QM_CLOSE_ALL_ENABLED, false);
         mWakeAndUnlock = prefs.getBoolean(MessagingPreferenceActivity.QM_LOCKSCREEN_ENABLED, false);
         mDarkTheme = prefs.getBoolean(MessagingPreferenceActivity.QM_DARK_THEME_ENABLED, false);
+        setTheme(mDarkTheme ? R.style.QuickMessageDark : R.style.QuickMessageLight);
+
         mUnicodeStripping = prefs.getInt(MessagingPreferenceActivity.UNICODE_STRIPPING_VALUE,
                 MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT);
         mInputMethod = Integer.parseInt(prefs.getString(MessagingPreferenceActivity.INPUT_TYPE,
@@ -190,17 +192,11 @@ public class QuickMessagePopup extends Activity implements
 
         // Load the main views
         mQmPagerArrow = (ImageView) findViewById(R.id.pager_arrow);
+        mQmPagerArrow.setImageResource(mDarkTheme ?
+                R.drawable.line_divider_arrow_dark : R.drawable.line_divider_arrow);
         mQmMessageCounter = (TextView) findViewById(R.id.message_counter);
         mCloseButton = (Button) findViewById(R.id.button_close);
         mViewButton = (Button) findViewById(R.id.button_view);
-
-        // Set the theme color on the pager arrow
-        Resources res = getResources();
-        if (mDarkTheme) {
-            mQmPagerArrow.setBackgroundColor(res.getColor(R.color.quickmessage_body_dark_bg));
-        } else {
-            mQmPagerArrow.setBackgroundColor(res.getColor(R.color.quickmessage_body_light_bg));
-        }
 
         // ViewPager Support
         mPagerAdapter = new MessagePagerAdapter();
@@ -762,20 +758,20 @@ public class QuickMessagePopup extends Activity implements
         @Override
         public Object instantiateItem(View collection, int position) {
 
+            Resources res = getResources();
             // Load the layout to be used
             LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout;
-            if (mDarkTheme) {
-                layout = inflater.inflate(R.layout.quickmessage_content_dark, null);
-            } else {
-                layout = inflater.inflate(R.layout.quickmessage_content_light, null);
-            }
+            View layout = inflater.inflate(R.layout.quickmessage_content, null);
 
             // Load the main views
             EditText qmReplyText = (EditText) layout.findViewById(R.id.embedded_text_editor);
             TextView qmTextCounter = (TextView) layout.findViewById(R.id.text_counter);
             ImageButton qmSendButton = (ImageButton) layout.findViewById(R.id.send_button_sms);
+            qmSendButton.setImageResource(mDarkTheme ?
+                    R.drawable.send_button_selector_dark : R.drawable.send_button_selector);
             ImageButton qmTemplatesButton = (ImageButton) layout.findViewById(R.id.templates_button);
+            qmTemplatesButton.setImageResource(mDarkTheme ?
+                    R.drawable.ic_templates_holo_dark : R.drawable.ic_templates_holo_light);
             TextView qmMessageText = (TextView) layout.findViewById(R.id.messageTextView);
             TextView qmFromName = (TextView) layout.findViewById(R.id.fromTextView);
             TextView qmTimestamp = (TextView) layout.findViewById(R.id.timestampTextView);
@@ -793,12 +789,7 @@ public class QuickMessagePopup extends Activity implements
                 qmTimestamp.setText(MessageUtils.formatTimeStampString(mContext, qm.getTimestamp(), mFullTimestamp));
                 updateContactBadge(qmContactBadge, qm.getFromNumber()[0], false);
                 qmMessageText.setText(qm.getMessageBody());
-
-                if (!mDarkTheme) {
-                    // We are using a holo.light background with a holo.dark activity theme
-                    // Override the EditText background to use the holo.light theme
-                    qmReplyText.setBackgroundResource(R.drawable.edit_text_holo_custom);
-                }
+                qmReplyText.setBackgroundResource(R.drawable.edit_text_holo_custom);
 
                 // Set the remaining values
                 qmReplyText.setInputType(InputType.TYPE_CLASS_TEXT | mInputMethod

@@ -43,15 +43,13 @@
     <color name="semi_transparent">#6f000000</color>
 
     <!-- Quick messaging colors -->
-    <color name="qm_light_bg">#ffeeeeee</color>
     <color name="qm_light_text">#ff101010</color>
-    <color name="qm_light_text_fade">#ff404040</color>
+    <color name="qm_hint_text">#ff999999</color>
     <color name="qm_holo_blue_light">#ff33b5e5</color>
-    <color name="qm_dark_bg">#ff020202</color>
+    <color name="qm_link_text">#ffff0000</color>
     <color name="qm_dark_text">#ffefefef</color>
-    <color name="qm_dark_text_fade">#ffafafaf</color>
-    <color name="quickmessage_body_dark_bg">#ff010101</color>
-    <color name="quickmessage_body_light_bg">#fff3f3f3</color>
+    <color name="pager_arrow_dark_bg">#a0454545</color>
+    <color name="pager_arrow_light_bg">#a0cccccc</color>
 
     <!-- widget background colors for unread/read -->
     <color name="widget_unread_bgcolor">#8f2f2f2f</color>
