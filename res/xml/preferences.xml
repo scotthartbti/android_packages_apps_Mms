@@ -292,6 +292,11 @@
             android:summary="@string/pref_summary_mms_use_sent_timestamp"
             android:defaultValue="false" />
 
+	<CheckBoxPreference android:key="new_sms_wakelock"
+            android:title="@string/pref_title_wake_screen_on_incoming_sms"
+            android:summary="@string/pref_summary_wake_screen_on_incoming_sms"
+            android:defaultValue="false" />
+
         <ListPreference
             android:key="pref_key_mms_input_type"
             android:title="@string/pref_title_input_type"
