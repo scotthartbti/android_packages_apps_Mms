@@ -238,4 +238,7 @@
     <!-- Screen on when SMS/MMS is received -->
     <string name="pref_title_wake_screen_on_incoming_sms">Screen on for new SMS/MMS</string>
     <string name="pref_summary_wake_screen_on_incoming_sms">The screen will be powered on if a new SMS or MMS is received.</string>
+
+    <string name="system_audio_item">System audio</string>
+    <string name="external_audio_item">External audio</string>
 </resources>
