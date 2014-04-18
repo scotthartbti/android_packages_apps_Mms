@@ -58,12 +58,9 @@ import android.view.Window;
 import com.android.mms.R;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
 
 public class ThemesConversationList extends PreferenceActivity implements
             OnPreferenceChangeListener {
@@ -284,7 +281,8 @@ public class ThemesConversationList extends PreferenceActivity implements
             int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
             int titleBarHeight = contentViewTop - statusBarHeight;
 
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+            Intent intent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/*");
             intent.putExtra("crop", "true");
             boolean isPortrait = getResources()
@@ -299,7 +297,8 @@ public class ThemesConversationList extends PreferenceActivity implements
             intent.putExtra(MediaStore.EXTRA_OUTPUT, getCustomImageExternalUri());
             intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
 
-            startActivityForResult(intent, Constants.REQUEST_PICK_WALLPAPER);
+            startActivityForResult(Intent.createChooser(
+                    intent, "Select Image"), Constants.REQUEST_PICK_WALLPAPER);
             return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
@@ -353,34 +352,38 @@ public class ThemesConversationList extends PreferenceActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Constants.REQUEST_PICK_WALLPAPER) {
-
                 FileOutputStream wallpaperStream = null;
                 try {
                     wallpaperStream = this.openFileOutput(Constants.CONV_CUSTOM_IMAGE,
                             Context.MODE_WORLD_READABLE);
                 } catch (FileNotFoundException e) {
-                    return; // NOOOOO
+                    return; // No file found
                 }
 
                 Uri selectedImageUri = getCustomImageExternalUri();
-                Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri.getPath());
-
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, wallpaperStream);
+                Bitmap bitmap;
+                if (data != null) {
+                    Uri mUri = data.getData();
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),
+                                mUri);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, wallpaperStream);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        bitmap = BitmapFactory.decodeFile(selectedImageUri.getPath());
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, wallpaperStream);
+                    } catch (NullPointerException npe) {
+                        Log.e("ThemesConversationList", "SeletedImageUri was null.");
+                        super.onActivityResult(requestCode, resultCode, data);
+                        return;
+                    }
+                }
             }
         }
-    }
-
-    public void copy(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        FileOutputStream out = new FileOutputStream(dst);
-
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
     }
 }
