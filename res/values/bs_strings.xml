@@ -241,4 +241,8 @@
 
     <string name="system_audio_item">System audio</string>
     <string name="external_audio_item">External audio</string>
+
+    <!-- Used in MobilePaperShowActivity -->
+    <string name="normal_show">View normal mode</string>
+    <string name="cannot_play">Cannot present the slide show.</string>
 </resources>
