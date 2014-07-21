@@ -139,6 +139,8 @@
 
     <!-- Context menu item on a message for marking as unread -->
     <string name="menu_as_unread">Mark as unread</string>
+    <!-- Context menu item on a message for marking all threads as unread -->
+    <string name="menu_all_as_unread">Mark all as unread</string>
 
     <!-- Delay delivery -->
     <string name="pref_title_send_delay">Delivery delay</string>
