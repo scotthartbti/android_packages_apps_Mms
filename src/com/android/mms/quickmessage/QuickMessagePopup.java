@@ -273,7 +273,8 @@ public class QuickMessagePopup extends Activity implements
             }
         } else {
             // Parse the intent and ensure we have a notification object to work with
-            NotificationInfo nm = (NotificationInfo) extras.getParcelable(SMS_NOTIFICATION_OBJECT_EXTRA);
+            NotificationInfo nm = (NotificationInfo) extras
+                    .getParcelable(SMS_NOTIFICATION_OBJECT_EXTRA);
             if (nm != null) {
                 QuickMessage qm = new QuickMessage(extras.getString(SMS_FROM_NAME_EXTRA),
                         extras.getString(SMS_FROM_NUMBER_EXTRA), nm);
@@ -282,7 +283,8 @@ public class QuickMessagePopup extends Activity implements
 
                 // If triggered from Quick Reply the keyboard should be visible immediately
                 if (extras.getBoolean(QR_SHOW_KEYBOARD_EXTRA, false)) {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    getWindow().setSoftInputMode(WindowManager
+                            .LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
 
                 if (newMessage && mCurrentPage != -1) {
@@ -295,10 +297,11 @@ public class QuickMessagePopup extends Activity implements
                     mMessagePager.setCurrentItem(mCurrentPage);
                 }
 
-                if (DEBUG)
-                    Log.d(LOG_TAG, "parseIntent(): New message from " + qm.getFromName().toString()
+                if (DEBUG) {
+                    Log.d(LOG_TAG, "parseIntent(): New message from " + qm.getThreadId()
                             + " added. Number of messages = " + mMessageList.size()
-                            + ". Displaying page #" + (mCurrentPage+1));
+                            + ". Displaying page #" + (mCurrentPage + 1));
+                }
 
                 // Make sure the counter is accurate
                 updateMessageCounter();
@@ -309,8 +312,9 @@ public class QuickMessagePopup extends Activity implements
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (DEBUG)
+        if (DEBUG) {
             Log.d(LOG_TAG, "onNewIntent() called");
+        }
 
         // Set new intent
         setIntent(intent);
@@ -432,7 +436,8 @@ public class QuickMessagePopup extends Activity implements
         if (qm != null) {
             EditText editView = qm.getEditText();
             if (editView != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(editView.getApplicationWindowToken(), 0);
             }
         }
@@ -476,8 +481,9 @@ public class QuickMessagePopup extends Activity implements
      */
     public void showPreviousMessageWithRemove(QuickMessage qm) {
         if (qm != null) {
-            if (DEBUG)
+            if (DEBUG) {
                 Log.d(LOG_TAG, "showPreviousMessageWithRemove()");
+            }
 
             markCurrentMessageRead(qm);
             if (mCurrentPage > 0) {
@@ -493,8 +499,9 @@ public class QuickMessagePopup extends Activity implements
      */
     public void showNextMessageWithRemove(QuickMessage qm) {
         if (qm != null) {
-            if (DEBUG)
+            if (DEBUG) {
                 Log.d(LOG_TAG, "showNextMessageWithRemove()");
+            }
 
             markCurrentMessageRead(qm);
             if (mCurrentPage < (mMessageList.size() - 1)) {
@@ -515,10 +522,11 @@ public class QuickMessagePopup extends Activity implements
         mMessagePager.setCurrentItem(gotoPage);
         updateMessageCounter();
 
-        if (DEBUG)
+        if (DEBUG) {
             Log.d(LOG_TAG, "updatePages(): Removed message " + removeMsg.getThreadId()
-                    + " and changed to page #" + (gotoPage+1) + ". Remaining messages = "
+                    + " and changed to page #" + (gotoPage + 1) + ". Remaining messages = "
                     + mMessageList.size());
+        }
     }
 
     /**
@@ -527,8 +535,10 @@ public class QuickMessagePopup extends Activity implements
      * @param threadId
      */
     public void removeMatchingMessages(long threadId) {
-        if (DEBUG)
-            Log.d(LOG_TAG, "removeMatchingMessages() looking for match with threadID = " + threadId);
+        if (DEBUG) {
+            Log.d(LOG_TAG, "removeMatchingMessages() looking for match with threadID = "
+                    + threadId);
+        }
 
         Iterator<QuickMessage> itr = mMessageList.iterator();
         QuickMessage qmElement = null;
@@ -562,9 +572,10 @@ public class QuickMessagePopup extends Activity implements
             Conversation con = Conversation.get(mContext, qm.getThreadId(), true);
             if (con != null) {
                 con.markAsRead(false);
-                if (DEBUG)
+                if (DEBUG) {
                     Log.d(LOG_TAG, "markCurrentMessageRead(): Marked message " + qm.getThreadId()
                             + " as read");
+                }
             }
         }
     }
@@ -578,9 +589,10 @@ public class QuickMessagePopup extends Activity implements
             Conversation con = Conversation.get(mContext, qm.getThreadId(), true);
             if (con != null) {
                 con.markAsRead(false);
-                if (DEBUG)
+                if (DEBUG) {
                     Log.d(LOG_TAG, "markAllMessagesRead(): Marked message " + qm.getThreadId()
                             + " as read");
+                }
             }
         }
     }
@@ -625,14 +637,16 @@ public class QuickMessagePopup extends Activity implements
             SmsMessageSender sender = new SmsMessageSender(getBaseContext(),
                     qm.getFromNumber(), message, threadId);
             try {
-                if (DEBUG)
-                    Log.d(LOG_TAG, "sendQuickMessage(): Sending message to " + qm.getFromName()
-                            + ", with threadID = " + threadId + ". Current page is #" + (mCurrentPage+1));
+                if (DEBUG) {
+                    Log.d(LOG_TAG, "sendQuickMessage(): Sending message to " + qm.getThreadId()
+                            + ", with threadID = " + threadId
+                            + ". Current page is #" + (mCurrentPage + 1));
+                }
 
                 sender.sendMessage(threadId);
                 Toast.makeText(mContext, R.string.toast_sending_message, Toast.LENGTH_SHORT).show();
             } catch (MmsException e) {
-                Log.e(LOG_TAG, "Error sending message to " + qm.getFromName());
+                Log.e(LOG_TAG, "Error sending message in " + qm.getThreadId());
             }
         }
     }
@@ -658,8 +672,10 @@ public class QuickMessagePopup extends Activity implements
         mMessageList.clear();
         mPagerAdapter.notifyDataSetChanged();
 
-        if (DEBUG)
-            Log.d(LOG_TAG, "clearNotification(): Message list cleared. Size = " + mMessageList.size());
+        if (DEBUG) {
+            Log.d(LOG_TAG, "clearNotification(): Message list cleared. Size = "
+                    + mMessageList.size());
+        }
     }
 
     /**
@@ -762,7 +778,8 @@ public class QuickMessagePopup extends Activity implements
 
             Resources res = getResources();
             // Load the layout to be used
-            LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater)mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.quickmessage_content, null);
 
             // Load the main views
@@ -777,14 +794,17 @@ public class QuickMessagePopup extends Activity implements
             TextView qmMessageText = (TextView) layout.findViewById(R.id.messageTextView);
             TextView qmFromName = (TextView) layout.findViewById(R.id.fromTextView);
             TextView qmTimestamp = (TextView) layout.findViewById(R.id.timestampTextView);
-            QuickContactBadge qmContactBadge = (QuickContactBadge) layout.findViewById(R.id.contactBadge);
+            QuickContactBadge qmContactBadge = (QuickContactBadge)
+                    layout.findViewById(R.id.contactBadge);
 
             // Retrieve the current message
             QuickMessage qm = mMessageList.get(position);
             if (qm != null) {
-                if (DEBUG)
-                    Log.d(LOG_TAG, "instantiateItem(): Creating page #" + (position + 1) + " for message from "
-                            + qm.getFromName() + ". Number of pages to create = " + getCount());
+                if (DEBUG) {
+                    Log.d(LOG_TAG, "instantiateItem(): Creating page #" + (position + 1)
+                            + " for message in " + qm.getThreadId()
+                            + ". Number of pages to create = " + getCount());
+                }
 
                 if (mCurrentQm == null) {
                     mCurrentQm = qm;
@@ -792,7 +812,8 @@ public class QuickMessagePopup extends Activity implements
 
                 // Set the general fields
                 qmFromName.setText(qm.getFromName());
-                qmTimestamp.setText(MessageUtils.formatTimeStampString(mContext, qm.getTimestamp(), mFullTimestamp));
+                qmTimestamp.setText(MessageUtils
+                        .formatTimeStampString(mContext, qm.getTimestamp(), mFullTimestamp));
                 updateContactBadge(qmContactBadge, qm.getFromNumber()[0], false);
                 qmMessageText.setText(qm.getMessageBody());
                 qmReplyText.setBackgroundResource(R.drawable.edit_text_holo_custom);
@@ -805,13 +826,16 @@ public class QuickMessagePopup extends Activity implements
                 qmReplyText.setText(qm.getReplyText());
                 qmReplyText.setSelection(qm.getReplyText().length());
 
-                if (mUnicodeStripping != MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT) {
+                if (mUnicodeStripping !=
+                        MessagingPreferenceActivity.UNICODE_STRIPPING_LEAVE_INTACT) {
                     boolean stripNonDecodableOnly =
-                            mUnicodeStripping == MessagingPreferenceActivity.UNICODE_STRIPPING_NON_DECODABLE;
+                            (MessagingPreferenceActivity.UNICODE_STRIPPING_NON_DECODABLE
+                                    == mUnicodeStripping);
                     mUnicodeFilter = new UnicodeFilter(stripNonDecodableOnly);
                 }
 
-                qmReplyText.addTextChangedListener(new QmTextWatcher(mContext, qmTextCounter, qmSendButton,
+                qmReplyText.addTextChangedListener(
+                        new QmTextWatcher(mContext, qmTextCounter, qmSendButton,
                         qmTemplatesButton, mNumTemplates, mUnicodeFilter));
                 qmReplyText.setOnEditorActionListener(new OnEditorActionListener() {
                     @Override
@@ -933,10 +957,11 @@ public class QuickMessagePopup extends Activity implements
             mCurrentPage = position;
             mCurrentQm = mMessageList.get(position);
 
-            if (DEBUG)
-                Log.d(LOG_TAG, "onPageSelected(): Current page is #" + (position+1)
+            if (DEBUG) {
+                Log.d(LOG_TAG, "onPageSelected(): Current page is #" + (position + 1)
                         + " of " + getCount() + " pages. Currenty visible message is from "
-                        + mCurrentQm.getFromName());
+                        + mCurrentQm.getThreadId());
+            }
 
             updateMessageCounter();
         }
